@@ -1,0 +1,7 @@
+node_modules/
+.build/
+# Built by npm run build
+public/guides/
+public/css/
+.DS_Store
+.env

@@ -1,0 +1,3310 @@
+
+/* =====================================================================
+   base.css — the design system both bundles share: components, type, motion,
+   stacking. It reads every color by name and defines none.
+
+   The colors are each side's theme, imported after this file:
+     site-theme.css       the public site — navy, brand blue, gold  (site.css)
+     dashboard-theme.css  the dashboard  — monochrome               (dashboard.css)
+   Both define the same names (the brand ramps, --ui-*, --elev-*, --dialog-*, and the
+   few colors a component sets for itself), so a color changed in one theme moves one
+   side only. A color token written here would ship to both — keep them in the themes.
+   ===================================================================== */
+/* `coarse:` — a finger is driving. Pairs with the 44px button target overlay
+   further down: an icon button's target is wider than its box, so rows of them
+   need clear space a mouse never asked for. Scoped to the input device rather
+   than the viewport, because a 1180px tablet is a finger and a 900px desktop
+   window is a mouse — see the UI Bible's "do not equate small screen with
+   touch". Desktop density is untouched. */
+@custom-variant coarse (@media (pointer: coarse));
+
+@theme {
+  /* ── Type ─────────────────────────────────────────────────────────────────
+     The UI Bible's scale (ui-bible/src/styles/tokens.css), which is Suno's as measured
+     at desktop width with two Bible rules over it: nothing readable below 12px, and
+     interface text at 15px regular. Shared by the public site and the dashboard; each
+     theme file names its own faces (--font-sans, --font-serif). Every token is a
+     Tailwind text utility (text-body, text-ui, text-caption…) carrying its size,
+     leading, tracking and weight, and a variable CSS reads (var(--text-ui)).
+
+     Weight carries the hierarchy: medium (500) for what is clicked or titles something,
+     regular (400) for reading, light (300) for the largest sizes, semibold (600) only for
+     a section heading. Nothing heavier. Sizes in rem and leading unitless, so the
+     reader's browser text size still works.
+
+     Which step a page uses: the home page's hero is display (48 on a phone); every other
+     page's title is h1; a section of a page is h2; a heading inside a section is h3; a
+     card's title is h4. Reading text is body (body-lg for a lead paragraph), smaller
+     reading text body-sm, metadata caption, and an eyebrow over a heading overline. */
+  --text-display: 4.5rem;          /* 72 / 72 — 48 on a phone */
+  --text-display--line-height: 1;
+  --text-display--letter-spacing: -0.0133em;
+  --text-display--font-weight: 500;
+
+  --text-title-serif: 3rem;        /* 48 / 48, in --font-serif */
+  --text-title-serif--line-height: 1;
+  --text-title-serif--letter-spacing: -0.025em;
+  --text-title-serif--font-weight: 300;
+
+  --text-h1: 2.5rem;               /* 40 / 56 — page title, light */
+  --text-h1--line-height: 1.4;
+  --text-h1--letter-spacing: 0;
+  --text-h1--font-weight: 300;
+
+  --text-h2: 1.5rem;               /* 24 / 32 — dialog title, major section */
+  --text-h2--line-height: 1.3333;
+  --text-h2--letter-spacing: -0.025em;
+  --text-h2--font-weight: 500;
+
+  --text-h3: 1.125rem;             /* 18 / 24 — section heading, the one semibold */
+  --text-h3--line-height: 1.3333;
+  --text-h3--letter-spacing: 0;
+  --text-h3--font-weight: 600;
+
+  --text-h4: 1rem;                 /* 16 / 24 — card title */
+  --text-h4--line-height: 1.5;
+  --text-h4--letter-spacing: 0;
+  --text-h4--font-weight: 500;
+
+  --text-body-lg: 1.0625rem;       /* 17 / 25.5 — lead paragraph */
+  --text-body-lg--line-height: 1.5;
+
+  --text-body: 1rem;               /* 16 / 24 — reading text and every input */
+  --text-body--line-height: 1.5;
+
+  --text-ui: 0.9375rem;            /* 15 / 21 — nav, menus, list rows, tabs */
+  --text-ui--line-height: 1.4;
+  --text-ui--font-weight: 400;
+
+  --text-body-sm: 0.875rem;        /* 14 / 20 — help text, table cells, tooltips */
+  --text-body-sm--line-height: 1.4286;
+
+  --text-label-lg: 1.0625rem;      /* 17 / 24 — on a 44px button */
+  --text-label-lg--line-height: 1.4118;
+  --text-label-lg--font-weight: 500;
+
+  --text-label: 0.9375rem;         /* 15 / 24 — on a 32–40px button; form labels */
+  --text-label--line-height: 1.6;
+  --text-label--font-weight: 500;
+
+  --text-label-sm: 0.875rem;       /* 14 / 24 — on a 28px control; table headers */
+  --text-label-sm--line-height: 1.7143;
+  --text-label-sm--font-weight: 500;
+
+  --text-label-xs: 0.75rem;        /* 12 / 14 — the smallest controls, keys, initials */
+  --text-label-xs--line-height: 1.1667;
+  --text-label-xs--font-weight: 500;
+
+  --text-caption: 0.75rem;         /* 12 / 16 — metadata; the floor */
+  --text-caption--line-height: 1.3333;
+
+  --text-badge: 0.75rem;           /* 12 / 15 — badges, tags, counts, held at the floor */
+  --text-badge--line-height: 1.25;
+  --text-badge--font-weight: 500;
+
+  --text-overline: 0.75rem;        /* 12 — eyebrows, always uppercase */
+  --text-overline--line-height: 1.25;
+  --text-overline--letter-spacing: 0.09em;
+  --text-overline--font-weight: 500;
+
+  --text-code: 0.8125rem;          /* 13 */
+  --text-code--line-height: 1.65;
+
+  /* The color ramps (surface, primary, accent) are declared in each theme's own
+     @theme block, so every bundle generates their utilities with its own values. */
+}
+
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-Regular.woff2") format("woff2"),
+    url("/fonts/Poppins-Regular.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+@font-face {
+  font-family: "Poppins";
+  src: url("/fonts/Poppins-Medium.woff2") format("woff2"),
+    url("/fonts/Poppins-Medium.woff") format("woff");
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+}
+
+:root {
+  --motion-hover-duration: 180ms;
+  --motion-hover-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/* Semantic feedback utilities — use these in JS instead of raw Tailwind color classes.
+   Each maps to a --ui-color-* token (defined per theme) so one change propagates everywhere. */
+.ui-text-error   { color: var(--ui-color-error); }
+.ui-text-success { color: var(--ui-color-success); }
+.ui-text-info    { color: var(--ui-color-info); }
+.ui-text-muted   { color: var(--ui-color-muted); }
+.ui-text-warning { color: var(--ui-color-warning); }
+.ui-bg-error     { background-color: color-mix(in oklab, var(--ui-color-error-muted) 10%, transparent); }
+.ui-pill-error   { background-color: color-mix(in oklab, var(--ui-color-error-muted) 10%, transparent); color: var(--ui-color-error); }
+.ui-pill-success { background-color: color-mix(in oklab, var(--ui-color-success) 10%, transparent); color: var(--ui-color-success); }
+.ui-pill-info    { background-color: color-mix(in oklab, var(--ui-color-info) 10%, transparent); color: var(--ui-color-info); }
+.ui-pill-warning { background-color: color-mix(in oklab, var(--ui-color-warning) 10%, transparent); color: var(--ui-color-warning); }
+.ui-hover-error:hover { background-color: color-mix(in oklab, var(--ui-color-error-muted) 20%, transparent); }
+
+/* ── The dashboard work surface, and the ladder that stands on it ──────────
+   The <main> pane to the right of the sidebar, shared by every product page so
+   they all read as the same room.
+
+   UI Bible → Dark Theme → "Stacked surfaces only go up". On a dark theme the
+   depth channel is lightness, not shadow — a shadow cast on near-black has
+   almost nothing left to darken. So a surface resting on another surface is
+   LIGHTER than it, every time, and the amount it lightens is how far off the
+   page it sits.
+
+   Level 0 is the page and it is FLAT. This used to be three gradient layers
+   reaching var(--color-primary-950) in one corner and var(--color-surface-950) in the other, which quietly broke
+   every level above it: the same token read as "raised" at the bottom of the
+   page and "recessed" at the top, so nothing stacked on it could hold a stable
+   relationship to it. A field that looked like a well by the header looked like
+   a button by the footer. The glow was pretty and it cost the hierarchy.
+
+     0  page            surface-950  var(--color-surface-950)   the darkest thing on screen
+     1  panels, chrome  surface-900  var(--color-surface-900)   bars, list containers, cards
+     2  controls        surface-800  var(--color-surface-800)   inputs, drop zones, buttons on L1
+     3  hover / active  surface-700  var(--color-surface-700)   the raise on an L2 control
+
+   One token per step (~4% lightness): enough to separate the levels, not so
+   much that the top one reads as a different colour rather than a higher one.
+
+   ── Shadows, and the rule that used to be here ──────────────────────────────
+   This block used to say the depth channel was lightness ALONE, on the grounds
+   that a shadow cast on near-black has nothing left to darken. That is true of
+   the page, and false everywhere it mattered: a card sits on level 1, not on
+   the page, and level 1 has 6 L* of room beneath it. Measured on the target
+   design, the raised card casts a 3.5 L* shadow onto the panel behind it and
+   recovers over about 20px — so lightness says which rung a surface is on, and
+   the shadow says it is DETACHED rather than painted on.
+
+   The distinction the target draws, and the one to keep: things that float
+   cast (cards, menus, dialogs); things cut INTO a surface do not (fields, drop
+   zones, segmented tracks). Its drop zone casts nothing — measured flat at
+   panel value across its whole lower edge. */
+:root {
+  /* Two layers each: a tight contact shadow that reads as the edge lifting,
+     and a wide soft one that reads as distance. One layer alone gives either a
+     hard cutout or a grey haze. */
+  --shadow-e1: 0 1px 2px rgb(0 0 0 / 0.40), 0 4px 10px rgb(0 0 0 / 0.28);
+  --shadow-e2: 0 2px 4px rgb(0 0 0 / 0.45), 0 8px 20px rgb(0 0 0 / 0.34);
+  --shadow-e3: 0 4px 8px rgb(0 0 0 / 0.50), 0 16px 40px rgb(0 0 0 / 0.40);
+}
+/*
+   Nothing on a product page may go darker than level 0 — there is nowhere
+   darker to go, so it just reads as switched off. Borders stay alpha-white, so
+   a single value composes correctly over all four levels. */
+/* The ladder is global. It used to be scoped to `.dash-surface` (i.e. <main>),
+   which quietly excluded the two places depth matters most: the sidebar is a
+   SIBLING of <main> — that is why it grew a private gradient — and every studio
+   dialog and drawer is appended to document.body. A scoped rule does not fail
+   loudly there; `elev-2` simply paints nothing and the surface stays whatever
+   was behind it.
+
+   The four --elev-* tokens are defined at :root by each theme, onto its own surface
+   ramp. The public interior pages (a blog post and its siblings) rebind them to a
+   neutral ladder in site-theme.css, with .page-interior. */
+
+.dash-surface { background-color: var(--elev-0); }
+
+/* A sidebar panel on an interior page: one step off the page, and NO padding of
+   its own — a heading and its rows have to reach the edges, which they cannot do
+   from inside a padded box. Panels that want padding add it to their content. */
+.interior-panel {
+  background: var(--elev-1);
+  border: 1px solid var(--ui-border);
+  border-radius: 12px;
+  overflow: hidden;
+}
+/* The divider between a panel's heading and its rows, and between the rows. */
+.interior-panel .divide-y > * + * { border-top-color: var(--ui-border); }
+
+/* Named levels rather than raw colour utilities: `elev-1` says "one step off
+   the page", which stays true through a palette change, and it is the same
+   vocabulary on every product page, panel and dialog. */
+.elev-1 { background-color: var(--elev-1); }
+.elev-2 { background-color: var(--elev-2); }
+.elev-3 { background-color: var(--elev-3); }
+
+/* Raise on hover — one step, the same step everywhere. */
+.elev-hover:hover { background-color: var(--elev-3); }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SCROLL FADE — .scroll-fade
+   ───────────────────────────────────────────────────────────────────────────
+   The bottom line of a scrollable list dissolves while there is more below it.
+
+   A mask rather than an overlaid gradient, for one reason worth knowing: a
+   mask is applied in the ELEMENT's box, not the content's, so it stays put
+   while the list scrolls under it. An absolutely-positioned gradient would
+   need a wrapper and a matched background colour, and would be wrong the
+   moment the surface underneath it changed.
+
+   Driven by `data-more`, which JS sets from the laid-out box — whether a list
+   overflows depends on the viewport, so it cannot be known at render time. No
+   attribute means no mask, so a list that never runs the script is fully
+   legible rather than permanently faded at the bottom.
+
+   The transition is on the SIZE, not on opacity: masks do not compose with
+   opacity, and animating the stop keeps the fade from popping in.
+   ═══════════════════════════════════════════════════════════════════════════ */
+/* Registered, because an unregistered custom property is not animatable — the
+   transition below is silently ignored without this. */
+@property --scroll-fade {
+  syntax: "<length>";
+  inherits: false;
+  initial-value: 0px;
+}
+
+.scroll-fade {
+  --scroll-fade: 0px;
+  -webkit-mask-image: linear-gradient(to bottom, #000 calc(100% - var(--scroll-fade)), transparent);
+  mask-image: linear-gradient(to bottom, #000 calc(100% - var(--scroll-fade)), transparent);
+  transition: --scroll-fade 140ms linear;
+}
+
+.scroll-fade[data-more="1"] { --scroll-fade: 32px; }
+
+/* The fade is decoration; a reader who has asked for less motion still gets it,
+   just without the tween. */
+@media (prefers-reduced-motion: reduce) {
+  .scroll-fade { transition: none; }
+}
+
+/* A card IS a panel, so on a product page it is level 1. Its own fill is a 60%
+   wash of surface-900, which over near-black lands closer to the page than to a
+   panel — and since every field inside it is level 2, the card ended up reading
+   as a recess that its own contents floated above. Opaque here, unchanged on the
+   marketing side where it sits on lighter ground and the wash still works. */
+.dash-surface .card { background-color: var(--elev-1); }
+
+/* A card lifted off level 1. It has to live HERE, unlayered and after the rule
+   above: `.card` itself is in @layer components, and any unlayered rule beats a
+   layered one whatever its specificity, so a `.card.elev-2` written next to
+   `.card` computed to level 1 on every dashboard page. Same specificity as
+   `.dash-surface .card`, later in the file, so this wins. The bare `.elev-N`
+   utility loses to that rule on specificity, which is why these exist at all.
+   The border goes alpha too — `.card`'s surface-800 border IS level 2, which
+   vanishes on an elev-2 fill and reads as a dark outline on elev-3. */
+.card.elev-2 { background-color: var(--elev-2); border-color: var(--ui-border); }
+.card.elev-3 { background-color: var(--elev-3); border-color: var(--ui-border); }
+
+/* What sits INSIDE a card lifted to level 2. The meter track and the costbar's
+   border are written as level 2 — the rung for a control on a level-1 panel —
+   so on an elev-2 card they land on their own fill and draw nothing. Fields
+   are not in this list: they take --ui-field, which the dashboard theme puts
+   above every surface (assets/css/dashboard-theme.css). */
+.card.elev-2 .costbar { border-color: var(--ui-border); }
+.card.elev-2 .meter__track { background-color: var(--elev-3); }
+
+/* ── The stacking order ───────────────────────────────────────────────────
+   Every fixed or sticky surface that can overlap another one takes its z-index
+   from HERE, by name. Local stacking inside a component (0-3, to put content
+   over its own decoration) is none of this scale's business and stays local.
+
+   The order is the whole point, and it is an order of ESCAPABILITY: the further
+   up, the fewer ways out. A sheet opened from a modal must not slide behind the
+   modal; the busy overlay has no dismiss at all and so sits above both; a
+   dialog is the last word and sits above everything.
+
+   The values are spread so a layer can be inserted between two without
+   renumbering the rest. They replace 998/999/99999, which were magic numbers
+   picked to be "big enough" and told you nothing about what they outranked. */
+:root {
+  --z-drawer:       30;   /* studio inspector / storyboard slide-outs */
+  --z-drawer-over:  40;   /* the second of two drawers                */
+  --z-chrome:       50;   /* site header, dashboard sidebar           */
+  --z-sheet:        55;   /* bottom sheet — may open from a modal     */
+  --z-modal:        60;   /* panel modal                              */
+  --z-busy:         80;   /* blocking progress, no way out            */
+  --z-menu-scrim:   90;   /* mobile nav scrim                         */
+  --z-menu:         95;   /* mobile nav panel                         */
+  --z-dialog:      100;   /* alert / confirm — always the last word   */
+}
+
+/* Interaction layers (--ui-layer-*), status fills (--ui-fill-*), borders and the scrim
+   are theme tokens: see the notes on them in site-theme.css. */
+.ui-scrim { background-color: var(--ui-scrim); backdrop-filter: blur(2px); }
+
+/* The layers as classes too, for the components that toggle them from JS. */
+.ui-layer-hover    { background-color: var(--ui-layer-hover); }
+.ui-layer-selected { background-color: var(--ui-layer-selected); }
+
+/* ── Floating surfaces, and the one rule that governs their insides ───────
+   The studio hand-rolled the same dialog shell seven times, the same dropdown
+   three times and the same icon medallion eight times across five files, each
+   re-declaring a slightly different string.
+
+   All of them are overlays, so they sit at level 2 (a menu at 3, since it can
+   open on top of a dialog). The important consequence is what happens INSIDE
+   them: the opaque ramp has four rungs and an overlay already at 2 has almost
+   nowhere left to go, so its contents take level 3 and anything above that is
+   an alpha layer. This is the same rule the Book Alchemy drawer follows — one
+   mental model rather than a second, rebased ladder per container. */
+.ui-dialog {
+  background-color: var(--elev-2);
+  border: 1px solid var(--ui-border);
+  box-shadow: 0 25px 50px -12px rgb(0 0 0 / 0.5);
+}
+
+.ui-menu {
+  background-color: var(--elev-3);
+  border: 1px solid var(--ui-border);
+  box-shadow: 0 20px 25px -5px rgb(0 0 0 / 0.4), 0 8px 10px -6px rgb(0 0 0 / 0.4);
+}
+
+/* A single icon on its own plate. Level 3 so it reads on a dialog (2) and on a
+   panel (0-1) alike; the ring was `ring-surface-800`, which on a level-2 dialog
+   is that dialog's own fill and drew nothing. */
+.ui-medallion {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  background-color: var(--elev-3);
+  box-shadow: inset 0 0 0 1px var(--ui-border);
+}
+
+/* ── The sidebar, and why it carries its own ground ───────────────────────
+   The sidebar is a SIBLING of <main>, not a descendant, so .dash-surface and
+   the whole --elev-* ladder never reach it. It compensated with a vertical
+   gradient (surface-800 → surface-900), which meant a row's rendered surface
+   depended on where it sat VERTICALLY rather than on what it was: measured, a
+   hovered item near the top (var(--color-surface-700)) landed at the same lightness as a
+   SELECTED item near the bottom (var(--color-surface-700)). The two states collapsed into each
+   other halfway down the list.
+
+   A flat ground instead — the same at every scroll offset — so an interaction layer
+   resolves to one value everywhere.
+
+   WHICH ground is the theme's to say, through --dash-nav-bg, because it is a decision
+   about the sidebar and not about the ladder: a theme can put the nav on the page's own
+   colour, or on a panel's, without moving every other surface on that rung. With no
+   token it is level 1, one step off the page, which is what it was before it had one.
+   Everything inside it is an alpha layer (--ui-layer-hover, --ui-layer-selected), so
+   the rows read the same on whichever ground this is. */
+.dash-nav {
+  background-color: var(--dash-nav-bg, var(--elev-1));
+  border-color: var(--ui-border);
+
+  /* The sidebar's controls are one size. A nav row and the call to action under the
+     nav are the same capsule — the same height, the same inset from its ends, the same
+     radius, the same type size — so they are measured once, here, and both read these.
+     A control that is a different KIND of thing (the profile row with its avatar and
+     two lines, the square collapse toggle) is not held to them. */
+  --nav-control-height: 40px;
+  --nav-control-pad: 12px;
+  --nav-control-radius: 9999px;
+  --nav-control-font: 14px;
+}
+
+/* One class for all twelve rows. They previously repeated a five-line utility
+   string, which is how a stray `text-white` came to sit on every one of them:
+   emitted after text-surface-400 at equal specificity, it won, so the ELEVEN
+   unselected rows rendered #ffffff while the selected one rendered #f4f0e8 —
+   the selected item was the dimmest thing in the nav, and hover darkened. */
+.nav-item {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  /* A pill. The row's highlight — hover or current — is a capsule the full width of the
+     nav, so the ends are a full radius and the inline padding is deep enough to keep the
+     icon off the curve. The measurements are the sidebar's (--nav-control-*, on .dash-nav). */
+  min-block-size: var(--nav-control-height);
+  border-radius: var(--nav-control-radius);
+  padding: 6px var(--nav-control-pad);
+  font-size: var(--nav-control-font);
+  line-height: 1.4;
+  color: var(--color-surface-200);
+  transition: background-color var(--motion-hover-duration) var(--motion-hover-ease),
+              color var(--motion-hover-duration) var(--motion-hover-ease);
+}
+
+.nav-item:hover { background-color: var(--ui-layer-hover); color: var(--color-surface-100); }
+
+/* aria-current is the single source of truth for "you are here" — it is what a
+   screen reader reads, so styling anything else would let the two disagree.
+
+   The current row is a filled capsule with the brightest ink in the nav on it, icon
+   and label alike. Selection is carried by three channels — the fill, the weight and
+   that step up in ink — so it survives a colour-blind reader and a dimmed screen,
+   neither of which can rely on a 1.26:1 fill alone. There was a fourth, a 2px bar at
+   the row's leading edge in the brand hue; a capsule has no straight edge to hang it
+   on, and the icon no longer takes a hue of its own for the same reason: the shape is
+   the mark now. */
+.nav-item[aria-current='page'] {
+  background-color: var(--ui-layer-selected);
+  color: var(--color-surface-50);
+  font-weight: 500;
+}
+
+/* The icon wears the row's ink rather than one of its own, here and under the pointer:
+   a current row that is hovered must not drop its icon back a step. */
+.nav-item[aria-current='page'] .nav-item__icon,
+.nav-item[aria-current='page']:hover .nav-item__icon { color: inherit; }
+
+.nav-item__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  block-size: 28px;
+  inline-size: 28px;
+  flex-shrink: 0;
+  /* One step off the page, matching the label beside it.
+     It was surface-500: 4.13:1 on the sidebar's ground against the label's 8.48,
+     so every icon was half as present as the word it belonged to and the row read
+     as switched off. 4.13 clears the 3:1 an icon is actually held to — this was
+     never a conformance failure, it was the hierarchy pointing the wrong way.
+     The UI Bible has no foreground step below 8.2:1 at all; surface-500 is for
+     borders, dividers and disabled states, where dimming is the message. */
+  color: var(--color-surface-200);
+}
+
+/* Both parts of the row brighten together. This was surface-300, a step BELOW
+   the resting colour now that rest is surface-200 — the icon dimmed on hover,
+   which is the opposite of what a hover is for. */
+.nav-item:hover .nav-item__icon { color: var(--color-surface-100); }
+
+/* Collapsed rail: the row centres on its icon and the label goes. */
+.group[data-collapsed='true'] .nav-item { justify-content: center; padding-inline: 0; }
+
+/* The sidebar's call to action (Upgrade Plan). The same capsule as a nav row, from the
+   same measurements; this class is its shape and size and nothing else. Its fill and ink
+   are the light primary fill, set in the markup, because that is a statement about
+   emphasis and not about the sidebar. Centred, where a nav row is leading-aligned: it is
+   a button, not a destination in a list. */
+.nav-cta {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  inline-size: 100%;
+  min-block-size: var(--nav-control-height);
+  border-radius: var(--nav-control-radius);
+  padding: 6px var(--nav-control-pad);
+  font-size: var(--nav-control-font);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.group[data-collapsed='true'] .nav-cta { padding-inline: 0; }
+.group[data-collapsed='true'] .nav-item__label { display: none; }
+
+/* A count of things waiting to be acted on: unread support replies on a nav row or a tab
+   (UI Bible, Badge → CountBadge, and Sidebar's "count only when actionable"). Neutral
+   rather than a status colour, since the row beside it already says what is waiting.
+   Tabular figures so it does not jitter as the number changes; templates cap it at 99+
+   so it can never widen the row it sits in. */
+.count-badge {
+  display: inline-grid;
+  place-items: center;
+  block-size: 18px;
+  min-inline-size: 18px;
+  padding-inline: 4px;
+  border-radius: 9999px;
+  background-color: var(--color-surface-200);
+  color: var(--color-surface-950);
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.nav-item__count { margin-inline-start: auto; }
+
+/* Collapsed rail: no room for a number, so it becomes a dot on the icon's corner. The
+   number is still read out, from the sr-only text inside it. */
+.group[data-collapsed='true'] .nav-item__count {
+  position: absolute;
+  inset-block-start: 3px;
+  inset-inline-end: calc(50% - 15px);
+  block-size: 8px;
+  min-inline-size: 8px;
+  padding: 0;
+  font-size: 0;
+}
+
+/* The mobile nav panel's brand glow.
+
+   A two-ramp wash rather than a Tailwind gradient utility: `bg-gradient-to-*` gives you one
+   gradient with three stops, and this is two layers at different angles — the violet coming
+   down from the top-right and the gold up from the bottom-left. That is past what the
+   utility expresses, so it earns a class rather than an inline style.
+
+   Both ramps are sized to the panel and anchored inside it. They replaced two radials of
+   38rem and 22rem on a 288px-wide panel, which is the oversized-gradient shape that painted
+   black rectangles on iOS. See .hero-abstract-bg. */
+.mobile-menu-glow {
+  background-image:
+    linear-gradient(205deg, rgba(94, 116, 216, 0.30) 0%, rgba(94, 116, 216, 0) 58%),
+    linear-gradient(25deg, rgba(227, 191, 110, 0.14) 0%, rgba(227, 191, 110, 0) 48%);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* The product demo panels, stacked rather than swapped.
+
+   Five tabs of different content in a box that resized as you clicked between them. It had
+   a min-height to soften that, which is the wrong tool twice over: a guessed number that
+   panels can still exceed, and one that has to be re-guessed every time the copy changes.
+
+   All five occupy the same grid cell instead, so the cell is as tall as the TALLEST panel
+   and the box never moves. The inactive ones are marked `data-inactive` rather than
+   `hidden`, because preflight gives `[hidden]` a `display: none !important` that would take
+   them out of the layout and bring the resizing straight back. They hide by visibility, so
+   they keep their space — and visibility:hidden is still out of the accessibility tree and
+   out of the tab order, so nothing behind the curtain is reachable or focusable.
+
+   Costs nothing to load: only the Narrava panel carries an <img>, and it is the one that
+   opens. The other four are inline SVG.
+
+   FROM md UP, though — not on a phone. Stacking costs the height of the tallest panel at
+   every width, and the panels are only close in height while they are two columns wide.
+   Once they reflow to one column they diverge hard: measured at 390px the tallest is
+   868px and the shortest 170px, so opening Text to Audio drew a 170px panel in an 868px
+   box — 698px of empty space under it, on the screen with the least to spare. At 1440 the
+   same spread is 317px, which is the trade the stack was accepted for.
+
+   Below md the panels swap instead, and the box is the height of the one you are looking
+   at. The flip-flop that stacking exists to prevent is a desktop complaint: the tab row
+   sits ABOVE the panel, so it does not move when the panel below it resizes — a phone is
+   scrolling through this section anyway. `display: none` there rather than visibility,
+   because the space is exactly what we do not want kept. */
+.ps-panels {
+  display: grid;
+}
+.ps-panels > [role="tabpanel"][data-inactive] {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  /* Centred, so the slack between the tallest panel and a shorter one falls evenly above
+     and below rather than pooling under it. */
+  .ps-panels {
+    align-items: center;
+  }
+  .ps-panels > [role="tabpanel"] {
+    grid-area: 1 / 1;
+  }
+  .ps-panels > [role="tabpanel"][data-inactive] {
+    display: revert;
+    visibility: hidden;
+    pointer-events: none;
+  }
+}
+
+/* The home header, which has to read as the same field as the hero below it.
+
+   Both surfaces sit on #0a0c1a, the colour the hero's own base gradient starts at, and the
+   hero tints its top edge violet — so a flat header leaves a visible seam at the boundary.
+   The header carries the same tint, ramped to meet it: transparent at the top, brightest
+   along the bottom edge where the hero begins.
+
+   A linear ramp sized to the box, NOT the 70rem x 20rem radial anchored at `78% 120%` that
+   used to do this. That one was three times the element in both axes with its centre
+   outside it, which is the shape that paints black rectangles on iOS. Same wash, contained.
+   See .hero-abstract-bg for the full account. */
+.site-header--home {
+  background-color: #0a0c1a;
+  background-image: linear-gradient(190deg, rgba(139, 123, 247, 0) 25%, rgba(139, 123, 247, 0.20) 100%);
+  background-size: 100% 100%;
+  background-repeat: no-repeat;
+}
+
+/* A brand glow for a full-width section, painted INTO the section's own background.
+
+   This replaces the pattern it is named after: three or four absolutely-positioned circles
+   carrying `blur-3xl` (filter: blur(64px)), deliberately pushed outside their container
+   with negative insets, inside a `relative overflow-hidden` section. Every one of those is
+   a compositing layer whose paint extends past its own box, and on iOS WebKit that
+   arrangement painted a hard black rectangle at the top-left of the page — the same class
+   of failure as an oversized background gradient (see .hero-abstract-bg below), and just
+   as invisible on every desktop browser.
+
+   Three linear ramps sized to the box: no filter, no layer, nothing outside anything. The
+   light is flatter than a blurred circle and reads the same at these opacities.
+
+   Put it on the section beside its background colour and delete the decorative markup —
+   the divs existed only to carry the blurs. */
+.section-glow {
+  background-image:
+    linear-gradient(150deg, rgba(74, 93, 192, 0.30) 0%, rgba(74, 93, 192, 0) 48%),
+    linear-gradient(300deg, rgba(94, 116, 216, 0.20) 0%, rgba(94, 116, 216, 0) 46%),
+    linear-gradient(0deg, rgba(227, 191, 110, 0.10) 0%, rgba(227, 191, 110, 0) 32%);
+  background-size: 100% 100%;
+  background-position: 0 0;
+  background-repeat: no-repeat;
+}
+
+/* Cool abstract, blackish backdrop for the technology → contact region.
+   Brand glows (blue + gold) over a faint grid on near-black.
+
+   SIZED TO THE BOX. See the note on .hero-abstract-bg below for what happens on iOS when
+   a background gradient is larger than the element it paints or anchored outside it — a
+   hard black rectangle, on the device, in a place nothing on a desktop can reproduce.
+   This carried five radials of 40-50rem (640-800px) with one centred on its own bottom
+   edge, which is the same shape of mistake. */
+.abstract-bg {
+  position: relative;
+  background-color: #080b16;
+  background-image:
+    linear-gradient(155deg, rgba(94, 116, 216, 0.34) 0%, rgba(94, 116, 216, 0.12) 34%, rgba(94, 116, 216, 0) 62%),
+    linear-gradient(215deg, rgba(227, 191, 110, 0.22) 0%, rgba(227, 191, 110, 0) 46%),
+    linear-gradient(330deg, rgba(94, 116, 216, 0.24) 0%, rgba(94, 116, 216, 0) 48%),
+    linear-gradient(rgba(255, 255, 255, 0.07) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.07) 1px, transparent 1px);
+  background-size: 100% 100%, 100% 100%, 100% 100%, 46px 46px, 46px 46px;
+  background-position: 0 0, 0 0, 0 0, center, center;
+  background-repeat: no-repeat, no-repeat, no-repeat, repeat, repeat;
+}
+/* Soft diagonal sheen for extra depth */
+.abstract-bg::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: linear-gradient(135deg, rgba(94, 116, 216, 0.10) 0%, transparent 38%, transparent 68%, rgba(227, 191, 110, 0.08) 100%);
+}
+.abstract-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Home hero backdrop. Mirrors the .abstract-bg treatment used above the footer
+   (faint square grid under layered brand glows) so the top and bottom of the
+   home page read as the same design. Replaces the animated starfield. */
+/* The hero backdrop: one background stack, every layer contained.
+   NOTHING HERE MAY BE BIGGER THAN THE ELEMENT, OR ANCHORED OUTSIDE IT. That is not a
+   style preference. This carried three radials sized 48rem/44rem/38rem — 768px, 704px
+   and 608px wide on a phone that is 414px across — and one of them centred at `78% -6%`,
+   above its own box. WebKit on iOS answered that by painting a hard black rectangle into
+   the top-left corner: reproducible on an iPhone in both Safari and Chrome, invisible in
+   every desktop browser and in Safari's own responsive mode on a Mac. The identical
+   pattern on the header (a 70rem ellipse centred at 120%) did the same thing.
+
+   So the colour comes from a linear ramp sized to the box. It is a softer, flatter light
+   than three overlapping radials, and it is the whole of what those radials were buying.
+
+   Layer order is top first. The two fade ramps sit above the grid and below the tint, and
+   they end on the base colour rather than on `transparent`, which interpolates through
+   rgba(0,0,0,0) and greys the middle of a ramp. */
+.hero-abstract-bg {
+  position: relative;
+  background-color: #080b16;
+  background-image:
+    linear-gradient(165deg, rgba(139, 123, 247, 0.20) 0%, rgba(94, 116, 216, 0.13) 44%, rgba(94, 116, 216, 0) 74%),
+    linear-gradient(180deg, #0a0c1a 0%, rgba(10, 12, 26, 0) 20%),
+    linear-gradient(0deg, var(--color-surface-950) 0%, rgba(6, 8, 15, 0) 34%),
+    linear-gradient(rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(255, 255, 255, 0.06) 1px, transparent 1px),
+    linear-gradient(180deg, #0a0c1a 0%, var(--color-surface-950) 55%, var(--color-surface-950) 100%);
+  background-size:
+    100% 100%, 100% 100%, 100% 100%,
+    46px 46px, 46px 46px,
+    100% 100%;
+  background-position:
+    0 0, 0 0, 0 0,
+    center top, center top,
+    0 0;
+  background-repeat:
+    no-repeat, no-repeat, no-repeat,
+    repeat, repeat,
+    no-repeat;
+}
+.hero-abstract-bg > * {
+  position: relative;
+  z-index: 1;
+}
+
+/* Soft brand glow layer — gives a section depth without a hard edge.
+   Pair with chained bg-gradients so section boundaries stay seamless. */
+.pf-glow {
+  position: relative;
+  isolation: isolate;
+}
+.pf-glow > * {
+  position: relative;
+  z-index: 1;
+}
+.pf-glow::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(55% 75% at 82% 16%, rgba(94, 116, 216, 0.14), transparent 70%),
+    radial-gradient(52% 72% at 12% 94%, rgba(227, 191, 110, 0.09), transparent 72%);
+}
+
+.robot-image-1 {
+  max-width: 420px;
+}
+.f-Montserrat {
+  font-family: "Poppins";
+}
+.container {
+  max-width: 1440px;
+  margin: 0 auto;
+}
+.bg-light-gray {
+  background-color: var(--color-surface-light-gray);
+}
+a, button {
+  cursor: pointer;
+}
+
+/* Global button interaction baseline.
+   In @layer base so that .btn (components) and Tailwind utilities can both
+   override it. Unlayered, these element selectors outranked every layered rule
+   regardless of specificity — which silently replaced .btn's 120ms Bible
+   easing with this 180ms one, and would have defeated a utility like
+   `transition-none` on any plain <button> too. */
+@layer base {
+  button,
+  input[type="button"],
+  input[type="submit"],
+  input[type="reset"],
+  a[role="button"] {
+    transition-property: opacity, background-color, border-color, color, box-shadow, transform;
+    transition-duration: var(--motion-hover-duration);
+    transition-timing-function: var(--motion-hover-ease);
+    /* Button labels stay on one line — never wrap to two. */
+    white-space: nowrap;
+  }
+
+  button:hover:not(:disabled),
+  input[type="button"]:hover:not(:disabled),
+  input[type="submit"]:hover:not(:disabled),
+  input[type="reset"]:hover:not(:disabled),
+  a[role="button"]:hover {
+    opacity: 0.92;
+  }
+
+  button:active:not(:disabled),
+  input[type="button"]:active:not(:disabled),
+  input[type="submit"]:active:not(:disabled),
+  input[type="reset"]:active:not(:disabled),
+  a[role="button"]:active {
+    opacity: 0.86;
+  }
+}
+
+/* ── Blog content (DB-stored HTML; Tailwind can't scan it, so style here) ── */
+.blog-content { color: var(--color-surface-300); font-size: var(--text-body); line-height: var(--text-body--line-height); }
+.blog-content > * + * { margin-top: 1.15rem; }
+.blog-content h1 {
+  color: var(--color-surface-100); font-size: var(--text-h1); font-weight: var(--text-h1--font-weight);
+  line-height: var(--text-h1--line-height); letter-spacing: var(--text-h1--letter-spacing); margin-bottom: 0.5rem;
+}
+.blog-content h2 {
+  color: var(--color-surface-100); font-size: var(--text-h2); font-weight: var(--text-h2--font-weight);
+  line-height: var(--text-h2--line-height); letter-spacing: var(--text-h2--letter-spacing);
+  margin-top: 2.5rem; margin-bottom: 0.25rem;
+}
+.blog-content h3 {
+  color: var(--color-surface-200); font-size: var(--text-h3); font-weight: var(--text-h3--font-weight);
+  line-height: var(--text-h3--line-height); margin-top: 1.75rem; margin-bottom: 0.25rem;
+}
+.blog-content p { color: var(--color-surface-300); }
+.blog-content a { color: #8b9bf0; text-decoration: underline; text-underline-offset: 2px; }
+.blog-content a:hover { color: #aab6f6; }
+.blog-content strong { color: var(--color-surface-100); font-weight: 500; }
+.blog-content ul, .blog-content ol { padding-left: 1.4rem; }
+.blog-content ul { list-style: disc; }
+.blog-content ol { list-style: decimal; }
+.blog-content li { margin-top: 0.5rem; }
+.blog-content li::marker { color: var(--color-primary-500); }
+.blog-content blockquote {
+  border-left: 3px solid var(--color-primary-500); padding: 0.25rem 0 0.25rem 1.1rem;
+  color: #d8d2c4; font-style: italic; margin: 1.5rem 0;
+}
+.blog-content code {
+  background: var(--elev-1); border: 1px solid var(--color-surface-700); border-radius: 0.375rem;
+  padding: 0.1rem 0.4rem; font-size: var(--text-code); color: var(--color-surface-200);
+}
+/* Comparison tables */
+.blog-content .table-wrap { overflow-x: auto; margin: 2rem 0; border: 1px solid var(--color-surface-700); border-radius: 0.75rem; }
+.blog-content table { width: 100%; border-collapse: collapse; font-size: var(--text-body-sm); line-height: var(--text-body-sm--line-height); min-width: 720px; }
+.blog-content thead th {
+  background: var(--elev-1); color: var(--color-surface-100); text-align: left; font-weight: var(--text-label-sm--font-weight);
+  padding: 0.85rem 1rem; border-bottom: 1px solid #2b3344; white-space: nowrap;
+}
+.blog-content tbody td { padding: 0.85rem 1rem; border-bottom: 1px solid var(--color-surface-800); vertical-align: top; }
+.blog-content tbody tr:last-child td { border-bottom: 0; }
+.blog-content tbody td:first-child { color: var(--color-surface-100); font-weight: 500; white-space: nowrap; }
+
+/* ── Phansora Dialog (extracted from dialog.js) ─────────────────── */
+.synx-dialog-backdrop {
+  position: fixed; inset: 0; z-index: var(--z-dialog);
+  display: flex; align-items: center; justify-content: center;
+  background: var(--ui-scrim);
+  backdrop-filter: blur(4px);
+  -webkit-backdrop-filter: blur(4px);
+  opacity: 0; transition: opacity .15s ease;
+}
+.synx-dialog-backdrop.synx-show { opacity: 1; }
+.synx-dialog-panel {
+  position: relative; /* containing block for .synx-dialog-close */
+  width: 92%; max-width: 400px;
+  background: var(--elev-2);
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-2xl);
+  box-shadow: 0 25px 60px rgba(0,0,0,0.5);
+  padding: 1.5rem;
+  transform: scale(0.95) translateY(8px);
+  transition: transform .15s ease;
+  text-align: center;
+  /* A dialog may never be taller than the screen it is on. The backdrop is fixed and
+     centres this, so a panel that outgrows the viewport hangs off BOTH edges with nothing
+     to scroll — and what goes off the bottom edge is the actions row, i.e. the way out of
+     the dialog. The Media panel's help is eight rows long and did exactly that on a phone:
+     a modal you cannot dismiss and cannot read the end of.
+
+     svh, not vh or dvh: vh ignores the browser chrome that is actually on screen, and dvh
+     changes as that chrome retracts, which would re-lay a scrolling dialog under the
+     reader's thumb. */
+  max-height: calc(100svh - 2rem);
+  overflow-y: auto;
+}
+@media (max-width: 640px) {
+  /* 1.5rem of padding on each side is a sixth of a phone's width and, top and bottom,
+     more of the panel than some dialogs' content. */
+  .synx-dialog-panel { padding: 1.25rem; }
+}
+
+/* A titled dialog scrolls its BODY and keeps the header and the actions where they are.
+   Panel-level scrolling (the rule above) guarantees the buttons are REACHABLE; this makes
+   them visible without going to look, which is what a footer of buttons is for. Scoped to
+   the custom shape because the plain alert has no such structure — it is a centred icon,
+   a line of text and its buttons, and turning that into a flex column would left-align
+   the icon it deliberately centres. */
+.synx-dialog-panel--framed {
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+.synx-dialog-panel--framed > .synx-custom-dialog-body {
+  flex: 1 1 auto;
+  min-height: 0;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+.synx-dialog-panel--framed > .synx-dialog-header,
+.synx-dialog-panel--framed > .synx-dialog-actions { flex-shrink: 0; }
+.synx-dialog-backdrop.synx-show .synx-dialog-panel {
+  transform: scale(1) translateY(0);
+}
+.synx-dialog-icon-wrap {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 3rem; height: 3rem; border-radius: 50%;
+  margin-bottom: 1rem;
+}
+.synx-dialog-icon { width: 1.5rem; height: 1.5rem; }
+.synx-dialog-message {
+  color: var(--color-surface-200);
+  font-size: 0.875rem; line-height: 1.5;
+  margin-bottom: 1.5rem;
+}
+.synx-dialog-actions {
+  display: flex; gap: 0.625rem; justify-content: center;
+  /* Two buttons never needed this. A row of peers can be six (clip length, 1-6s), which
+     at the coarse-pointer sizes below is wider than a phone — and an actions row that
+     overflows puts the choices off the edge of the one element that must stay reachable. */
+  flex-wrap: wrap;
+}
+.synx-dialog-btn {
+  padding: 0.5rem 1.25rem;
+  border-radius: var(--radius-lg);
+  font-size: 0.8125rem; font-weight: 600;
+  cursor: pointer; border: none;
+  transition: filter .15s ease, transform .1s ease;
+}
+.synx-dialog-btn:hover { filter: brightness(1.15); }
+.synx-dialog-btn:active { transform: scale(0.97); }
+/* While an async confirm runs (dialog.js) — the same dimming as a disabled .btn. */
+.synx-dialog-btn:disabled { opacity: 0.45; filter: saturate(0.5); pointer-events: none; }
+/* 0.5rem of vertical padding on 0.8125rem type is about 33px — fine under a mouse, short
+   of the 44px floor under a thumb. These are Confirm and Cancel sitting side by side, so
+   the one that is too small to aim at is as likely to be the destructive one. The .btn
+   ladder solves this with an ::after overlay to protect desktop density; these buttons
+   have no such ladder to protect, so they can simply grow. */
+@media (pointer: coarse) {
+  .synx-dialog-btn { min-height: 44px; padding-inline: 1.5rem; }
+}
+/* Fallback only — dialog.js sets the label color inline from the accent's `fg`,
+   because which label reads depends on which fill is behind it. */
+.synx-dialog-btn-primary { color: #fff; }
+.synx-dialog-btn-cancel {
+  background: rgba(148,163,184,0.12);
+  color: #a39d8c;
+  border: 1px solid rgba(148,163,184,0.18);
+}
+.synx-dialog-btn-cancel:hover { background: rgba(148,163,184,0.2); }
+/* A SECOND action, not a refusal. It reads quieter than the primary because the row is
+   ordered by preference, but it must not read as the cancel it sits in the position of —
+   so it keeps the panel's own border and ink rather than the cancel's greyed pair. */
+.synx-dialog-btn-secondary {
+  background: rgba(148,163,184,0.12);
+  color: var(--color-surface-100, #f4f0e8);
+  border: 1px solid var(--ui-border);
+}
+.synx-dialog-btn-secondary:hover { background: rgba(148,163,184,0.22); }
+
+/* A row of single-token peers ("1s".."6s"). Phrase padding would overflow the panel and
+   wrap the last one onto a line by itself; these are equals and must read as one row.
+   Sized so six fit inside both the 400px panel and a 375px phone's 92% of it. */
+.synx-dialog-actions--compact .synx-dialog-btn {
+  padding-inline: 0.5rem;
+  min-width: 2.5rem;
+}
+@media (pointer: coarse) {
+  /* The 44px height still applies — it is the width that has to give. */
+  .synx-dialog-actions--compact .synx-dialog-btn { padding-inline: 0.5rem; }
+}
+
+/* The dismiss, for dialogs whose buttons are all actions (see showChoice in dialog.js). */
+.synx-dialog-title {
+  color: #f4f0e8; font-size: 1rem; font-weight: 600;
+  margin-bottom: 0.375rem;
+}
+.synx-dialog-close {
+  position: absolute; top: 0.625rem; right: 0.625rem;
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 2rem; height: 2rem; padding: 0;
+  border: none; border-radius: var(--radius-lg);
+  background: transparent; color: var(--color-surface-400, #a39d8c);
+  cursor: pointer;
+  transition: background .15s ease, color .15s ease;
+}
+.synx-dialog-close svg { width: 1rem; height: 1rem; }
+.synx-dialog-close:hover { background: rgba(148,163,184,0.16); color: #f4f0e8; }
+.synx-dialog-close:focus-visible { outline: 2px solid var(--dialog-info-icon); outline-offset: 2px; }
+/* 32px is under the 44px thumb floor, and this is the control that ABANDONS the dialog —
+   the one a mis-tap should never hit by accident, and never miss when meant. */
+@media (pointer: coarse) {
+  .synx-dialog-close { width: 44px; height: 44px; top: 0.25rem; right: 0.25rem; }
+}
+
+.synx-custom-dialog-body label {
+  display: block; color: var(--color-surface-300); font-size: 0.8125rem; font-weight: 500; margin-bottom: 0.375rem;
+}
+.synx-custom-dialog-body select,
+.synx-custom-dialog-body input,
+.synx-custom-dialog-body textarea {
+  width: 100%; padding: 0.5rem 0.75rem; border-radius: var(--radius-lg);
+  border: 1px solid rgba(148,163,184,0.18); background: rgba(255,255,255,0.06);
+  color: var(--color-surface-100); font-size: 0.8125rem; outline: none;
+  transition: border-color .15s ease;
+}
+.synx-custom-dialog-body select:focus,
+.synx-custom-dialog-body input:focus,
+.synx-custom-dialog-body textarea:focus {
+  border-color: rgba(148,163,184,0.4);
+}
+.synx-custom-dialog-body select option {
+  background: var(--elev-1); color: var(--color-surface-100);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DATA TABLE — .data-table
+   ───────────────────────────────────────────────────────────────────────────
+   From the UI Bible Data Table spec (ui.skylanex.com/#/data-table), for tables
+   people compare rows in: horizontal rules only, no zebra striping, a 36px
+   label strip over 44px rows, 14px cell padding, numbers right-aligned in
+   tabular figures.
+
+   Colour, size and weight are set on the TABLE and inherited, never on the
+   cells. This file is unlayered and Tailwind's utilities are layered, so a
+   `td { color }` here would beat a `text-emerald-400` on a status cell and
+   quietly grey it out. Inherited values lose to anything set on the cell.
+
+   Two deliberate differences from the Bible:
+     - Header labels stay at surface-200, the dashboard's single secondary
+       tier (see the surface-200 lift). The strip is told apart from the rows
+       by size, weight, its shorter height and the rule under it, not by
+       dimmer text.
+     - No inset fill behind the header. The card is the surface; the header
+       row sits on it like every other row.
+
+   Inside a flush card the card owns the surface and the edge; the table adds
+   neither. Wrap it in `.data-table-wrap` so a wide table scrolls itself
+   rather than the page. */
+.data-table-wrap { overflow-x: auto; }
+.data-table {
+  inline-size: 100%;
+  border-collapse: collapse;
+  text-align: start;
+  font-size: 13px;
+  color: var(--color-surface-200);
+}
+.data-table thead th {
+  block-size: 36px;                    /* shorter than a data row: a label strip */
+  padding-inline: 14px;
+  text-align: start;
+  font-size: 12px;
+  font-weight: 500;
+  white-space: nowrap;
+}
+/* A row's own name is a <th scope="row">: a data cell, not part of the strip. */
+.data-table td,
+.data-table tbody th { block-size: 44px; padding-inline: 14px; }
+.data-table tbody th { text-align: start; font-weight: 500; }
+.data-table thead tr,
+.data-table tbody tr { border-block-end: 1px solid rgb(255 255 255 / 0.06); }
+.data-table tbody tr:last-child { border-block-end: 0; }
+.data-table tbody tr { transition: background-color 75ms; }
+.data-table tbody tr:not(.data-table__empty):hover { background: var(--ui-layer-hover); }
+.data-table .data-table__num { text-align: end; font-variant-numeric: tabular-nums; }
+/* In a flush card the outer cells take the card's 24px gutter, so the first
+   column lines up under the card's own heading rather than ten pixels left of it.
+   Inner cells keep 14px on both sides, which is the rule that matters. */
+.card--flush .data-table :is(th, td):first-child { padding-inline-start: 24px; }
+.card--flush .data-table :is(th, td):last-child { padding-inline-end: 24px; }
+.data-table .data-table__strong { color: var(--color-surface-100); font-weight: 500; }
+
+/* ── Content tables ──────────────────────────────────────────────────────
+   Add class="table table-dark-1" to a <table> for the dark, selectable look.
+   `.table` is the shared base; `-dark-1` is the first theme (more can follow).
+   Build the table as usual (thead > th, tbody > tr > td). Helper cell classes:
+     .t-strong  brighter text (e.g. a name)
+     .t-sub     a dim, smaller second line inside a cell
+   A row whose checkbox is checked highlights automatically (no JS needed).
+   Wrap in a div with overflow-x:auto if it may exceed its container width. */
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  text-align: left;
+  font-size: 15px;
+}
+.table th,
+.table td { padding: 0.9rem 1.25rem; vertical-align: middle; }
+
+.table-dark-1 {
+  color: var(--color-surface-400);
+  background: var(--elev-0);
+  border-radius: var(--radius-xl);
+  overflow: hidden;
+}
+.table-dark-1 tbody tr:nth-child(even) {
+  background: var(--elev-2);
+}
+
+/* ── Table card ──────────────────────────────────────────────────────────
+   A titled card around a .table: an icon, a name, and a line saying what the
+   reader is looking at. The table keeps its own background when it stands
+   alone; inside the card the CARD owns the surface, so the table gives it up
+   rather than painting a second one a step off. */
+.table-card {
+  background: var(--elev-1);
+  border: 1px solid var(--ui-border);
+  border-radius: 14px;
+  overflow: hidden;
+  margin: 2rem 0;
+}
+.table-card__head {
+  display: flex;
+  align-items: center;
+  gap: 0.85rem;
+  padding: 1.05rem 1.25rem;
+  border-bottom: 1px solid var(--ui-border);
+}
+.table-card__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 36px;
+  block-size: 36px;
+  flex: none;
+  border-radius: 10px;
+  background: var(--elev-2);
+  color: var(--color-surface-200);
+}
+.table-card__icon svg { inline-size: 18px; block-size: 18px; }
+.table-card__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: var(--color-surface-100);
+}
+/* Pushed to the far edge, and the first thing to go when there is no room for
+   both it and the title. */
+.table-card__note {
+  margin: 0 0 0 auto;
+  font-size: 13px;
+  color: var(--color-surface-400);
+  text-align: right;
+}
+@media (max-width: 640px) { .table-card__note { display: none; } }
+
+.table-card .table-dark-1 { background: transparent; border-radius: 0; }
+.table-card .table-wrap { margin: 0; border: 0; border-radius: 0; }
+
+/* ── Winning against the prose ───────────────────────────────────────────
+   This card is dropped INTO article copy, where `.blog-content h3` and
+   `.blog-content p` are waiting for it. Those are (0,1,1) and the card's own
+   rules are (0,1,0), so the prose wins every tie and the card is styled by the
+   article rather than by itself: the heading picked up `margin: 28px 0 4px` and
+   sat twelve pixels below the centre of its own icon, and the note picked up the
+   body colour and stopped reading as secondary.
+   Repeating the class is the smallest fix that holds — (0,2,0) beats the prose
+   without reaching for an id, `!important`, or a `.blog-content` prefix that
+   would tie the component to the one page it happens to live on. */
+.table-card .table-card__title { margin: 0; }
+.table-card .table-card__note { margin: 0 0 0 auto; color: var(--color-surface-400); }
+
+/* The table stays in its column, beside nothing and level with the image above
+   it. It does NOT reach across the sidebar: an article column is a column, and a
+   block that breaks out of it stops reading as part of the article.
+   Six columns in that width is tight, so the wrapper scrolls rather than the
+   headings wrapping — a caret dropped onto its own line reads as a second, empty
+   column, which is worse than a scrollbar. */
+
+/* A heading that wraps takes its sort caret onto a line of its own, which reads as
+   a second, empty column. */
+.table-dark-1 thead th { white-space: nowrap; }
+.table-dark-1 td.t-strong { white-space: nowrap; }
+.table-dark-1 thead th {
+  color: var(--color-surface-100);
+  font-weight: 700;
+  padding-top: 1.05rem;
+  padding-bottom: 1.05rem;
+  background: none;
+}
+.table-dark-1 tbody tr { border-top: 1px solid var(--color-surface-800); }
+.table-dark-1 tbody td { color: var(--color-surface-400); }
+.table-dark-1 td.t-strong { color: var(--color-surface-200); }
+.table-dark-1 .t-sub {
+  display: block;
+  margin-top: 2px;
+  font-size: 13px;
+  color: var(--color-surface-500);
+}
+.table-dark-1 tbody tr:hover { background: var(--elev-3); }
+
+/* ── The narrow columns ──────────────────────────────────────────────────
+   A checkbox column and a menu column, both sized to their control rather than
+   to their (absent) heading. */
+.table-dark-1 .t-check,
+.table-dark-1 .t-menu { inline-size: 1%; white-space: nowrap; }
+.table-dark-1 .t-check { padding-inline-end: 0; }
+.table-dark-1 .t-menu { text-align: right; color: var(--color-surface-500); }
+
+/* Sort affordance and row menu, DECORATIVE on a published article: there is
+   nothing here to sort or act on, and the design wants the shape.
+   `aria-hidden` in the markup keeps them out of the accessibility tree, so a
+   screen reader is never told about a control that does not exist. They are
+   spans rather than buttons for the same reason — a button announces an action
+   and takes a tab stop, and neither would lead anywhere. */
+.table-dark-1 .t-sort,
+.table-dark-1 .t-dots {
+  display: inline-flex;
+  vertical-align: middle;
+  color: var(--color-surface-500);
+}
+.table-dark-1 .t-sort { margin-inline-start: 5px; }
+.table-dark-1 .t-sort svg { inline-size: 12px; block-size: 12px; }
+.table-dark-1 .t-dots svg { inline-size: 16px; block-size: 16px; }
+
+/* An outlined badge. The filled ones elsewhere sit on a panel; these sit in a
+   table row, where a tint alone is too close to the stripe behind it to read as
+   a pill at all — so the tone gets an edge as well as a fill. */
+.badge--outline {
+  border: 1px solid currentColor;
+  border-radius: var(--radius-md);
+  block-size: 24px;
+  padding-inline: 10px;
+  font-weight: 600;
+}
+.table-dark-1 tbody tr:has(input[type="checkbox"]:checked) { background: var(--color-surface-800); }
+.table-dark-1 tbody tr:has(input[type="checkbox"]:checked) td,
+.table-dark-1 tbody tr:has(input[type="checkbox"]:checked) td.t-strong { color: var(--color-surface-100); }
+.table-dark-1 tbody tr:has(input[type="checkbox"]:checked) .t-sub { color: var(--color-surface-300); }
+
+.table-dark-1 input[type="checkbox"] {
+  appearance: none;
+  -webkit-appearance: none;
+  width: 20px; height: 20px; margin: 0;
+  border: 1.5px solid var(--color-surface-600);
+  border-radius: var(--radius-md);
+  background: var(--color-surface-900);
+  cursor: pointer;
+  position: relative;
+  vertical-align: middle;
+  transition: background .15s, border-color .15s;
+}
+.table-dark-1 input[type="checkbox"]:hover { border-color: var(--color-surface-500); }
+.table-dark-1 input[type="checkbox"]:checked {
+  background: var(--color-primary-500);
+  border-color: var(--color-primary-500);
+}
+.table-dark-1 input[type="checkbox"]:checked::after {
+  content: "";
+  position: absolute; left: 6px; top: 2.5px;
+  width: 5px; height: 10px;
+  border: solid #fff; border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+/* ── Heading scale ───────────────────────────────────────────────────────
+   Reusable heading classes so headings stay consistent instead of drifting
+   across ad-hoc utility combos. Typographic only (size/weight/tracking) — they
+   inherit the body text color (surface-100); add a text-{ramp}-{shade} class to
+   recolor. Body paragraph line-height is handled globally on the front. */
+.h1 { font-size: 2.25rem; line-height: 1.1; font-weight: 700; letter-spacing: -0.01em; }
+@media (min-width: 640px) { .h1 { font-size: 3rem; } }
+.h2 { font-size: 1.5rem; line-height: 1.25; font-weight: 700; letter-spacing: -0.01em; }
+.h3 { font-size: 1.125rem; line-height: 1.4; font-weight: 600; }
+.eyebrow { font-size: 0.875rem; line-height: 1.4; font-weight: 600; letter-spacing: 0.1em; text-transform: uppercase; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BUTTONS — the UI Bible standard, in Phansora's colors.
+   ───────────────────────────────────────────────────────────────────────────
+   Geometry, states and accessibility come from the UI Bible. The palette does
+   NOT: every fill below is an existing Phansora token, and each pairing was
+   measured rather than assumed —
+       white on primary-600      5.80:1   AA
+       surface-950 on accent-500 11.38:1  AA
+       white on emerald-700      5.48:1   AA
+   (white on accent-500 is 1.76:1, which is why accent buttons take dark text.)
+
+   The problem this replaces: every public button was hand-written Tailwind, so
+   heights drifted to 40px and 48px next to 36px inputs, nothing had a focus
+   ring, and nothing responded to being pressed. Four fixed heights on the 4px
+   grid is what makes a button line up with an input beside it.
+   ───────────────────────────────────────────────────────────────────────────
+   Everything below sits in @layer components ON PURPOSE. base.css is imported
+   after Tailwind, and unlayered CSS outranks every layered rule — so an
+   unlayered `.btn { display: inline-flex }` beat `.hidden` and `lg:hidden`,
+   and buttons that were supposed to stay hidden rendered anyway. In the
+   components layer, utilities win, which is the relationship a component class
+   is supposed to have with them.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+@layer components {
+
+.btn {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  white-space: nowrap;
+  user-select: none;
+  vertical-align: middle;
+  /* Buttons live in flex toolbars all over the dashboard, and a flex item
+     shrinks below its width by default. Icon buttons set min-width: 0 (to
+     cancel the size's text min-width), which left them free to collapse to
+     the 1px borders — measured at 2px wide in a crowded row. A button that
+     can be squashed out of existence is not a fixed-size button. */
+  flex-shrink: 0;
+  font-weight: 600;
+  text-align: center;
+  cursor: pointer;
+  border: 1px solid transparent;
+  transition-property: background-color, border-color, color, box-shadow, transform, opacity;
+  transition-duration: 120ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Press feedback. Tiny on purpose — enough to confirm the click landed,
+   not enough to look like the button moved. */
+.btn:active:not(:disabled) { transform: scale(0.985); }
+
+/* A visible focus ring is the single most commonly missing accessibility
+   feature on this site. 2px at 2px offset so it clears the fill and still
+   reads against the page behind it. */
+.btn:focus-visible {
+  outline: 2px solid var(--color-primary-400, #8b9ae8);
+  outline-offset: 2px;
+}
+
+/* WCAG 2.5.5 — a 44px target on every size, coarse pointers only.
+
+   This is the UI Bible's mechanism: pad the TARGET with an overlay and leave
+   the box alone, "so a 28px toolbar button is still thumb-safe on a tablet
+   without inflating the desktop layout".
+
+   It replaces a `min-block-size: 44px` that grew the button itself. Growing
+   cannot overlap by construction, but it also flattened the size ladder on
+   every touch device — xs, sm and md all rendered at 44px, so a phone only
+   ever saw `lg` and choosing a smaller size did nothing but change the type.
+
+   Two things this rule must not do, both of which have been shipped here
+   before. It must not set `pointer-events: none` — that excludes a
+   pseudo-element from hit testing altogether, so the 44px it promises is never
+   real. And it must not leave icon buttons at their 28px width, which is a
+   target only comfortable to hit vertically; they get the horizontal half too,
+   below.
+
+   The cost is that adjacent overlays can intersect, and where one reaches
+   inside a neighbor's visible edge the later sibling wins the tap. That is a
+   spacing constraint, not a reason to abandon the overlay, and it is narrower
+   than it first looks: a labeled button's overlay is `inset-inline: 0`, so it
+   only ever grows UP and DOWN. Horizontal neighbors are a problem for icon
+   buttons alone, which are the only ones that also grow sideways.
+
+   The overhang is (44 - height) / 2 — 8px at xs, 6px at sm, 4px at md, none at
+   lg. Keep that much clear space and no overlay can touch the box beside it;
+   `coarse:gap-3` (12px) clears every size. Rows of icon buttons that were
+   tighter were widened when this landed: studio Header (undo/redo), Preview
+   (transport), Timeline (zoom), TrackHeaders (lock/hide/mute/solo) and
+   MediaPanel (help/add). The gap is added on `coarse:` only, so the dense
+   desktop toolbars those components were designed as are unchanged. */
+@media (pointer: coarse) {
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
+
+  /* Square buttons are narrower than the target, so `inset-inline: 0` alone
+     would promise 44px and deliver 28. Center a 44px-wide box instead. */
+  .btn--icon::after {
+    inset-inline: auto;
+    left: 50%;
+    width: 44px;
+    transform: translate(-50%, -50%);
+  }
+}
+
+/* The same 44px overlay for a control that is NOT a .btn — a list row whose
+   visible box is text-height, where the target must not be. Subject to both
+   prohibitions in the rule above: no `pointer-events: none`, and the element
+   has to be positioned or the overlay resolves against the wrong box.
+
+   `inset-inline: 0` like a labeled button, never the icon-button variant: this
+   only ever grows UP and DOWN, so it cannot reach inside a horizontal
+   neighbor. The constraint that remains is vertical — nothing else with a
+   44px target may sit within (44 - height) / 2 above or below it. */
+@media (pointer: coarse) {
+  .tap-44 { position: relative; }
+
+  .tap-44::after {
+    content: '';
+    position: absolute;
+    inset-inline: 0;
+    top: 50%;
+    height: 44px;
+    transform: translateY(-50%);
+  }
+}
+
+.btn:disabled,
+.btn[aria-disabled='true'] {
+  opacity: 0.45;
+  filter: saturate(0.5);
+  pointer-events: none;
+}
+
+/* ── The price, beside the button that charges it ────────────────────────── */
+/* A generate button costs credits, and this says how many. It replaced a meter
+   below the field — a bar, a balance, a run count and a Recharge button, all
+   spent on a number that only matters at the instant you press Generate.
+
+   It sits OUTSIDE the button, to its left. Inside, it was a pill within a control
+   — a thing that looks pressable inside the thing that is — and it moved with the
+   label whenever the button changed state. Beside it, the button says what it
+   does and this says what it costs, which are two facts, not one.
+
+   Being outside changes the colour maths, and that is the whole reason these are
+   stated rather than reused: on the button they sat on its FACE, out here they sit
+   on the card. Violet-600 measured 5.01:1 on --contrast's light face and only
+   3.26:1 on the card, so the default steps up to violet-400 — 6.82:1 — which is
+   also the floor this codebase holds for text. Yellow was already light enough to
+   survive the move: 4.99:1 on the filled button, 15.95:1 here.
+   The marks themselves (--cost-tag-mark) are theme colors, set in each theme file. */
+.cost-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  font-weight: 600;
+  line-height: 1;
+  /* So a row does not reflow as the number changes. */
+  font-variant-numeric: tabular-nums;
+  color: var(--color-surface-300);
+  white-space: nowrap;
+}
+.cost-tag :is(svg, img) { color: var(--cost-tag-mark); }
+
+/* Yellow, and the NUMBER too, not just the bolt. */
+.cost-tag--yellow { color: var(--cost-tag-mark); }
+
+/* ── Sizes — four fixed heights on the 4px grid, never invented ──────────── */
+.btn--xs { height: 28px; padding-inline: 10px; border-radius: var(--radius-md);  font-size: 12px; gap: 6px; min-width: 56px; }
+.btn--sm { height: 32px; padding-inline: 12px; border-radius: var(--radius-lg);  font-size: 13px; gap: 6px; min-width: 64px; }
+.btn--md { height: 36px; padding-inline: 14px; border-radius: var(--radius-lg);  font-size: 13px; gap: 8px; min-width: 72px; }
+.btn--lg { height: 44px; padding-inline: 20px; border-radius: var(--radius-xl); font-size: 17px; gap: 8px; min-width: 96px; font-weight: 500; }
+
+/* A fifth entry that is not a fifth size: the page's one primary action, sized
+   by context rather than by taste. The Bible assigns `lg` to "mobile primary
+   actions" and `md` to "the default — forms, dialogs, page headers", and a
+   product's Generate button is honestly both: the single thing you came to do
+   on a phone, one control among many at a desk. So it resolves to lg on a
+   phone and md from `sm` up.
+
+   Mobile-first, per the Bible's min-width-only rule — the phone case is the
+   base and the desk overrides it, so the two never define an overlapping range.
+   Metrics are copied from the two sizes above rather than composed, because
+   plain CSS has no @extend; if a size changes up there, change it here too.
+
+   Use with --filled, once per view. A second one is the same as none. */
+/* Back on the ladder. This briefly became a flat 52px / 16px / 600 hero to match
+   a target drawing, which is a FIFTH height: the Bible's sizes are 28/32/36/44
+   and its type set is 12/13/13/17 at 540/500, so 52/16/600 is not any of them at
+   any width. A size the design system does not define is not a size we have.
+
+   So it is the two documented answers again, and nothing else — lg on a phone,
+   md from sm up. Metrics copied verbatim from .btn--lg and .btn--md above. */
+.btn--cta { height: 44px; padding-inline: 20px; border-radius: var(--radius-xl); font-size: 17px; gap: 8px; min-width: 96px; font-weight: 500; }
+.btn--cta :is(svg, img) { width: 18px; height: 18px; }
+
+@media (min-width: 640px) {
+  .btn--cta { height: 36px; padding-inline: 14px; border-radius: var(--radius-lg); font-size: 13px; gap: 8px; min-width: 72px; font-weight: 500; }
+  .btn--cta :is(svg, img) { width: 16px; height: 16px; }
+}
+
+/* Icon-only is square: the horizontal padding becomes the vertical. */
+.btn--icon { padding-inline: 0; min-width: 0; }
+.btn--icon.btn--xs { width: 28px; }
+.btn--icon.btn--sm { width: 32px; }
+.btn--icon.btn--md { width: 36px; }
+.btn--icon.btn--lg { width: 44px; }
+
+/* Fully rounded. A shape, not a size: the height, padding and type stay whatever the size
+   class says, so a pill and a square-cornered button of the same size still line up. For
+   the standalone call to action on a page that is itself made of rounded things — the
+   dashboard home's prompt box and banners — where the sidebar's rows (.nav-item, .nav-cta)
+   are already this shape. */
+.btn--pill { border-radius: 9999px; }
+
+/* Icons scale sub-linearly with the button — a 1.5x button gets a 1.2x icon. */
+.btn--xs :is(svg, img) { width: 13px; height: 13px; }
+.btn--sm :is(svg, img) { width: 14px; height: 14px; }
+.btn--md :is(svg, img) { width: 16px; height: 16px; }
+.btn--lg :is(svg, img) { width: 18px; height: 18px; }
+
+.btn--block { width: 100%; }
+
+/* ── Variants — Phansora's palette, the Bible's emphasis ladder ──────────── */
+
+/* The primary answer to "what did you bring me here to do?". One per view. */
+.btn--filled {
+  background-color: var(--color-primary-600);
+  color: var(--color-white);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+}
+.btn--filled:hover:not(:disabled) { background-color: var(--color-primary-700); }
+
+/* Accent fill. Dark label, because white on this gold is 1.76:1. */
+.btn--accent {
+  background-color: var(--color-accent-500);
+  color: var(--color-surface-950);
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.25);
+}
+.btn--accent:hover:not(:disabled) { background-color: var(--color-accent-400); }
+
+.btn--tonal {
+  background-color: color-mix(in oklab, var(--color-primary-500) 14%, transparent);
+  color: var(--color-primary-200);
+}
+.btn--tonal:hover:not(:disabled) {
+  background-color: color-mix(in oklab, var(--color-primary-500) 22%, transparent);
+}
+
+/* Accent-tinted secondary action. Same emphasis level as --tonal, used where
+   the surrounding section is already keyed to accent rather than primary. */
+.btn--tonal-accent {
+  background-color: color-mix(in oklab, var(--color-accent-500) 12%, transparent);
+  color: var(--color-accent-200);
+}
+.btn--tonal-accent:hover:not(:disabled) {
+  background-color: color-mix(in oklab, var(--color-accent-500) 20%, transparent);
+}
+
+/* Light fill on a dark surface — the loudest button available here, reserved
+   for the single highest-emphasis action on a dense dark screen (the Studio
+   header's Export, for instance) where even primary-600 does not separate from
+   the panel behind it. 17.6:1. */
+.btn--contrast {
+  background-color: var(--color-surface-100);
+  color: var(--color-surface-950);
+}
+.btn--contrast:hover:not(:disabled) { background-color: var(--color-white); }
+
+/* .btn--ink is gone. It was the black fill on the home page's product demos, and it was
+   the only place it was ever used — those buttons take .btn--accent now, so the demo
+   CTA and the profile button in the nav are the same control. It also carried the last
+   two raw #000/#fff literals in the button system. */
+
+
+/* .btn--inset is gone. It was "opaque near-black, one step DOWN from the surface
+   it sits on rather than up" — a button that recedes — which is precisely the
+   move the surface ladder above now forbids: a control is a surface standing on
+   the page, not a well cut into it. Its own comment already flagged it as a local
+   dialect ("not a UI Bible variant... if it earns a second use, upstream it"). It
+   never earned a second use; its single caller, the Book Alchemy file picker, is
+   a filled button now. Deleted rather than left as a trap for the next person
+   looking for a quiet neutral action — that is what --outlined and --tonal are. */
+
+.btn--outlined {
+  border-color: var(--color-surface-600);
+  background-color: transparent;
+  color: var(--color-surface-100);
+}
+.btn--outlined:hover:not(:disabled) {
+  border-color: var(--color-surface-500, var(--color-surface-500));
+  background-color: rgb(255 255 255 / 0.05);
+}
+
+/* Outlined on a light or image-backed hero, where a gray border disappears. */
+.btn--outlined-invert {
+  border-color: rgb(255 255 255 / 0.3);
+  background-color: transparent;
+  color: var(--color-white);
+}
+.btn--outlined-invert:hover:not(:disabled) {
+  border-color: rgb(255 255 255 / 0.55);
+  background-color: rgb(255 255 255 / 0.1);
+}
+
+.btn--text {
+  background-color: transparent;
+  color: var(--color-surface-300, var(--color-surface-300));
+}
+.btn--text:hover:not(:disabled) {
+  background-color: var(--ui-layer-hover);
+  color: var(--color-white);
+}
+
+.btn--success { background-color: var(--ui-fill-success); color: var(--color-white); }
+.btn--success:hover:not(:disabled) { background-color: var(--ui-fill-success-hover); }
+
+/* Destructive, but not the loudest thing on screen. Used where delete sits in a
+   row of ordinary actions and a solid red block would out-shout the primary. */
+.btn--danger-outline {
+  background-color: transparent;
+  color: var(--ui-fill-danger-text);
+  border-color: var(--ui-fill-danger-edge);
+}
+.btn--danger-outline:hover:not(:disabled) {
+  background-color: var(--ui-fill-danger-wash);
+  border-color: var(--ui-fill-danger-edge-strong);
+  color: var(--color-white);
+}
+
+/* Quietest destructive form: reads as neutral until hovered. This is the right
+   variant for the small remove/dismiss icons attached to list rows and chips,
+   where a permanent red tint would make a calm list look full of errors. */
+.btn--danger-text {
+  background-color: transparent;
+  color: var(--color-surface-400, #a39d8e);
+}
+.btn--danger-text:hover:not(:disabled) {
+  background-color: var(--ui-fill-danger-wash);
+  color: var(--ui-fill-danger-text);
+}
+
+/* ── Loading and success — overlay, never replace ────────────────────────── */
+/* The label stays in the DOM and is only made invisible, so the button cannot
+   change width under a moving cursor and shift the target out from under it.
+   `color: transparent` rather than hiding child elements, because plenty of
+   buttons here have a bare text node and no wrapper span to hide — those kept
+   their label visible underneath the spinner. The spinner draws from its own
+   variable so it stays visible while the text does not. */
+/* Every variant names a CONCRETE color. `currentColor` cannot be the default
+   here: the loading state sets `color: transparent` to hide the label, so a
+   currentColor spinner resolves to transparent and draws nothing. That left
+   outlined/text/tonal buttons showing an empty box while they worked.
+   Those colors (--btn-spinner, per variant) are set in each theme file. */
+
+.btn[data-loading='true'],
+.btn[data-success='true'] {
+  color: transparent !important;
+  pointer-events: none;
+}
+.btn[data-loading='true'] :is(svg, img),
+.btn[data-success='true'] :is(svg, img) { visibility: hidden; }
+
+.btn[data-loading='true']::before {
+  content: '';
+  position: absolute;
+  width: 1em;
+  height: 1em;
+  border-radius: 9999px;
+  border: 2px solid var(--btn-spinner);
+  border-top-color: transparent;
+  animation: btn-spin 720ms linear infinite;
+}
+
+/* A brief check on completion. The action finished somewhere the user may not
+   be looking; this is the acknowledgement. Reverts on its own after ~1.5s. */
+.btn[data-success='true']::before {
+  content: '';
+  position: absolute;
+  width: 0.5em;
+  height: 0.85em;
+  border: solid var(--btn-spinner);
+  border-width: 0 2px 2px 0;
+  transform: translateY(-0.1em) rotate(45deg);
+  animation: btn-pop 180ms cubic-bezier(0.32, 0.72, 0, 1) both;
+}
+
+@keyframes btn-spin { to { transform: rotate(360deg); } }
+@keyframes btn-pop {
+  from { opacity: 0; transform: translateY(-0.1em) rotate(45deg) scale(0.6); }
+  to   { opacity: 1; transform: translateY(-0.1em) rotate(45deg) scale(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .btn { transition-duration: 1ms; }
+  .btn:active:not(:disabled) { transform: none; }
+  .btn[data-loading='true']::before { animation-duration: 2400ms; }
+  .btn[data-success='true']::before { animation: none; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FORM CONTROLS — .field / .input / .select / .textarea
+   ───────────────────────────────────────────────────────────────────────────
+   Ported from the UI Bible Text Field, Select and Textarea specs so the
+   dashboard stops carrying seven hand-written variants of the same control.
+   They shared a shape but agreed on nothing: rounded-lg/xl/2xl, px-3/px-4,
+   py-2/2.5/3, bg-surface-950/30 and /60 and surface-800/80, and four
+   different focus borders.
+
+   The important change is the focus treatment. Every one of those variants
+   used `outline-none focus:border-primary-500` — a 1px border color change
+   and nothing else, which is not a visible focus indicator for a low-vision
+   user. Controls here match the button rule: the border moves AND a 3px halo
+   appears. The halo is what you see at a glance; the border is what makes it
+   precise.
+   ═══════════════════════════════════════════════════════════════════════════ */
+
+/* The wrapper. Label above the control, always — never a placeholder standing
+   in for one, because a placeholder disappears at the first keystroke and
+   takes the question with it. */
+.field { display: flex; flex-direction: column; }
+
+.field__label {
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1.4;
+  color: var(--color-surface-200);
+  margin-block-end: 6px;
+}
+
+/* Marks the smaller set. Most dashboard forms are mostly required, so the
+   optional ones get the word and an asterisk means nothing without a legend. */
+.field__optional { color: var(--color-surface-400); font-weight: 400; }
+
+/* Static guidance. It stays visible when an error appears — the message
+   stacks under it rather than replacing it, because losing the instructions
+   at the moment of failure is exactly backwards. */
+.field__hint {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-surface-400);
+  margin-block-start: 6px;
+}
+
+.field__error {
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--ui-color-error);
+  margin-block-start: 6px;
+}
+
+/* ── The controls themselves ─────────────────────────────────────────────── */
+.input,
+.select,
+.textarea {
+  inline-size: 100%;
+  padding-inline: 12px;
+  /* Alpha, so one value composes on every rung. The opaque surface-700 this
+     replaced was chosen against the old translucent fill, where it was the
+     only thing drawing the control at all; over an opaque level 2 it measures
+     1.15:1 and this measures 1.35:1, so the edge got STRONGER as the surface
+     step arrived, not weaker. */
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-lg);
+  /* Level 2, the rung this ladder reserves for a control on a panel — and what
+     the large composer below has said in its own comment all along ("level 2,
+     like every other field"), while every other field was in fact a 45% wash
+     of the PAGE colour.
+     That wash composited TOWARD the ground: on an elev-1 card it landed at
+     #0c0f18, 2.4 L* BELOW the panel it sat on, and on a bare page it resolved
+     to exactly the page colour and drew nothing. Every field in the dashboard
+     was a hole punched in its own panel, which left the 1px border as the only
+     evidence a control was there — and made the panel itself read flat,
+     because the things inside it were sinking.
+     This is the same bug already fixed twice in isolation: once in the Book
+     Alchemy drawer, once in the composer. Fixed at the shared rule this time.
+     The fallback is for the marketing side, which has no ladder. */
+  background-color: var(--ui-field, var(--elev-2, var(--color-surface-800)));
+  color: var(--color-surface-100);
+  font-size: 14px;
+  font-family: inherit;
+  line-height: 1.5;
+  transition-property: border-color, box-shadow, background-color;
+  transition-duration: 120ms;
+  transition-timing-function: cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Matches .btn--md exactly, so a field and a button on the same row share a
+   baseline with no per-component nudging. That shared scale is the whole
+   reason the control heights are fixed rather than derived from padding. */
+.input,
+.select { block-size: 36px; }
+
+/* Sized by its longest OPTION rather than by the form. A field's width is a hint
+   about the answer it wants, and a select's answers are already written down —
+   stretched to a full column, "Standard" trails 500px of empty run to a chevron
+   at the far edge, and the eye has to cross all of it to find the control. Auto
+   keeps it honest as the options change (voice names are loaded, not authored),
+   and the cap keeps a long one from overflowing a narrow column. */
+.select--fit {
+  /* block + fit-content, not inline + auto. A <select> is inline-block, and it was
+     only sitting on its own line because inline-size:100% pushed the label off it —
+     take that away and the label snaps back alongside, so two fields in a column
+     end up labelled differently from every other field on the form. Block keeps the
+     line break; fit-content keeps the width honest. */
+  display: block;
+  inline-size: fit-content;
+  max-inline-size: 100%;
+}
+
+.textarea {
+  /* Four rows. The height of a textarea is a promise about the answer you
+     expect — ten rows makes an honest one-sentence reply feel inadequate. */
+  min-block-size: calc(4 * 1.6em + 20px);
+  /* Grows with what is typed, then scrolls. Without a ceiling a pasted log
+     file turns the field into the page and the submit button ends up below
+     the fold with nothing to say it is there. */
+  max-block-size: calc(12 * 1.6em + 20px);
+  field-sizing: content;
+  /* ~70 characters. Width is a readability setting, not a space-filling one:
+     a field stretched across a 1440px window produces lines the eye cannot
+     track back from. See .textarea--wide for the case this is wrong for. */
+  max-inline-size: 36rem;
+  padding-block: 10px;
+  line-height: 1.6;
+  /* Vertical only. A field dragged wider than its container breaks the form
+     layout and can push the submit button off-screen. */
+  resize: vertical;
+}
+
+/* A DROP TARGET, not something you read back. The 36rem measure above protects
+   the eye on prose you compose and re-read; paste a whole book in and you never
+   read a line of it in the field. What you do see is a box stopping 234px short
+   of every input around it, which reads as broken rather than as considered —
+   the one thing a measure is not supposed to cost. */
+.textarea--wide { max-inline-size: none; }
+
+/* Two rows, for a short aside next to a longer field — the TTS delivery hint.
+   Small enough to read as secondary, still a real field. */
+.textarea--sm {
+  min-block-size: calc(2 * 1.6em + 16px);
+  padding: 8px 10px;
+  font-size: 13px;
+}
+
+/* The writing surface of a page whose whole job is writing — the TTS script
+   editor. It IS the field, not something sitting inside one: it keeps the inset
+   well and the ordinary 12px gutter, and only its sizing changes so it can fill
+   the height it is given.
+
+   It used to be transparent inside a .card, with the measure capped by growing
+   padding. That was two mistakes at once — the card's lighter surface replaced
+   the well, and its 20px padding stacked on top of the ~62px the measure trick
+   added, so the text sat 82px from the edge. Capping the line length is not
+   worth that; on a column this size it was solving a problem that only exists
+   on an ultrawide monitor. */
+.textarea--fill {
+  block-size: 100%;
+  min-block-size: 0;
+  max-block-size: none;
+  /* Fills the column it is given rather than the 36rem form measure. */
+  max-inline-size: none;
+  /* Sized by the layout, so a drag handle would be lying about what it does. */
+  resize: none;
+  field-sizing: normal;
+  /* The Large step from the UI Bible size table — the one it lists for "the
+     main content field on a page dedicated to writing". */
+  padding: 12px 14px;
+  border-radius: var(--radius-xl);
+  font-size: 15px;
+  /* Opaque, unlike the shared field fill — a transparent fill would let the
+     page through and the editor would track its background instead of sitting
+     on it. It used to be solid surface-950 to read as a well cut into the old
+     gradient; with the work surface now flat at that same value, a well would
+     be invisible AND the darkest thing on the page. The page you write on is a
+     surface you write ON: level 2, like every other field, just larger.
+     Falls back for the marketing/admin side, which has no ladder. */
+  background-color: var(--ui-field, var(--elev-2, var(--color-surface-800)));
+}
+
+.input::placeholder,
+.textarea::placeholder { color: var(--color-surface-400); }
+
+/* The character counter. Neutral while there is room, error once there is not
+   — the count itself is the message, so it changes tone rather than being
+   joined by a second one. */
+.field-count { font-size: 12px; color: var(--color-surface-300); }
+/* The text rose, not the pill rose — --ui-color-error-muted is a step darker
+   and documented for fills, which is the wrong end of the ramp for 12px text
+   on a dark surface. */
+.field-count[data-over='true'] { color: var(--ui-color-error); }
+
+/* iOS zooms the whole page when a focused field is under 16px, and does not
+   zoom back out — the single most common mobile form bug. Coarse pointers
+   only, so desktop keeps its 13-14px density. Bare elements are included so a
+   one-off input that skipped the component classes is still covered. */
+@media (pointer: coarse) {
+  .input,
+  .select,
+  .textarea,
+  input:not([type='checkbox']):not([type='radio']):not([type='range']):not([type='file']),
+  select,
+  textarea {
+    font-size: 16px;
+  }
+}
+
+/* The halo is the point. A border change alone is not a focus indicator. */
+.input:focus-visible,
+.select:focus-visible,
+.textarea:focus-visible {
+  outline: none;
+  border-color: var(--color-primary-500);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--color-primary-500) 28%, transparent);
+}
+
+.input:disabled,
+.select:disabled,
+.textarea:disabled {
+  opacity: 0.55;
+  cursor: not-allowed;
+}
+
+/* Focusable, selectable and copyable — but not editable. Prefer this over
+   disabled whenever the value still matters to the reader. */
+.input[readonly],
+.textarea[readonly] {
+  /* Level 1 — flush with the panel rather than raised off it, which is the
+     honest signal for a value you may read but not change. Explicit rather
+     than a wash: the wash happened to land on exactly this colour over a card
+     and drifted anywhere else. */
+  background-color: var(--elev-1, var(--color-surface-900));
+  color: var(--color-surface-300);
+}
+
+/* ── The pointer lift ─────────────────────────────────────────────────────
+   Level 2 now comes from the shared rule above, for every field on every
+   surface. It used to be set again here, scoped to .dash-surface, on the
+   reasoning that "marketing pages put their fields on lighter cards where the
+   well still reads correctly". Measured, that premise did not hold: a
+   marketing .card is a 60% wash of surface-900 over the same surface-950 body,
+   which lands at L* 4.7 — DARKER than the dashboard panel it was being
+   contrasted with, and only 2.5 above the page. The well then subtracted
+   another 1.2 and the field disappeared into the card. There was no lighter
+   card anywhere to protect.
+
+   Two rules setting the same fill is also what let this hide: the shared rule
+   said one thing, this one silently won, and reading either alone gave the
+   wrong answer. One source of truth for the fill; this block now does the one
+   thing the ladder still needs — the raise to level 3 under the pointer.
+
+   Disabled and readonly are excluded: they are not interactive, so they do not
+   get the lift. */
+.input:not(:disabled):not([readonly]):hover,
+.select:not(:disabled):hover,
+.textarea:not(:disabled):not([readonly]):hover {
+  background-color: var(--ui-field-hover, var(--elev-3));
+}
+
+/* aria-invalid drives the styling, so the visual state can never drift from
+   the state assistive tech is told about. */
+.input[aria-invalid='true'],
+.select[aria-invalid='true'],
+.textarea[aria-invalid='true'] { border-color: var(--ui-color-error-muted); }
+
+.input[aria-invalid='true']:focus-visible,
+.select[aria-invalid='true']:focus-visible,
+.textarea[aria-invalid='true']:focus-visible {
+  border-color: var(--ui-color-error-muted);
+  box-shadow: 0 0 0 3px color-mix(in oklab, var(--ui-color-error-muted) 28%, transparent);
+}
+
+/* ── Select ──────────────────────────────────────────────────────────────── */
+/* The native chevron is unstyleable and differs per platform, so we draw our
+   own and reserve the gutter for it: a 16px glyph plus 12px either side. */
+.select {
+  appearance: none;
+  padding-inline-end: 36px;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23b9b3a3' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 12px center;
+  /* A select narrower than its longest option — capped to a phone's column —
+     still reports that option's full width as overflow in WebKit, and the
+     page's scroller picks it up: the whole form slid ~30px sideways on iOS.
+     Clipping here only trims the closed control; the OS popup is not ours. */
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+}
+
+/* The popup is drawn by the OS and inherits nothing, so options need their
+   own colors or they render as black-on-black in dark mode. */
+.select option { background-color: var(--color-surface-900); color: var(--color-surface-100); }
+
+/* ── Sizes ───────────────────────────────────────────────────────────────── */
+.input--sm,
+.select--sm { block-size: 32px; padding-inline: 10px; font-size: 13px; }
+.select--sm { padding-inline-end: 32px; }
+.input--lg,
+.select--lg { block-size: 44px; padding-inline: 14px; font-size: 16px; border-radius: var(--radius-xl); }
+
+/* ── Leading icon ────────────────────────────────────────────────────────── */
+/* Search fields put the magnifier first, always. A trailing magnifier reads
+   as a submit button and users wait for it to do something. */
+.field--icon { position: relative; }
+/* .select too: a voice or a language is a field whose icon says what KIND of
+   answer it wants, and the select was the one control that could not carry
+   one. Its own chevron lives on the other side, so there is no collision. */
+.field--icon :is(.input, .select) { padding-inline-start: 34px; }
+.field--icon > :is(svg, img, i) {
+  position: absolute;
+  inset-inline-start: 11px;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+  inline-size: 15px;
+  block-size: 15px;
+  color: var(--color-surface-400);
+  pointer-events: none;
+}
+
+/* ── Field help ──────────────────────────────────────────────────────────── */
+/* The little "?" beside a label whose effect is not obvious from its name. A
+   button rather than an icon with a title: a title alone appears on hover only,
+   which is no affordance at all on a keyboard or a touch screen. Sized to the
+   label's line so it does not add height to the row it sits in. */
+.field-help {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  inline-size: 14px;
+  block-size: 14px;
+  border-radius: 50%;
+  color: var(--color-surface-400);
+  cursor: help;
+}
+.field-help > :is(svg, i) { inline-size: 14px; block-size: 14px; }
+.field-help:hover { color: var(--color-surface-200); }
+.field-help:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+  color: var(--color-surface-200);
+}
+
+/* ── Trailing icon ───────────────────────────────────────────────────────── */
+/* The mirror of the above, and it means something different. A leading icon
+   labels the field — it says what kind of answer belongs here, before the
+   answer exists. A trailing one annotates the value, which is why it is right
+   on a name field and wrong on a search box, where users read a trailing
+   magnifier as a submit button and wait for it to do something.
+   Decorative only: pointer-events stay off, so it can never be mistaken for a
+   control. Anything clickable there is a button and belongs in its own row. */
+.field--icon-end { position: relative; }
+.field--icon-end :is(.input, .select) { padding-inline-end: 34px; }
+.field--icon-end > :is(svg, img, i) {
+  position: absolute;
+  inset-inline-end: 11px;
+  inset-block-start: 50%;
+  transform: translateY(-50%);
+  inline-size: 15px;
+  block-size: 15px;
+  color: var(--color-surface-400);
+  pointer-events: none;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   SWITCH — .switch
+   ───────────────────────────────────────────────────────────────────────────
+   One implementation, from the UI Bible Switch spec. The dashboard had two
+   that disagreed: settings used a 44x24 track with a 20px knob, admin used
+   36x20 with a 16px knob — and the admin one had no focus ring at all.
+
+   38 x 22 is roughly a 1.7:1 track ratio: narrower and the knob has nowhere
+   to travel; wider and it stops reading as a switch and starts reading as a
+   slider. The knob is always white in both themes, because the affordance is
+   a physical object sitting in a track.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.switch {
+  position: relative;
+  display: inline-block;
+  inline-size: 38px;
+  block-size: 22px;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  background-color: var(--color-surface-600);
+  transition: background-color 180ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+.switch::after {
+  content: '';
+  position: absolute;
+  inset-block-start: 2px;
+  inset-inline-start: 2px;
+  inline-size: 18px;
+  block-size: 18px;
+  border-radius: 9999px;
+  background-color: #fff;
+  box-shadow: 0 1px 2px rgb(0 0 0 / 0.3);
+  /* transform, so the knob never triggers layout as it moves. */
+  transition: transform 180ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* Color and position change together, so the state survives grayscale and
+   does not depend on the user noticing a 16px shift. */
+.peer:checked ~ .switch { background-color: var(--color-primary-500); }
+.peer:checked ~ .switch::after { transform: translateX(16px); }
+
+/* The input is sr-only, so the ring has to be drawn on the track. */
+.peer:focus-visible ~ .switch {
+  outline: 2px solid var(--color-primary-400);
+  outline-offset: 2px;
+}
+
+.peer:disabled ~ .switch { opacity: 0.45; cursor: not-allowed; }
+
+.switch--accent.switch { background-color: var(--color-surface-600); }
+.peer:checked ~ .switch--accent { background-color: var(--color-accent-500); }
+
+@media (prefers-reduced-motion: reduce) {
+  .switch, .switch::after { transition-duration: 1ms; }
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   CARD — .card
+   ───────────────────────────────────────────────────────────────────────────
+   From the UI Bible Card spec. The dashboard had twenty distinct class
+   strings for thirty-seven surfaces, differing in radius, padding, border
+   shade and shadow with no rule behind any of it.
+
+   20px padding: one step larger than any internal gap, so content reads as
+   contained rather than clipped. 16px radius is the container radius — the
+   rule is that anything rounded inside caps at about 8px, or the corners
+   visually pinch.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.card {
+  border: 1px solid var(--color-surface-800);
+  border-radius: var(--radius-2xl);
+  background-color: color-mix(in oklab, var(--color-surface-900) 60%, transparent);
+  padding: 20px;
+  /* Every card floats. .card--raised below is now the emphasis step above this
+     rather than the only card with any depth at all. */
+  box-shadow: var(--shadow-e1);
+}
+
+.card--sm { padding: 14px; border-radius: var(--radius-xl); }
+.card--lg { padding: 24px; }
+
+/* For tables and lists that reach the card edge: the surface keeps its
+   border and radius, the child supplies its own spacing. */
+.card--flush { padding: 0; overflow: hidden; }
+
+/* Elevation is opt-in. A grid where every card is raised has no hierarchy —
+   raising one is how you say which one matters. */
+.card--raised { box-shadow: var(--shadow-e2); }
+/* Cards lifted off level 1 (.card.elev-2 / .card.elev-3) are defined up beside
+   `.dash-surface .card`, outside this layer — see the note there. */
+
+/* Utilities, because `shadow-[var(--shadow-e1)]` does NOT work: Tailwind parses
+   an arbitrary shadow into its own --tw-shadow machinery and supplies its own
+   colour, so a two-layer value arrives with both layers set to transparent.
+   Measured that way on the tip card — a shadow that computed to
+   `rgba(0,0,0,0) 0 0 0 0`. These set box-shadow directly and stay correct. */
+.shadow-e1 { box-shadow: var(--shadow-e1); }
+.shadow-e2 { box-shadow: var(--shadow-e2); }
+.shadow-e3 { box-shadow: var(--shadow-e3); }
+
+/* Only for cards that are genuinely pressable. One pixel and one shadow
+   step — any more and the card appears to jump, which makes it harder to
+   click, not easier. */
+.card--interactive {
+  cursor: pointer;
+  transition: transform 160ms cubic-bezier(0.2, 0, 0, 1), border-color 160ms, box-shadow 160ms;
+}
+.card--interactive:hover {
+  transform: translateY(-1px);
+  border-color: var(--color-surface-700);
+}
+.card--interactive:focus-visible {
+  outline: 2px solid var(--color-primary-400);
+  outline-offset: 2px;
+}
+
+.card__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 12px;
+  margin-block-end: 12px;
+}
+.card__title { font-size: 15px; font-weight: 600; color: var(--color-surface-100); }
+/* 4px from the title because they are one unit; 12px to the body, which is
+   three times larger and is what makes the grouping read. */
+.card__desc  { font-size: 13px; line-height: 1.5; color: var(--color-surface-400); margin-block-start: 4px; }
+
+/* The eye reads a rule as belonging to the content beneath it, so the footer
+   divider needs more space above than below. */
+.card__footer {
+  margin-block-start: 20px;
+  padding-block-start: 16px;
+  border-block-start: 1px solid var(--color-surface-800);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   BADGE — .badge
+   ───────────────────────────────────────────────────────────────────────────
+   From the UI Bible Badge spec. 22px tall: below a chip at 28px and well
+   below a button at 36px, and that size difference is itself the signal that
+   this is not pressable. Fully rounded, because pills are labels and an 8px
+   radius reads as interactive — users read the shape before the word.
+
+   Tone classes reuse the existing --ui-color-* tokens, so a badge and a
+   status message cannot drift apart.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  block-size: 22px;
+  padding-inline: 8px;
+  border-radius: 9999px;
+  font-size: 12px;
+  font-weight: 500;
+  line-height: 1;
+  white-space: nowrap;
+  /* So a count badge does not change width as the number changes. */
+  font-variant-numeric: tabular-nums;
+  background-color: color-mix(in oklab, var(--color-surface-500) 18%, transparent);
+  color: var(--color-surface-200);
+}
+
+.badge--sm { block-size: 18px; padding-inline: 6px; font-size: 11px; }
+
+.badge--success { background-color: color-mix(in oklab, var(--ui-color-success) 12%, transparent); color: var(--ui-color-success); }
+.badge--error   { background-color: color-mix(in oklab, var(--ui-color-error-muted) 12%, transparent); color: var(--ui-color-error); }
+.badge--warning { background-color: color-mix(in oklab, var(--ui-color-warning) 12%, transparent); color: var(--ui-color-warning); }
+.badge--info    { background-color: color-mix(in oklab, var(--ui-color-info) 12%, transparent); color: var(--ui-color-info); }
+
+/* The redundant encoding. It carries the tone at full saturation while the
+   text stays legible against a soft tint — which is what makes the status
+   survive grayscale and color-vision deficiency. */
+.badge__dot {
+  inline-size: 6px;
+  block-size: 6px;
+  border-radius: 9999px;
+  background-color: currentColor;
+  flex-shrink: 0;
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   STAT TILE — .stat-tile
+   ───────────────────────────────────────────────────────────────────────────
+   From the UI Bible Stat spec, layout="leading". A label and its value, led
+   by a tinted chip that carries the tone.
+
+   These six facts were boxed once before and the boxes were removed, for a
+   good reason: they painted a wash of the PAGE colour onto a raised panel,
+   so they read as holes punched in the drawer, and they bought nothing the
+   grid gap was not already doing.
+
+   What makes the box worth its level this time is the chip. Status, progress
+   and source validation each carry a tone, and previously that tone had
+   nowhere to live — "Some content flagged" was the same grey as "25:42", so
+   the one fact on the panel that wants attention got none. The chip gives the
+   tone a home, and a box is what a chip needs to sit in.
+
+   The level is the part to get right: the drawer is elev-2, so these are
+   elev-3. One step TOWARDS the viewer, because they sit on top of it.
+
+   Tone classes reuse --ui-color-* at the same 12% tint as .badge, so a tile
+   and the status pill beside it cannot drift apart.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.stat-tile {
+  display: flex;
+  /* Wraps rather than squeezes. Two tiles abreast in a phone-width drawer leave
+     the text ~70px beside the chip, and overflow-wrap:anywhere below then breaks
+     "Processing" mid-word. With a 7rem floor on the text (below), a tile too
+     narrow for chip + text puts the text under the chip instead; a wide one never
+     reaches the floor and stays a row. align-content keeps a wrapped chip and
+     its text together as one centred block; left at stretch, a tile made taller
+     by its neighbour split them to its top and bottom. */
+  flex-wrap: wrap;
+  align-items: center;
+  align-content: center;
+  gap: 12px;
+  padding: 14px;
+  border: 1px solid var(--ui-border);
+  border-radius: 14px;
+  background-color: var(--elev-3);
+}
+
+.stat-tile__chip {
+  display: grid;
+  place-items: center;
+  inline-size: 40px;
+  block-size: 40px;
+  flex-shrink: 0;
+  border-radius: 9999px;
+  /* Neutral default. A fact with no tone is the common case — a duration, a
+     count — and it must not look like a status that happens to be grey. */
+  background-color: color-mix(in oklab, var(--color-surface-500) 18%, transparent);
+  color: var(--color-surface-300);
+}
+
+.stat-tile__chip svg { inline-size: 20px; block-size: 20px; }
+
+.stat-tile--success .stat-tile__chip { background-color: color-mix(in oklab, var(--ui-color-success) 12%, transparent); color: var(--ui-color-success); }
+.stat-tile--error   .stat-tile__chip { background-color: color-mix(in oklab, var(--ui-color-error-muted) 12%, transparent); color: var(--ui-color-error); }
+.stat-tile--warning .stat-tile__chip { background-color: color-mix(in oklab, var(--ui-color-warning) 12%, transparent); color: var(--ui-color-warning); }
+.stat-tile--info    .stat-tile__chip { background-color: color-mix(in oklab, var(--ui-color-info) 12%, transparent); color: var(--ui-color-info); }
+
+/* min-inline-size:0 so a long value wraps inside the tile instead of pushing
+   the chip out of it. A truncated fact is worse than a two-line one. */
+.stat-tile__text { flex: 1 1 7rem; min-inline-size: 0; }
+
+.stat-tile__label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+  font-weight: 600;
+  color: var(--color-surface-400);
+}
+
+.stat-tile__value {
+  margin-block-start: 2px;
+  font-size: 15px;
+  font-weight: 500;
+  line-height: 1.3;
+  color: var(--color-surface-100);
+  font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* The ring replaces the glyph when the fact is a proportion. Rotated so 0%
+   starts at twelve o'clock; the dasharray is set inline from the value. */
+.stat-tile__ring { transform: rotate(-90deg); }
+.stat-tile__ring-track { stroke: color-mix(in oklab, var(--color-surface-500) 30%, transparent); }
+.stat-tile__ring-fill {
+  stroke: currentColor;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 420ms cubic-bezier(0.2, 0, 0, 1);
+}
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   TABS — .tabs / .tab
+   ───────────────────────────────────────────────────────────────────────────
+   From the UI Bible Tabs spec. The dashboard had two inline implementations
+   that disagreed on everything: admin used `-mb-px border-b-2 pb-3`, book
+   alchemy used `pb-2 border-b-2`, and neither had a focus ring.
+
+   The two details that matter. The tab is pulled down 1px so its indicator
+   overlaps the container border — that overlap is what visually joins the
+   tab to its panel. And the label changes COLOR, not weight: changing the
+   weight reflows the whole row on every switch, so the tabs beside the
+   active one visibly shift.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.tabs {
+  display: flex;
+  align-items: center;
+  /* Tight, because the tabs are one group. The padding inside each tab does
+     the separating. */
+  gap: 4px;
+  border-block-end: 1px solid var(--color-surface-800);
+  /* Material's scrollable-tabs pattern: on a screen too narrow for the row,
+     the tabs scroll rather than clip (the Admin page's five tabs overrun a
+     375px viewport). The scrollbar is hidden — the cut-off tab peeking at the
+     edge is the affordance. */
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+.tabs::-webkit-scrollbar { display: none; }
+
+/* A tab must never shrink to fit — shrinking is what clipped labels look like. */
+.tabs .tab { flex: none; }
+
+.tab {
+  position: relative;
+  /* The 1px pull-down: the indicator sits ON the container border. */
+  margin-block-end: -1px;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  block-size: 36px;
+  padding-inline: 12px;
+  border-block-end: 2px solid transparent;
+  background: none;
+  font-size: 13px;
+  /* Fixed. Only the color changes on selection. */
+  font-weight: 500;
+  color: var(--color-surface-400);
+  white-space: nowrap;
+  cursor: pointer;
+  transition: color 120ms, border-color 120ms;
+}
+
+.tab:hover { color: var(--color-surface-200); }
+
+.tab[aria-selected='true'],
+.tab.is-active {
+  color: var(--color-surface-50);
+  border-block-end-color: var(--color-primary-500);
+}
+
+/* Inset, because the tab sits on the container border and an outset ring
+   would be clipped by the row above it. */
+.tab:focus-visible {
+  outline: 2px solid var(--color-primary-400);
+  outline-offset: -2px;
+  border-radius: var(--radius-md) 6px 0 0;
+}
+
+.tab:disabled { opacity: 0.45; pointer-events: none; }
+
+.tab--sm { block-size: 32px; padding-inline: 10px; font-size: 12px; }
+
+/* Accent-toned tab set, for the product dashboards that run on gold. */
+.tabs--accent .tab[aria-selected='true'],
+.tabs--accent .tab.is-active { border-block-end-color: var(--color-accent-500); }
+
+/* Pill variant. Same contract as the underline set — still role="tab", still
+   switches a panel — but the indicator is a filled chip instead of a rule.
+   Used where the tabs sit INSIDE a card and an underline would read as a
+   second, competing edge next to the card's own border. */
+.tabs--pill {
+  display: inline-flex;
+  gap: 2px;
+  padding: 2px;
+  /* Alpha: an opaque surface-800 border on a surface-800 track is the
+     same colour and measures 1.00:1 — it would draw nothing. */
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-lg);
+  /* The track is a control on a panel, so level 2 — the selected item
+     below is already level 3, which makes this panel -> track -> selected
+     the ladder's own 1 -> 2 -> 3. Painted with a wash of the PAGE colour it
+     sank beneath the card instead, which is why the set read as a floating
+     strip rather than as part of the form it belongs to. */
+  background-color: var(--elev-2, var(--color-surface-800));
+}
+
+/* The track owns the space under it, so no caller has to remember it — and they
+   did not agree: Admin wrote mb-4 (16px), Book Alchemy wrote nothing and let one
+   of its three panels add its own mt-4, so the same component sat 16px above a
+   panel on one page and flush against a label on another.
+
+   24px because this is a group boundary, not a gap between related elements.
+   The fields inside these panels are 8px apart and the card's sections are 24px
+   apart, so the switch between panels has to read at least as strongly as a
+   section break — see ui-bible's spacing page: space-6 is "gap between
+   subsections", and the gap between groups must be at least twice the gap
+   within one.
+
+   Only the pill variant. The underline .tabs are page-level, sit in a layout
+   that already owns its rhythm (a flex column with gap-8), and adding a margin
+   there would double up. */
+.tabs--pill { margin-block-end: 24px; }
+
+.tabs--pill .tab {
+  /* No border to overlap, so the 1px pull-down is wrong here. */
+  margin-block-end: 0;
+  /* The Bible's icon-to-label step for the inside of a small control. .tab's 8px is
+     sized for a 36px tab and reads loose against 12px type. */
+  gap: 6px;
+  block-size: 28px;
+  padding-inline: 12px;
+  border-block-end: none;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  transition: background-color 120ms, color 120ms;
+}
+
+/* Primary, not the next grey rung. Selection is a statement about which view
+   you are in, and on a track that is itself one step off the panel a grey chip
+   has only ~4 L* to say it with — which is how the active tab came to look
+   like an unselected one. The target fills it with the brand. */
+.tabs--pill .tab[aria-selected='true'],
+.tabs--pill .tab.is-active {
+  background-color: var(--color-primary-700);
+  color: var(--color-white);
+  box-shadow: var(--shadow-e1);
+}
+
+.tabs--pill .tab:focus-visible { border-radius: var(--radius-md); }
+
+/* WCAG 2.5.8. A 36px tab is a comfortable mouse target and a cramped thumb
+   one; on a touch device the row grows rather than asking for precision. */
+@media (pointer: coarse) {
+  .tab { min-block-size: 44px; }
+  .tabs--pill .tab { min-block-size: 40px; }
+}
+
+/* On a phone the intrinsic width of three pills exceeds the card, and an
+   inline-flex row with nothing to give simply ran the last tab off the right
+   edge — "Paste text" was unreachable. Stretched to the full width with the
+   tabs sharing it evenly, the same three fit with room to spare, and the
+   segmented control reads as one control rather than a clipped strip.
+   480px, not a pointer query — this is a width problem. */
+@media (max-width: 480px) {
+  .tabs--pill { display: flex; inline-size: 100%; }
+  .tabs--pill .tab {
+    flex: 1 1 0;
+    min-inline-size: 0;
+    padding-inline: 8px;
+  }
+}
+
+/* ── Meter ───────────────────────────────────────────────────────────────── */
+/* A state, not a process — that is the whole distinction between this and a
+   progress bar, and it is why the two are one entry in the UI Bible with
+   separate variants rather than two components that look alike. Progress says
+   how far along something is; a meter says how much is left. */
+.meter__track {
+  block-size: 6px;
+  inline-size: 100%;
+  border-radius: 9999px;
+  background-color: var(--color-surface-800);
+  overflow: hidden;
+}
+
+.meter__fill {
+  block-size: 100%;
+  border-radius: 9999px;
+  background-color: var(--color-primary-500);
+  transition: width 420ms cubic-bezier(0.2, 0, 0, 1), background-color 200ms;
+}
+
+/* Running low. Not an error — nothing has gone wrong and nothing is blocked —
+   so this is the warning tone rather than the error one. */
+.meter__fill--low { background-color: var(--color-accent-400); }
+
+/* ── Cost bar ────────────────────────────────────────────────────────────── */
+/* Border only, no fill and no shadow. This describes the cost of the button
+   next to it; it is not an object competing with the editor above it. It used
+   to be a filled, shadowed, ring-lit card, which made the most passive thing
+   in the column the heaviest. */
+.costbar {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 12px 14px;
+  border: 1px solid var(--color-surface-800);
+  border-radius: var(--radius-xl);
+  background-color: transparent;
+  /* The meter describes ONE button's cost, not the state of the page. Stretched
+     the full width of a 1440px work area it reads as a page-level banner and
+     competes with the content it is annotating — and the bar itself becomes a
+     36rem-long hairline whose fill is impossible to judge. Capped and centred,
+     it reads as a caption belonging to the action below it.
+     Still no external margin: the host container owns the gap (see the note in
+     partials/admin/credit-meter.ejs). */
+  inline-size: 100%;
+  max-inline-size: 32rem;
+  margin-inline: auto;
+}
+
+.costbar__row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.costbar__facts {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-inline-size: 0;
+  font-size: 13px;
+  color: var(--color-surface-300);
+}
+
+.costbar__sep { color: var(--color-surface-600); }
+
+/* On a phone the facts line wraps raggedly beside the button; stacked, with the
+   action full-width in the thumb zone, both read cleanly. 480px, not a pointer
+   query — this is a width problem, not an input-device one.
+   Must stay BELOW the .costbar__facts base rule: a media query adds no
+   specificity, so from above it the base `align-items: center` and `gap: 8px`
+   simply won, and the stacked facts came out centered and double-spaced. */
+@media (max-width: 480px) {
+  .costbar__row {
+    flex-direction: column;
+    align-items: stretch;
+    gap: 10px;
+  }
+  .costbar__row .btn { inline-size: 100%; }
+  /* Wrapping left the separator stranded as the last thing on line one ("300
+     per generation ·"), which reads as a typo. The two facts are a short list,
+     so at this width they become two lines and the middot — which only earns
+     its place between them on one line — goes away. */
+  .costbar__facts {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 2px;
+  }
+  .costbar__sep { display: none; }
+}
+
+.costbar__strong {
+  color: var(--color-surface-100);
+  font-weight: 600;
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── Banner ──────────────────────────────────────────────────────────────── */
+/* A persistent, in-flow message tied to a region. Distinct from a Toast, which
+   leaves: this one stays because the condition it describes has not gone away.
+   Tinted fill plus a border, 14px on all sides, 12px between the icon and the
+   text column — the UI Bible's default size. */
+.banner {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 14px;
+  border-radius: var(--radius-xl);
+  border: 1px solid var(--color-surface-700);
+  background-color: color-mix(in oklab, var(--color-surface-800) 60%, transparent);
+}
+
+.banner__icon { flex: none; margin-block-start: 1px; color: var(--color-surface-300); }
+.banner__title { font-size: 13px; font-weight: 600; color: var(--color-surface-50); }
+.banner__body { margin-block-start: 6px; font-size: 13px; color: var(--color-surface-200); }
+.banner__actions { margin-block-start: 10px; display: flex; align-items: center; gap: 8px; }
+
+/* Warning: the user is blocked but nothing has failed, and the fix is one
+   click away. --ui-color-warning is the accent ramp, which is also what the
+   credit bolt uses — the color and the metaphor stay joined up. */
+.banner--warning {
+  border-color: color-mix(in oklab, var(--ui-color-warning) 45%, transparent);
+  background-color: color-mix(in oklab, var(--ui-color-warning) 10%, transparent);
+}
+.banner--warning .banner__icon { color: var(--ui-color-warning); }
+
+/* Shell: the one banner not tied to a region, because what it describes is true of
+   every screen (the admin viewing as another user). It spans the content column's top
+   edge, so it drops the card radius and side borders for a single rule underneath, and
+   takes its gutters from the column (utilities) rather than 14px. One line: 8px above
+   and below an xs button. */
+.banner--shell {
+  flex: none;
+  align-items: center;
+  padding-block: 8px;
+  border-radius: 0;
+  border-width: 0 0 1px;
+  font-size: 13px;
+  color: var(--color-surface-200);
+}
+.banner--shell .banner__icon { margin-block-start: 0; }
+
+/* ── Segmented control ───────────────────────────────────────────────────── */
+/* Not tabs: this picks a VALUE rather than switching a panel, which is why it
+   is a radiogroup in the UI Bible and gets a filled selection rather than an
+   underline. Two implementations existed inline, both as bare buttons. */
+.segmented {
+  display: inline-flex;
+  align-items: center;
+  gap: 2px;
+  padding: 2px;
+  /* Alpha: an opaque surface-800 border on a surface-800 track is the
+     same colour and measures 1.00:1 — it would draw nothing. */
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-lg);
+  /* The track is a control on a panel, so level 2 — the selected item
+     below is already level 3, which makes this panel -> track -> selected
+     the ladder's own 1 -> 2 -> 3. Painted with a wash of the PAGE colour it
+     sank beneath the card instead, which is why the set read as a floating
+     strip rather than as part of the form it belongs to. */
+  background-color: var(--elev-2, var(--color-surface-800));
+}
+
+.segmented__item {
+  block-size: 28px;
+  padding-inline: 10px;
+  border-radius: var(--radius-md);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--color-surface-400);
+  cursor: pointer;
+  transition: background-color 120ms, color 120ms;
+}
+.segmented__item:hover { color: var(--color-surface-200); }
+.segmented__item[aria-checked='true'],
+.segmented__item.is-active {
+  background-color: var(--color-primary-700);
+  color: var(--color-white);
+  box-shadow: var(--shadow-e1);
+}
+.segmented__item:focus-visible {
+  outline: 2px solid var(--color-primary-400);
+  outline-offset: -2px;
+}
+
+/* ── Audio player ────────────────────────────────────────────────────────── */
+/* The waveform player (assets/js/admin/AudioPlayer.js), per the UI Bible's
+   Audio Player page. Only the two things Tailwind utilities cannot express live
+   here; the rest of the player is utilities on its own markup.
+
+   The canvas cannot read a Tailwind class, so the bars are painted from these
+   custom properties instead of hard-coded rgba. That is what keeps the waveform
+   on the brand ramp: the played half was stock Tailwind orange, left behind by
+   the commit that moved every other brand colour into `primary`.
+   Those properties (--ap-played, --ap-unplayed, …) are set on .ap in each theme file. */
+
+/* ── The row variant's play control ────────────────────────────────────────
+   An outlined circle at rest, a filled one while playing. In a list of twenty
+   that fill is how you find the row you are hearing without reading any of
+   them — the waveform's played portion says the same thing, but only once your
+   eye is already on the right line.
+
+   The 26px glyph the transport uses is drawn for a 36px filled disc with no
+   border; inside a bordered circle it touches the ring, so the row scales it
+   down rather than shipping a second icon. */
+.ap-row .ap-play :is(svg) { width: 14px; height: 14px; }
+
+.ap-row .ap-play.is-playing {
+  border-color: transparent;
+  background-color: var(--color-primary-600);
+  color: #fff;
+}
+.ap-row .ap-play.is-playing:hover:not(:disabled) {
+  border-color: transparent;
+  background-color: var(--color-primary-500);
+  color: #fff;
+}
+
+/* The play button is 28px in a row and 48px in the full player — right for
+   density, wrong for a thumb. It is not a `.btn` (it is a filled circle with its
+   own geometry), so it needs its own copy of the Bible's overlay rather than
+   inheriting one. Same rule as `.btn--icon::after`: centre a real 44px box, and
+   never `pointer-events: none`, which would make the target imaginary. */
+@media (pointer: coarse) {
+  .ap-play { position: relative; }
+  .ap-play::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    inline-size: 44px;
+    block-size: 44px;
+    transform: translate(-50%, -50%);
+  }
+}
+
+
+/* ── Lifted from <style> blocks in templates ─────────────────────────────────
+   These were embedded in the EJS that used them. That put component CSS
+   somewhere no stylesheet audit looks and Tailwind never scans — which is how a
+   1120x320 gradient on a 111px header survived long enough to paint black
+   rectangles on iOS. Same rules, one place. */
+
+/* Auth hero — animated brand blobs behind the login/register panel
+   Lifted out of views/partials/layout/auth-hero.ejs — component CSS belongs in a stylesheet, not in
+   markup, where nothing scans it and no audit can see it. */
+  .auth-hero { position: relative; overflow: hidden; background: var(--elev-0); }
+  .auth-hero__blob {
+    position: absolute; border-radius: 9999px; filter: blur(72px);
+    opacity: 0.55; mix-blend-mode: screen; will-change: transform;
+  }
+  .auth-hero__blob--1 { width: 48%; aspect-ratio: 1; left: -8%; top: -8%;
+    background: radial-gradient(circle at 30% 30%, var(--color-primary-500), transparent 70%);
+    animation: authFloat1 22s ease-in-out infinite; }
+  .auth-hero__blob--2 { width: 52%; aspect-ratio: 1; right: -12%; top: 16%;
+    background: radial-gradient(circle at 30% 30%, var(--color-accent-500), transparent 70%);
+    animation: authFloat2 27s ease-in-out infinite; }
+  .auth-hero__blob--3 { width: 46%; aspect-ratio: 1; left: 6%; bottom: -16%;
+    background: radial-gradient(circle at 30% 30%, var(--color-primary-300), transparent 70%);
+    animation: authFloat3 24s ease-in-out infinite; }
+  .auth-hero__blob--4 { width: 40%; aspect-ratio: 1; right: 4%; bottom: -8%;
+    background: radial-gradient(circle at 30% 30%, var(--color-primary-600), transparent 70%);
+    animation: authFloat1 30s ease-in-out infinite reverse; }
+  .auth-hero__grid {
+    position: absolute; inset: 0; opacity: 0.07;
+    background-image:
+      linear-gradient(var(--color-white) 1px, transparent 1px),
+      linear-gradient(90deg, var(--color-white) 1px, transparent 1px);
+    background-size: 46px 46px;
+    -webkit-mask-image: radial-gradient(circle at 50% 42%, #000 28%, transparent 74%);
+    mask-image: radial-gradient(circle at 50% 42%, #000 28%, transparent 74%);
+  }
+  @keyframes authFloat1 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(8%, 6%) scale(1.15); }
+  }
+  @keyframes authFloat2 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(-7%, 5%) scale(1.1); }
+  }
+  @keyframes authFloat3 {
+    0%, 100% { transform: translate(0, 0) scale(1); }
+    50%      { transform: translate(6%, -7%) scale(1.18); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .auth-hero__blob { animation: none !important; }
+  }
+
+/* Product showcase — the tabbed demo panel on the home hero
+   Lifted out of views/partials/product-showcase.ejs — component CSS belongs in a stylesheet, not in
+   markup, where nothing scans it and no audit can see it. */
+  .product-showcase{ position:relative; border-radius:28px;
+    background:linear-gradient(165deg, rgba(26,33,48,.72), rgba(6,8,15,.82));
+    backdrop-filter:blur(18px) saturate(140%); -webkit-backdrop-filter:blur(18px) saturate(140%);
+    box-shadow:0 40px 120px -30px rgba(0,0,0,.85), 0 0 0 1px rgba(255,255,255,.05) inset, 0 0 90px -20px rgba(94,116,216,.4); }
+
+  /* Stacked 2x2 grid on mobile/tablet (rounded-rectangle track); horizontal pill row from lg up. */
+  .product-showcase .ps-tabs{ background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:18px; }
+  @media (min-width:1024px){ .product-showcase .ps-tabs{ border-radius: 9999px; } }
+  .product-showcase .ps-tab{ position:relative; display:flex; align-items:center; justify-content:center; gap:.5rem; border-radius: 9999px; padding:.6rem 1.15rem;
+    font-weight:var(--text-label-sm--font-weight); font-size:var(--text-label-sm); line-height:var(--text-label-sm--line-height); color:#aeb6d4; transition:color .25s; white-space:nowrap; }
+  .product-showcase .ps-tab svg{ width:1.05rem; height:1.05rem; opacity:.85; }
+  .product-showcase .ps-tab:hover{ color:#fff; }
+  .product-showcase .ps-tab.is-active{ color:#fff; background:linear-gradient(135deg,#8b7bf7,var(--color-primary-500));
+    box-shadow:0 8px 22px -8px rgba(139,123,247,.8), 0 0 0 1px rgba(255,255,255,.12) inset; }
+
+  .product-showcase .grad-text{ background:linear-gradient(120deg,#c4bdff,#8b7bf7 60%,var(--color-primary-500)); -webkit-background-clip:text; background-clip:text; color:transparent; }
+
+  /* 3D book */
+  .product-showcase .book-stage{ perspective:1400px; }
+  .product-showcase .book{ position:relative; width:190px; height:270px; transform-style:preserve-3d;
+    transform:rotateY(-22deg) rotateX(4deg); animation:ps-float 6s ease-in-out infinite; }
+  @keyframes ps-float{ 0%,100%{ transform:rotateY(-22deg) rotateX(4deg) translateY(0) } 50%{ transform:rotateY(-19deg) rotateX(4deg) translateY(-10px) } }
+  .product-showcase .book__cover{ position:absolute; inset:0; border-radius: var(--radius-md) 12px 12px 6px; overflow:hidden;
+    background:radial-gradient(120px 120px at 50% 62%, rgba(139,123,247,.5), transparent 70%), linear-gradient(160deg,#20244a,#0b0d1f 70%);
+    box-shadow:0 30px 60px -18px rgba(0,0,0,.8), 0 0 40px -6px rgba(139,123,247,.5), inset 0 0 0 1px rgba(179,192,255,.14);
+    display:flex; flex-direction:column; align-items:center; justify-content:center; padding:22px 16px; }
+  .product-showcase .book__cover::after{ content:""; position:absolute; left:0; top:0; bottom:0; width:14px;
+    background:linear-gradient(90deg, rgba(0,0,0,.55), rgba(255,255,255,.06) 60%, rgba(0,0,0,.35)); }
+  .product-showcase .book__spine{ position:absolute; left:-14px; top:3px; bottom:3px; width:16px; border-radius: var(--radius-md) 0 0 6px;
+    transform:rotateY(60deg); transform-origin:right center; background:linear-gradient(#161933,#0a0c1c); box-shadow:inset 0 0 6px rgba(0,0,0,.6); }
+  .product-showcase .book__title{ font-family:Georgia,'Times New Roman',serif; color:var(--color-primary-50); text-align:center; font-size:19px; line-height:1.05; letter-spacing:.06em; text-shadow:0 2px 10px rgba(0,0,0,.6); }
+  .product-showcase .book__moon{ width:74px; height:74px; margin:8px 0 12px; filter:drop-shadow(0 0 14px rgba(255,214,140,.55)); }
+  .product-showcase .book__sub{ font-family:Georgia,serif; color:var(--color-primary-400); font-size:8.5px; letter-spacing:.22em; text-align:center; margin-top:14px; text-transform:uppercase; opacity:.85; }
+  .product-showcase .book-glow{ position:absolute; left:50%; bottom:-26px; width:210px; height:44px; transform:translateX(-50%);
+    background:radial-gradient(closest-side, rgba(139,123,247,.5), transparent); filter:blur(6px); }
+
+  .product-showcase .feat{ display:flex; align-items:center; gap:.7rem; color:#c9d0ea; font-size:var(--text-body-sm); line-height:var(--text-body-sm--line-height); }
+  .product-showcase .feat .fi{ width:34px; height:34px; border-radius:10px; display:grid; place-items:center; flex:none;
+    background:rgba(139,123,247,.14); border:1px solid rgba(139,123,247,.28); color:#c4bdff; }
+  .product-showcase .feat .fi svg{ width:16px; height:16px; }
+
+  /* Narrava Studio — a vertical player beside a list of example videos (assets/demos/narrava-studio). */
+
+  .product-showcase .nv-btn{ flex:none; width:36px; height:36px; border-radius:9999px; display:grid; place-items:center; color:#fff;
+    background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.18); backdrop-filter:blur(8px); -webkit-backdrop-filter:blur(8px); transition:transform .15s, background .2s; }
+  .product-showcase .nv-btn svg{ width:16px; height:16px; }
+  .product-showcase .nv-btn--play svg{ width:15px; height:15px; margin-left:1px; }
+
+  /* The player's frame is one button. Its glyph hides while the video plays and comes back
+     on hover or focus as a pause. Opacity is held at 1: the hover dimming every button gets
+     would dim the whole video. */
+  .product-showcase .nv-cover{ position:absolute; inset:0; display:grid; place-items:center; width:100%; cursor:pointer; opacity:1; }
+  .product-showcase .nv-cover:hover:not(:disabled), .product-showcase .nv-cover:active:not(:disabled){ opacity:1; }
+  .product-showcase .nv-btn--lg{ width:60px; height:60px; background:rgba(0,0,0,.4); border-color:rgba(255,255,255,.4); transition:opacity .2s, transform .15s, background .2s; }
+  .product-showcase .nv-btn--lg svg{ width:24px; height:24px; }
+  .product-showcase .nv-btn--lg .ps-ico-play{ margin-left:3px; }
+  .product-showcase .nv-cover:hover .nv-btn--lg{ transform:scale(1.06); background:rgba(0,0,0,.55); }
+  .product-showcase .nv-cover.is-playing .nv-btn--lg{ opacity:0; }
+  .product-showcase .nv-cover.is-playing:hover .nv-btn--lg, .product-showcase .nv-cover.is-playing:focus-visible .nv-btn--lg{ opacity:1; }
+  .product-showcase .nv-cover.is-playing .ps-ico-play{ display:none; }
+  .product-showcase .nv-cover.is-playing .ps-ico-pause{ display:inline; }
+  .product-showcase .nv-time{ position:absolute; left:50%; bottom:.75rem; transform:translateX(-50%); padding:.125rem .5rem; border-radius:9999px; pointer-events:none;
+    background:rgba(0,0,0,.55); color:#fff; font-size:var(--text-caption); line-height:var(--text-caption--line-height); font-variant-numeric:tabular-nums; white-space:nowrap; }
+
+  /* A whole row is the button, so it takes `white-space: normal` back from the one-line rule
+     every button gets: the subtitle wraps under the title rather than running beneath the
+     play glyph. */
+  .product-showcase .nv-item{ display:flex; flex:1; align-items:center; gap:.875rem; width:100%; min-width:0; padding:.5rem .75rem .5rem .5rem; text-align:left; white-space:normal;
+    border-radius:16px; background:rgba(255,255,255,.03); border:1px solid rgba(255,255,255,.08); transition:background .2s, border-color .2s, box-shadow .2s; }
+  .product-showcase .nv-item:hover{ background:rgba(139,123,247,.08); }
+  .product-showcase .nv-item.is-active{ background:linear-gradient(90deg, rgba(139,123,247,.16), rgba(139,123,247,.04));
+    border-color:rgba(139,123,247,.55); box-shadow:0 0 0 1px rgba(139,123,247,.3), 0 10px 30px -14px rgba(139,123,247,.6); }
+  .product-showcase .nv-thumb{ position:relative; flex:none; width:6rem; aspect-ratio:16/9; border-radius:10px; overflow:hidden; background:rgba(255,255,255,.05); }
+  .product-showcase .nv-thumb img{ position:absolute; inset:0; width:100%; height:100%; object-fit:cover; }
+  @media (min-width:1280px){ .product-showcase .nv-thumb{ width:9rem; } }
+  .product-showcase .sessions{ background:linear-gradient(180deg, rgba(10,12,24,.72), rgba(6,8,15,.72)); border:1px solid rgba(255,255,255,.08); border-radius:20px; }
+  .product-showcase .ses{ position:relative; display:flex; align-items:center; gap:.8rem; border-radius:14px; padding:.7rem .8rem;
+    transition:background .2s, border-color .2s; border:1px solid transparent; cursor:pointer; }
+  .product-showcase .ses:hover{ background:rgba(139,123,247,.08); }
+  .product-showcase .ses.is-active{ background:linear-gradient(90deg, rgba(139,123,247,.16), rgba(139,123,247,.04));
+    border-color:rgba(139,123,247,.4); box-shadow:0 0 0 1px rgba(139,123,247,.25), 0 10px 30px -14px rgba(139,123,247,.6); }
+  .product-showcase .ps-play{ position:relative; flex:none; width:38px; height:38px; border-radius: 9999px; display:grid; place-items:center;
+    color:#fff; background:rgba(255,255,255,.08); border:1px solid rgba(255,255,255,.14); transition:transform .15s, background .2s; }
+  .product-showcase .ps-play:hover{ transform:scale(1.06); }
+  .product-showcase .ses.is-active .ps-play, .product-showcase .ps-play.is-playing{ background:linear-gradient(135deg,#8b7bf7,var(--color-primary-500)); border-color:transparent; box-shadow:0 8px 20px -6px rgba(139,123,247,.85); }
+  .product-showcase .ps-play svg{ width:15px; height:15px; }
+  /* The pause glyph is hidden HERE, not with the `hidden` utility it used to carry in the
+     markup. These rules moved into @layer components when they were lifted out of the
+     partial, and a utility beats a component rule whatever its specificity — so `hidden`
+     won over the `display:inline` below, the play glyph went too, and a playing button
+     was an empty circle. Both states are this component's now. */
+  .product-showcase .ps-ico-pause{ display:none; }
+  .product-showcase .ps-play.is-playing .ps-ico-play{ display:none; }
+  .product-showcase .ps-play.is-playing .ps-ico-pause{ display:inline; }
+  .product-showcase .ps-num{ flex:none; font-size:var(--text-caption); line-height:var(--text-caption--line-height); font-weight:500; color:#7c86ad; width:20px; text-align:center; }
+  .product-showcase .ses.is-active .ps-num{ color:var(--color-primary-400); }
+  .product-showcase .ps-ttl{ flex:1; min-width:0; font-size:var(--text-body-sm); line-height:var(--text-body-sm--line-height); color:#cdd4ec; }
+  .product-showcase .ses.is-active .ps-ttl{ color:#fff; }
+  .product-showcase .ps-dur{ flex:none; font-variant-numeric:tabular-nums; font-size:var(--text-caption); line-height:var(--text-caption--line-height); color:#8891b4; }
+  .product-showcase .eq{ display:none; align-items:flex-end; gap:2px; height:16px; flex:none; }
+  .product-showcase .ses.is-active .eq{ display:flex; }
+  .product-showcase .eq span{ width:3px; border-radius:2px; background:var(--color-primary-400); animation:ps-eq 1s ease-in-out infinite; }
+  .product-showcase .eq span:nth-child(1){ animation-delay:-.8s } .product-showcase .eq span:nth-child(2){ animation-delay:-.5s }
+  .product-showcase .eq span:nth-child(3){ animation-delay:-.2s } .product-showcase .eq span:nth-child(4){ animation-delay:-.6s }
+  @keyframes ps-eq{ 0%,100%{ height:4px } 50%{ height:16px } }
+  .product-showcase .ps-scroll::-webkit-scrollbar{ width:6px; height:6px; }
+  .product-showcase .ps-scroll::-webkit-scrollbar-thumb{ background:rgba(139,123,247,.4); border-radius: 9999px; }
+
+  .product-showcase .ck{ display:inline-grid; place-items:center; width:20px; height:20px; border-radius: 9999px; background:rgba(139,123,247,.18); color:#c4bdff; font-size:var(--text-label-xs); line-height:var(--text-label-xs--line-height); font-weight:var(--text-label-xs--font-weight); }
+
+  /* The CTAs are plain `.btn btn--ink btn--lg` now — the Bible's 44px box, its
+     one-step elevation and its focus ring, instead of a hand-rolled pill with a
+     40px purple glow at an invented 53px height. Nothing to override here. */
+
+/* Voice showcase — the tab column that becomes a carousel below lg
+   Lifted out of views/partials/voice-showcase-home.ejs — component CSS belongs in a stylesheet, not in
+   markup, where nothing scans it and no audit can see it. */
+  /* Tab states live in CSS rather than toggled Tailwind classes so the active/hover
+     styling can't be dropped by a purge pass. Mirrors the surface-800 fill the first
+     block had when this was static markup. */
+  .voice-demo-tab {
+    background-color: transparent;
+    transition: background-color 150ms ease;
+    cursor: pointer;
+    /* base.css applies `white-space: nowrap` to every <button> so button LABELS never wrap
+       to two lines. These tabs hold a heading plus a full paragraph, not a label, so the
+       copy laid out on one line and overflowed the column (measured: 664px tab, 2101px of
+       text). Opt this one component back into normal wrapping. */
+    white-space: normal;
+  }
+  .voice-demo-tab:hover:not(.is-active) {
+    background-color: rgb(255 255 255 / 0.04);
+  }
+  .voice-demo-tab.is-active {
+    background-color: var(--color-surface-800, var(--elev-2));
+  }
+  .voice-demo-tab.is-active h3 { color: var(--color-surface-50, var(--color-surface-50)); }
+  .voice-demo-tab.is-active p { color: var(--color-surface-300, var(--color-surface-300)); }
+  .voice-demo-tab:focus-visible {
+    outline: 2px solid var(--color-primary-500, var(--color-primary-500));
+    outline-offset: 2px;
+  }
+
+  /* ---- Carousel (below lg) ------------------------------------------------
+     One tab in frame on mobile, two on tablet. The tabs don't shrink, so they
+     overflow the track rather than widening it — the track stays the viewport's
+     width and the extra slides are clipped. That means a translate percentage
+     resolves against one viewport-width, so one slide of travel is
+     100%/per-view (NOT 100%/count, which would under-shoot on mobile). */
+  [data-voice-showcase] {
+    --voice-per-view: 1;
+  }
+  .voice-demo-viewport {
+    overflow: hidden;
+  }
+  .voice-demo-track {
+    display: flex;
+    transform: translateX(calc(var(--voice-index, 0) * -100% / var(--voice-per-view)));
+    transition: transform 300ms ease;
+  }
+  .voice-demo-tab {
+    flex: 0 0 calc(100% / var(--voice-per-view));
+  }
+
+  @media (min-width: 640px) {
+    [data-voice-showcase] {
+      --voice-per-view: 2;
+    }
+  }
+
+  /* At lg the carousel dissolves back into the original stacked tab column. */
+  @media (min-width: 1024px) {
+    .voice-demo-viewport {
+      overflow: visible;
+    }
+    .voice-demo-track {
+      display: block;
+      transform: none;
+    }
+    .voice-demo-tab {
+      width: 100%;
+    }
+    .voice-demo-tab + .voice-demo-tab {
+      margin-top: 0.5rem;
+    }
+    .voice-demo-controls {
+      display: none;
+    }
+  }
+
+  /* Owns its own `display` rather than using Tailwind's `flex` utility, so the
+     `display: none` at lg doesn't come down to stylesheet ordering. */
+  .voice-demo-controls {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  .voice-demo-arrow {
+    display: inline-grid;
+    place-items: center;
+    height: 2.75rem;
+    width: 2.75rem;
+    border-radius: 9999px;
+    background-color: rgb(255 255 255 / 0.06);
+    color: var(--color-surface-200, #ddd8cc);
+    cursor: pointer;
+    transition: background-color 150ms ease, opacity 150ms ease;
+  }
+  .voice-demo-arrow:hover:not(:disabled) {
+    background-color: rgb(255 255 255 / 0.12);
+  }
+  .voice-demo-arrow:disabled {
+    opacity: 0.35;
+    cursor: default;
+  }
+  .voice-demo-arrow:focus-visible {
+    outline: 2px solid var(--color-primary-500, var(--color-primary-500));
+    outline-offset: 2px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .voice-demo-track {
+      transition: none;
+    }
+  }
+
+/* Products carousel — the swipeable card rail
+   Lifted out of views/partials/our-products-home.ejs — component CSS belongs in a stylesheet, not in
+   markup, where nothing scans it and no audit can see it. */
+      .products-carousel .pc-track { scrollbar-width: none; -ms-overflow-style: none; scroll-behavior: smooth; }
+      .products-carousel .pc-track::-webkit-scrollbar { display: none; }
+      .products-carousel .pc-track:focus-visible { outline: 2px solid rgba(179, 192, 255, .7); outline-offset: 4px; border-radius: 20px; }
+      .products-carousel .pc-arrow { position: absolute; top: 50%; transform: translateY(-50%); z-index: 2;
+        display: none; width: 44px; height: 44px; border-radius: 9999px; place-items: center; color: #fff;
+        background: rgba(10, 12, 24, .72); border: 1px solid rgba(255, 255, 255, .14);
+        backdrop-filter: blur(10px); transition: background .2s, border-color .2s, transform .15s; }
+      .products-carousel .pc-arrow:hover { background: rgba(94, 116, 216, .9); border-color: transparent; }
+      .products-carousel .pc-arrow:active { transform: translateY(-50%) scale(.94); }
+      .products-carousel .pc-arrow--prev { left: -10px; }
+      .products-carousel .pc-arrow--next { right: -10px; }
+      @media (min-width: 1024px) { .products-carousel .pc-arrow { display: grid; } }
+      .products-carousel .pc-dot { width: 9px; height: 9px; border-radius: 9999px; background: rgba(255, 255, 255, .22);
+        transition: width .25s, background .25s; }
+      .products-carousel .pc-dot:hover { background: rgba(255, 255, 255, .45); }
+      .products-carousel .pc-dot.is-active { width: 26px; background: linear-gradient(135deg, #8b7bf7, var(--color-primary-500)); }
+      @media (prefers-reduced-motion: reduce) { .products-carousel .pc-track { scroll-behavior: auto; } }
+    
+
+/* Book Alchemy demo player
+   Lifted out of views/book-alchemy.ejs — component CSS belongs in a stylesheet, not in
+   markup, where nothing scans it and no audit can see it. */
+    /* The button owns its own background across all three states. It used to take the
+   resting colour from a `bg-primary-500` utility in the markup and override it here
+   for `.is-playing`, which only worked while this CSS sat unlayered in a <style>
+   tag: inside a layer the utility wins and the playing state loses its colour. */
+.ba-play { background-color: var(--color-primary-500); }
+.ba-play:hover { background-color: var(--color-primary-600); }
+#ba-demos .ba-ico-pause { display: none; }
+#ba-demos .ba-play.is-playing { background-color: var(--color-primary-600); }
+#ba-demos .ba-play.is-playing .ba-ico-play { display: none; }
+#ba-demos .ba-play.is-playing .ba-ico-pause { display: inline; }
+  
+
+/* SpokenVerse demo player
+   Lifted out of views/spokenverse.ejs — component CSS belongs in a stylesheet, not in
+   markup, where nothing scans it and no audit can see it. */
+    /* The button owns its own background across all three states. It used to take the
+   resting colour from a `bg-primary-500` utility in the markup and override it here
+   for `.is-playing`, which only worked while this CSS sat unlayered in a <style>
+   tag: inside a layer the utility wins and the playing state loses its colour. */
+.sv-play { background-color: var(--color-primary-500); }
+.sv-play:hover { background-color: var(--color-primary-600); }
+#sv-demos .sv-ico-pause { display: none; }
+#sv-demos .sv-play.is-playing { background-color: var(--color-primary-600); }
+#sv-demos .sv-play.is-playing .sv-ico-play { display: none; }
+#sv-demos .sv-play.is-playing .sv-ico-pause { display: inline; }
+  
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   FORM SECTION — .form-section
+   ───────────────────────────────────────────────────────────────────────────
+   A named group of fields inside a panel.
+
+   A product form is a sequence of decisions, and rendering it as one unbroken
+   column of label/control pairs makes every decision look equally important
+   and equally urgent. Book Alchemy's import panel ran fourteen controls that
+   way: what you are teaching, who reads it, and how deep it goes all arrived
+   at once, in one rhythm, with nothing marking where one question ended and
+   the next began.
+
+   The divider goes on the SECOND and later sections, not the last child of
+   each — a rule below the final section would fence the footer off from the
+   form it belongs to. Space is asymmetric for the same reason it is on
+   .card__footer: the eye reads a rule as belonging to what follows it.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.form-section + .form-section {
+  margin-block-start: 24px;
+  padding-block-start: 24px;
+  border-block-start: 1px solid var(--ui-border);
+}
+
+/* 11px uppercase, not a heading size. It names the group without competing
+   with the field labels underneath — which are the things actually being
+   answered, and are already only 12px. */
+.form-section__title {
+  font-size: 11px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-surface-300);
+}
+
+/* 6px, not 4px: the title is uppercase and its letter-spacing already reads as
+   air on the right, so it needs slightly more beneath to group cleanly. */
+.form-section__hint {
+  margin-block-start: 6px;
+  font-size: 12px;
+  line-height: 1.5;
+  color: var(--color-surface-400);
+}
+
+.form-section__body { margin-block-start: 14px; }
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   DROP ZONE — .dropzone
+   ───────────────────────────────────────────────────────────────────────────
+   The target for a file, sized like the thing it is asking for.
+
+   This replaced a 32px icon button beside the words "No file selected" — the
+   smallest control on a page whose whole purpose is to receive a file, and the
+   only affordance for the one action every visit begins with. A drop target
+   has to look like somewhere a file can land, which means area, not a button.
+
+   A <button>, not a <div>: it is the file input's proxy, so it must be
+   focusable, Enter/Space-activated and announced as a control without any of
+   that being re-implemented here. Dashed border because the edge is a
+   boundary being offered rather than a container that already holds something
+   — the one place in this system where dashed is the honest choice.
+
+   Level 2 like every other control: it sits ON the panel, not cut into it.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.dropzone {
+  /* A ROW, reading left to right: mark, then what to do, then the caveats.
+     This was a centred column — icon stacked over centred text — which is the
+     arrangement for an empty state, not for a control. Centred text in a
+     1000px box also gives every line a different left edge, so the eye has to
+     re-find the start of each one; against a left rag the three lines read as
+     one block. */
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 18px;
+  inline-size: 100%;
+  min-block-size: 112px;
+  padding: 20px 24px;
+  border: 1px dashed var(--ui-border-strong);
+  border-radius: var(--radius-xl);
+  background-color: var(--elev-2, var(--color-surface-800));
+  color: var(--color-surface-300);
+  text-align: start;
+  /* base.css gives every <button> white-space:nowrap so a LABEL never wraps. This
+     button holds three lines of prose, and unwrapped the longest hint alone set
+     the zone at 430px — past the edge of any phone. */
+  white-space: normal;
+  cursor: pointer;
+  transition: border-color 140ms, background-color 140ms;
+}
+
+/* The three lines, as one block. */
+.dropzone__body {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  min-inline-size: 0;
+}
+
+.dropzone:hover {
+  border-color: var(--color-primary-500);
+  background-color: var(--elev-3, var(--color-surface-700));
+}
+
+.dropzone:focus-visible {
+  outline: 2px solid var(--color-primary-400);
+  outline-offset: 2px;
+}
+
+/* Dragging is a pointer state the pointer cannot show — the cursor is holding
+   the file, not hovering — so the target has to say so itself, and in hue
+   rather than only in lightness: :hover already spends the one lightness step
+   available above level 2. */
+.dropzone.is-dragover {
+  border-color: var(--color-primary-400);
+  border-style: solid;
+  background-color: color-mix(in oklab, var(--color-primary-500) 12%, var(--elev-2));
+}
+
+/* Solid primary at 52px, not a 40px chip of 14% tint. It is the only mark in a
+   very wide box and it carries the whole affordance — at a whisper of the brand
+   colour it read as decoration beside the text rather than as the thing the box
+   is for. */
+.dropzone__icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+  inline-size: 52px;
+  block-size: 52px;
+  border-radius: var(--radius-lg);
+  background-color: var(--color-primary-500);
+  color: var(--color-white);
+}
+
+.dropzone__title { font-size: 15px; font-weight: 600; color: var(--color-surface-100); }
+/* The half of the sentence that is the affordance. Colour only — no underline,
+   because the whole zone is the control and a link inside a button would be
+   promising a second, different destination. */
+.dropzone__browse { color: var(--color-primary-300); }
+.dropzone:hover .dropzone__browse { color: var(--color-primary-200); }
+.dropzone__hint  { font-size: 12px; color: var(--color-surface-400); }
+
+/* The chosen file. Muted until there is one, so the line is a status rather
+   than a label that happens to be empty. */
+.dropzone__file { font-size: 13px; color: var(--color-surface-400); }
+.dropzone__file.has-file { color: var(--color-primary-200); font-weight: 500; }
+
+} /* @layer components */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Type — the scale, applied
+   The styles themselves are tokens (the @theme at the top of this file): utilities in the
+   markup (text-body, text-ui, text-caption…) and var(--text-…) in CSS. This section does
+   what a token cannot: the face and the page's default, and the components above that
+   were sized before the scale — restyled here, after them and in the same layer, so a
+   utility on the element still wins exactly as it did.
+
+   Inter Variable is the face on both sides (rsms/inter, SIL OFL — fonts/InterVariable-
+   LICENSE.txt), one file per script covering every weight, which the scale needs: light
+   for the largest sizes, semibold for a section heading. The stylistic sets it turns on
+   tell l, 1 and I apart and give the single-storey a.
+   ═══════════════════════════════════════════════════════════════════════════ */
+@font-face {
+  font-family: "Inter Variable";
+  src: url("/fonts/InterVariable-latin.woff2") format("woff2-variations");
+  font-weight: 100 900; font-style: normal; font-display: swap;
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329,
+    U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+@font-face {
+  font-family: "Inter Variable";
+  src: url("/fonts/InterVariable-latin-ext.woff2") format("woff2-variations");
+  font-weight: 100 900; font-style: normal; font-display: swap;
+  unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF,
+    U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C0, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+body {
+  font-family: var(--font-sans);
+  font-size: var(--text-body);
+  line-height: var(--text-body--line-height);
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11', 'ss03';
+  font-variant-ligatures: contextual;
+}
+
+/* Emphasis inside interface text is medium: the Bible keeps semibold for the section
+   heading alone, and the browser's own bold (700) is off the scale. */
+strong, b { font-weight: 500; }
+
+.count-badge { font-size: var(--text-badge); line-height: var(--text-badge--line-height); font-weight: var(--text-badge--font-weight); }
+
+.synx-dialog-title {
+  font-size: var(--text-h2); line-height: var(--text-h2--line-height);
+  letter-spacing: var(--text-h2--letter-spacing); font-weight: var(--text-h2--font-weight);
+}
+.synx-dialog-message { font-size: var(--text-body); line-height: var(--text-body--line-height); }
+.synx-dialog-btn { font-size: var(--text-label); line-height: var(--text-label--line-height); font-weight: var(--text-label--font-weight); }
+.synx-custom-dialog-body label { font-size: var(--text-label); line-height: var(--text-label--line-height); font-weight: var(--text-label--font-weight); }
+.synx-custom-dialog-body textarea { font-size: var(--text-body); line-height: var(--text-body--line-height); }
+
+.data-table { font-size: var(--text-body-sm); line-height: var(--text-body-sm--line-height); }
+.data-table thead th { font-size: var(--text-label-sm); font-weight: var(--text-label-sm--font-weight); line-height: var(--text-label-sm--line-height); }
+.table { font-size: var(--text-body-sm); line-height: var(--text-body-sm--line-height); }
+.table-card__title { font-size: var(--text-h4); line-height: var(--text-h4--line-height); font-weight: var(--text-h4--font-weight); }
+.table-card__note, .table-dark-1 .t-sub { font-size: var(--text-body-sm); line-height: var(--text-body-sm--line-height); }
+.table-dark-1 thead th { font-size: var(--text-label-sm); font-weight: var(--text-label-sm--font-weight); line-height: var(--text-label-sm--line-height); }
+/* Unlayered where it was defined, so overridden unlayered. */
+.badge--outline { font-weight: var(--text-badge--font-weight); }
+
+.h1 { font-size: var(--text-h1); line-height: var(--text-h1--line-height); font-weight: var(--text-h1--font-weight); letter-spacing: 0; }
+@media (min-width: 640px) { .h1 { font-size: var(--text-h1); line-height: var(--text-h1--line-height); } }
+.h2 { font-size: var(--text-h2); line-height: var(--text-h2--line-height); letter-spacing: var(--text-h2--letter-spacing); font-weight: var(--text-h2--font-weight); }
+.h3 { font-size: var(--text-h3); line-height: var(--text-h3--line-height); font-weight: var(--text-h3--font-weight); }
+.eyebrow {
+  font-size: var(--text-overline); line-height: var(--text-overline--line-height);
+  letter-spacing: var(--text-overline--letter-spacing); font-weight: var(--text-overline--font-weight);
+}
+
+/* In base.css's components layer, so overridden in the same layer: these still lose to
+   a utility on the element, exactly as the originals did. */
+@layer components {
+  .cost-tag { font-size: var(--text-badge); line-height: var(--text-badge--line-height); font-weight: var(--text-badge--font-weight); }
+
+  /* Labels are sized by the control, as Suno's are: 14 on a 28px button, 15 on 32–40px,
+     17 on 44px. */
+  .btn { font-weight: var(--text-label--font-weight); line-height: var(--text-label--line-height); }
+  .btn--xs { font-size: var(--text-label-sm); font-weight: var(--text-label-sm--font-weight); line-height: var(--text-label-sm--line-height); }
+  .btn--sm, .btn--md { font-size: var(--text-label); font-weight: var(--text-label--font-weight); line-height: var(--text-label--line-height); }
+  .btn--lg, .btn--cta { font-size: var(--text-label-lg); font-weight: var(--text-label-lg--font-weight); line-height: var(--text-label-lg--line-height); }
+  @media (min-width: 640px) {
+    .btn--cta { font-size: var(--text-label); font-weight: var(--text-label--font-weight); line-height: var(--text-label--line-height); }
+  }
+
+  .field__label { font-size: var(--text-label); line-height: var(--text-label--line-height); font-weight: var(--text-label--font-weight); }
+  .field__hint, .field__error, .form-section__hint { font-size: var(--text-body-sm); line-height: var(--text-body-sm--line-height); }
+  .field-count { font-size: var(--text-caption); line-height: var(--text-caption--line-height); }
+  /* Every field is body text: what someone types and reads back is not small print,
+     and 16px is also where iOS stops zooming the page on focus. */
+  .input, .select, .textarea, .textarea--sm, .textarea--fill, .select--sm, .select--lg { font-size: var(--text-body); line-height: var(--text-body--line-height); }
+
+  .card__title { font-size: var(--text-h4); line-height: var(--text-h4--line-height); font-weight: var(--text-h4--font-weight); }
+  .card__desc { font-size: var(--text-body-sm); line-height: var(--text-body-sm--line-height); }
+  .badge, .badge--sm { font-size: var(--text-badge); font-weight: var(--text-badge--font-weight); line-height: var(--text-badge--line-height); }
+  .stat-tile__label, .form-section__title {
+    font-size: var(--text-overline); line-height: var(--text-overline--line-height); letter-spacing: var(--text-overline--letter-spacing);
+    font-weight: var(--text-overline--font-weight);
+  }
+  .stat-tile__value { font-size: var(--text-h4); line-height: var(--text-h4--line-height); font-weight: var(--text-h4--font-weight); }
+
+  .tab { font-size: var(--text-ui); line-height: var(--text-ui--line-height); font-weight: var(--text-ui--font-weight); }
+  .tab--sm { font-size: var(--text-body-sm); line-height: var(--text-body-sm--line-height); }
+  .tabs--pill .tab, .segmented__item { font-size: var(--text-label-sm); line-height: var(--text-label-sm--line-height); font-weight: var(--text-label-sm--font-weight); }
+
+  .costbar__facts, .banner__body, .banner--shell { font-size: var(--text-body-sm); line-height: var(--text-body-sm--line-height); }
+  .costbar__strong { font-weight: 500; }
+  .banner__title { font-size: var(--text-body-sm); line-height: var(--text-body-sm--line-height); font-weight: 500; }
+  /* The drop zone's line is a sentence with the action in it, not a heading. */
+  .dropzone__title { font-size: var(--text-body); line-height: var(--text-body--line-height); font-weight: 400; }
+  .dropzone__hint, .dropzone__file { font-size: var(--text-body-sm); line-height: var(--text-body-sm--line-height); }
+}

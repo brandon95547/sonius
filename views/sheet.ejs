@@ -1,0 +1,1283 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title><%= guide.name %> — Sonius</title>
+  <%# The guide's own bundle: Tailwind, the shared components (styles/components.css) and this
+      guide's theme (guides/<id>/theme.css), built by scripts/build-css.mjs. Every value on the
+      page is read back from it as it loads — no hex is written here. %>
+  <link rel="stylesheet" href="/guides/<%= guide.id %>.css">
+  <link rel="stylesheet" href="/css/sheet.css">
+  <script src="/vendor/lucide.min.js"></script>
+</head>
+
+<%# The body classes every guide is drawn on. Every demo sits inside <main class="dash-surface">,
+    as every page of the product it came from does: that is what makes a .card a level-1 panel
+    here. Every value on this page is read from the guide's bundle as it loads — no hex is
+    written here. %>
+<body class="min-h-screen bg-surface-950 text-surface-100 antialiased">
+
+  <header class="sg-header">
+    <div class="sg-wrap">
+      <p class="sg-eyebrow"><a class="sg-link" href="/">Sonius</a> · Style guide</p>
+      <h1 class="sg-h1"><%= guide.name %></h1>
+      <p class="sg-lede"><%= guide.summary %></p>
+      <% if (guide.source) { %>
+        <p class="sg-aside">From <a class="sg-link" href="<%= guide.source.url %>" rel="noopener"><%= guide.source.label %></a>.</p>
+      <% } %>
+    </div>
+  </header>
+
+  <nav class="sg-nav" aria-label="Sections">
+    <div class="sg-wrap">
+      <a href="#colors">Colors</a>
+      <a href="#surfaces">Surfaces</a>
+      <a href="#type">Typography</a>
+      <a href="#buttons">Buttons</a>
+      <a href="#forms">Forms</a>
+      <a href="#navigation">Navigation</a>
+      <a href="#cards">Cards &amp; data</a>
+      <a href="#status">Status</a>
+      <a href="#dialogs">Dialogs &amp; menus</a>
+    </div>
+  </nav>
+
+  <main class="dash-surface">
+
+    <!-- ───────────────────────────────── Colors ─────────────────────────────── -->
+    <!-- Each figure names its token in data-sg-token; the script reads the value back from
+         the bundle into [data-sg-value]. Fills and inks are inline var(), never a hex. -->
+    <section id="colors" class="sg-section">
+      <div class="sg-wrap">
+        <h2 class="sg-h2">Colors</h2>
+        <p class="sg-p">
+          A monochrome interface with one brand hue. Grey carries the interface, violet marks the
+          brand, and status keeps its color because the color is the message.
+        </p>
+
+        <h3 class="sg-h3">Core</h3>
+        <div class="sg-colors sg-mt">
+          <figure class="sg-color" data-sg-token="--mono-accent">
+            <div class="sg-color__fill" style="background-color: var(--mono-accent); color: var(--mono-on-accent)"><span>Aa</span></div>
+            <figcaption class="sg-color__body">
+              <span class="sg-color__name">Primary</span>
+              <span class="sg-color__value" data-sg-value></span>
+              <code class="sg-color__token">--mono-accent · primary-500</code>
+              <span class="sg-color__use">The primary button, the selected pill, the sidebar's call to action. One per view.</span>
+            </figcaption>
+            <div class="sg-states">
+              <span class="sg-state" data-sg-token="--mono-accent-hover"><span class="sg-state__chip" style="background-color: var(--mono-accent-hover)"></span><span class="sg-state__label">Hover</span><span class="sg-state__value" data-sg-value></span></span>
+              <span class="sg-state" data-sg-token="--mono-accent-active"><span class="sg-state__chip" style="background-color: var(--mono-accent-active)"></span><span class="sg-state__label">Pressed</span><span class="sg-state__value" data-sg-value></span></span>
+              <span class="sg-state" data-sg-token="--mono-on-accent"><span class="sg-state__chip" style="background-color: var(--mono-on-accent)"></span><span class="sg-state__label">On primary</span><span class="sg-state__value" data-sg-value></span></span>
+            </div>
+          </figure>
+
+          <figure class="sg-color" data-sg-token="--ui-fill-success">
+            <div class="sg-color__fill" style="background-color: var(--ui-fill-success); color: var(--mono-on-accent)"><span>Aa</span></div>
+            <figcaption class="sg-color__body">
+              <span class="sg-color__name">Secondary</span>
+              <span class="sg-color__value" data-sg-value></span>
+              <code class="sg-color__token">--ui-fill-success · emerald-400</code>
+              <span class="sg-color__use">The secondary button (Recharge), a switch that is on, a finished state.</span>
+            </figcaption>
+            <div class="sg-states">
+              <span class="sg-state" data-sg-token="--ui-fill-success-hover"><span class="sg-state__chip" style="background-color: var(--ui-fill-success-hover)"></span><span class="sg-state__label">Hover</span><span class="sg-state__value" data-sg-value></span></span>
+              <span class="sg-state" data-sg-token="--mono-on-accent"><span class="sg-state__chip" style="background-color: var(--mono-on-accent)"></span><span class="sg-state__label">On secondary</span><span class="sg-state__value" data-sg-value></span></span>
+            </div>
+          </figure>
+
+          <figure class="sg-color" data-sg-token="--color-violet-500">
+            <div class="sg-color__fill" style="background-color: var(--color-violet-500); color: var(--studio-on-accent)"><span>Aa</span></div>
+            <figcaption class="sg-color__body">
+              <span class="sg-color__name">Brand</span>
+              <span class="sg-color__value" data-sg-value></span>
+              <code class="sg-color__token">--color-violet-500</code>
+              <span class="sg-color__use">The current tab's underline, a selected card in the studios, the home page's glow.</span>
+            </figcaption>
+            <div class="sg-states">
+              <span class="sg-state" data-sg-token="--studio-accent-hover"><span class="sg-state__chip" style="background-color: var(--studio-accent-hover)"></span><span class="sg-state__label">Hover</span><span class="sg-state__value" data-sg-value></span></span>
+              <span class="sg-state" data-sg-token="--studio-accent-press"><span class="sg-state__chip" style="background-color: var(--studio-accent-press)"></span><span class="sg-state__label">Pressed</span><span class="sg-state__value" data-sg-value></span></span>
+              <span class="sg-state" data-sg-token="--studio-accent-text"><span class="sg-state__chip" style="background-color: var(--studio-accent-text)"></span><span class="sg-state__label">As text</span><span class="sg-state__value" data-sg-value></span></span>
+            </div>
+          </figure>
+
+          <figure class="sg-color" data-sg-token="--elev-0">
+            <div class="sg-color__fill" style="background-color: var(--elev-0); color: var(--color-surface-100)"><span>Aa</span></div>
+            <figcaption class="sg-color__body">
+              <span class="sg-color__name">Background</span>
+              <span class="sg-color__value" data-sg-value></span>
+              <code class="sg-color__token">--elev-0 · surface-950</code>
+              <span class="sg-color__use">The page and the sidebar. Everything else stands on it — see Surfaces.</span>
+            </figcaption>
+            <div class="sg-states">
+              <span class="sg-state" data-sg-token="--color-surface-100"><span class="sg-state__chip" style="background-color: var(--color-surface-100)"></span><span class="sg-state__label">On background</span><span class="sg-state__value" data-sg-value></span></span>
+            </div>
+          </figure>
+        </div>
+
+        <h3 class="sg-h3">Text</h3>
+        <div class="sg-inks sg-mt">
+          <div class="sg-ink" data-sg-token="--color-surface-100">
+            <span class="sg-ink__sample" style="color: var(--color-surface-100)">Aa</span>
+            <span class="sg-ink__line" style="color: var(--color-surface-100)">Headings and body</span>
+            <span class="sg-label">Primary · text-surface-100</span>
+            <span class="sg-meta" data-sg-value></span>
+          </div>
+          <div class="sg-ink" data-sg-token="--color-surface-200">
+            <span class="sg-ink__sample" style="color: var(--color-surface-200)">Aa</span>
+            <span class="sg-ink__line" style="color: var(--color-surface-200)">Descriptions, labels</span>
+            <span class="sg-label">Secondary · text-surface-200</span>
+            <span class="sg-meta" data-sg-value></span>
+          </div>
+          <div class="sg-ink" data-sg-token="--color-surface-400">
+            <span class="sg-ink__sample" style="color: var(--color-surface-400)">Aa</span>
+            <span class="sg-ink__line" style="color: var(--color-surface-400)">Captions, placeholders</span>
+            <span class="sg-label">Muted · text-surface-400</span>
+            <span class="sg-meta" data-sg-value></span>
+          </div>
+          <div class="sg-ink" data-sg-token="--color-surface-500">
+            <span class="sg-ink__sample" style="color: var(--color-surface-500)">Aa</span>
+            <span class="sg-ink__line" style="color: var(--color-surface-500)">Disabled, separators</span>
+            <span class="sg-label">Disabled · text-surface-500</span>
+            <span class="sg-meta" data-sg-value></span>
+          </div>
+        </div>
+
+        <h3 class="sg-h3">Status</h3>
+        <div class="sg-pairs sg-mt">
+          <figure class="sg-pair">
+            <div class="sg-pair__fills">
+              <span class="sg-pair__ink" style="color: var(--ui-color-success)">Saved</span>
+              <span class="sg-pair__fill" style="background-color: var(--ui-fill-success)">Fill</span>
+            </div>
+            <figcaption class="sg-pair__body">
+              <span class="sg-color__name">Success</span>
+              <span class="sg-color__value"><span data-sg-token="--ui-color-success"><span data-sg-value></span></span> · <span data-sg-token="--ui-fill-success"><span data-sg-value></span></span></span>
+              <code class="sg-color__token">--ui-color-success · --ui-fill-success</code>
+            </figcaption>
+          </figure>
+          <figure class="sg-pair">
+            <div class="sg-pair__fills">
+              <span class="sg-pair__ink" style="color: var(--ui-color-warning)">Running low</span>
+              <span class="sg-pair__fill" style="background-color: var(--ui-fill-warning)">Fill</span>
+            </div>
+            <figcaption class="sg-pair__body">
+              <span class="sg-color__name">Warning</span>
+              <span class="sg-color__value"><span data-sg-token="--ui-color-warning"><span data-sg-value></span></span> · <span data-sg-token="--ui-fill-warning"><span data-sg-value></span></span></span>
+              <code class="sg-color__token">--ui-color-warning · --ui-fill-warning</code>
+            </figcaption>
+          </figure>
+          <figure class="sg-pair">
+            <div class="sg-pair__fills">
+              <span class="sg-pair__ink" style="color: var(--ui-color-error)">Failed</span>
+              <span class="sg-pair__fill" style="background-color: var(--ui-fill-error)">Fill</span>
+            </div>
+            <figcaption class="sg-pair__body">
+              <span class="sg-color__name">Error</span>
+              <span class="sg-color__value"><span data-sg-token="--ui-color-error"><span data-sg-value></span></span> · <span data-sg-token="--ui-fill-error"><span data-sg-value></span></span></span>
+              <code class="sg-color__token">--ui-color-error · --ui-fill-error</code>
+            </figcaption>
+          </figure>
+          <figure class="sg-pair">
+            <div class="sg-pair__fills">
+              <span class="sg-pair__ink" style="color: var(--ui-color-info)">Processing</span>
+              <span class="sg-pair__fill" style="background-color: var(--dialog-info-btn)">Fill</span>
+            </div>
+            <figcaption class="sg-pair__body">
+              <span class="sg-color__name">Info</span>
+              <span class="sg-color__value"><span data-sg-token="--ui-color-info"><span data-sg-value></span></span></span>
+              <code class="sg-color__token">--ui-color-info</code>
+            </figcaption>
+          </figure>
+        </div>
+
+        <h3 class="sg-h3">Special cases</h3>
+        <p class="sg-p">The few places an edge or a color means something on its own. Each is drawn as it ships.</p>
+        <div class="sg-specials sg-mt">
+          <!-- The recommended plan, as partials/admin/upgrade-dialog.ejs and dashboard-checkout.ejs draw it. -->
+          <div class="sg-special">
+            <div class="sg-special__stage">
+              <div class="relative flex flex-col rounded-2xl border border-primary-500 ring-2 ring-primary-500/40 bg-surface-950/40 p-5">
+                <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary-500 px-3 py-0.5 text-overline uppercase text-surface-950">Recommended</span>
+                <h3 class="text-h3 text-surface-100">Pro</h3>
+                <div class="mt-2 flex items-baseline gap-1">
+                  <span class="text-h1 text-surface-100">$30</span>
+                  <span class="text-body-sm font-medium text-surface-200">/month</span>
+                </div>
+              </div>
+            </div>
+            <div class="sg-special__body">
+              <span class="sg-color__name">Premium · recommended</span>
+              <code class="sg-color__token">border-primary-500 ring-2 ring-primary-500/40</code>
+              <span class="sg-color__use">The recommended plan, and only that. Every other plan takes border-surface-800.</span>
+            </div>
+          </div>
+
+          <!-- Talari's selected cards: .talari-radio-card.is-selected and friends in dashboard.css. -->
+          <div class="sg-special">
+            <div class="sg-special__stage">
+              <div class="sg-edge sg-edge--selected" style="border-color: var(--studio-accent-edge); background-color: var(--studio-accent-wash); color: var(--color-surface-100)">Illustrated story</div>
+            </div>
+            <div class="sg-special__body">
+              <span class="sg-color__name">Selected card</span>
+              <code class="sg-color__token">--studio-accent-edge · --studio-accent-wash</code>
+              <span class="sg-color__use">A chosen option in a studio: violet edge, a wash of it behind.</span>
+            </div>
+          </div>
+
+          <div class="sg-special">
+            <div class="sg-special__stage">
+              <div class="sg-row">
+                <span class="cost-tag"><i data-lucide="zap" class="h-3.5 w-3.5"></i>1,200</span>
+                <button type="button" class="btn btn--filled btn--sm"><i data-lucide="sparkles" class="h-4 w-4"></i>Generate</button>
+              </div>
+            </div>
+            <div class="sg-special__body">
+              <span class="sg-color__name">Credits</span>
+              <code class="sg-color__token">.cost-tag · amber-400</code>
+              <span class="sg-color__use">The bolt beside a price. The mark carries the color; the number stays grey.</span>
+            </div>
+          </div>
+
+          <div class="sg-special">
+            <div class="sg-special__stage">
+              <div class="sg-edge" style="border-color: var(--ui-fill-danger-edge); background-color: var(--ui-fill-danger-wash); color: var(--ui-fill-danger-text)">Delete this project</div>
+            </div>
+            <div class="sg-special__body">
+              <span class="sg-color__name">Destructive</span>
+              <code class="sg-color__token">--ui-fill-danger-edge · -wash · -text</code>
+              <span class="sg-color__use">Around an action that cannot be undone, and an invalid field's edge.</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="sg-h3">Lines &amp; layers</h3>
+        <p class="sg-p">White at low strength, so one value works on every surface.</p>
+        <div class="sg-layers sg-mt">
+          <div class="sg-layer-demo" data-sg-token="--ui-border">
+            <div class="sg-layer-demo__stage sg-layer-demo__stage--line" style="border-color: var(--ui-border)"></div>
+            <span class="sg-label">Border</span>
+            <code class="sg-meta">--ui-border · <span data-sg-value></span></code>
+          </div>
+          <div class="sg-layer-demo" data-sg-token="--ui-border-strong">
+            <div class="sg-layer-demo__stage sg-layer-demo__stage--line" style="border-color: var(--ui-border-strong)"></div>
+            <span class="sg-label">Strong border</span>
+            <code class="sg-meta">--ui-border-strong · <span data-sg-value></span></code>
+          </div>
+          <div class="sg-layer-demo" data-sg-token="--ui-layer-hover">
+            <div class="sg-layer-demo__stage"><div class="ui-layer-hover h-full rounded-xl"></div></div>
+            <span class="sg-label">Hover</span>
+            <code class="sg-meta">.ui-layer-hover · <span data-sg-value></span></code>
+          </div>
+          <div class="sg-layer-demo" data-sg-token="--ui-layer-selected">
+            <div class="sg-layer-demo__stage"><div class="ui-layer-selected h-full rounded-xl"></div></div>
+            <span class="sg-label">Selected</span>
+            <code class="sg-meta">.ui-layer-selected · <span data-sg-value></span></code>
+          </div>
+          <div class="sg-layer-demo" data-sg-token="--ui-scrim">
+            <div class="sg-layer-demo__stage"><div class="ui-scrim h-full rounded-xl"></div></div>
+            <span class="sg-label">Scrim</span>
+            <code class="sg-meta">.ui-scrim · <span data-sg-value></span></code>
+          </div>
+        </div>
+
+        <!-- Every color the theme defines, merged by value, for looking one up. -->
+        <details class="sg-details">
+          <summary>All color tokens</summary>
+          <div class="sg-scroll">
+            <table id="sg-tokens" class="sg-tokens"></table>
+          </div>
+        </details>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────── Surfaces ────────────────────────────── -->
+    <section id="surfaces" class="sg-section">
+      <div class="sg-wrap">
+        <h2 class="sg-h2">Surfaces</h2>
+        <p class="sg-p">Depth is lightness: whatever rests on a surface is one step lighter than it.</p>
+
+        <h3 class="sg-h3">Elevation, dark to light</h3>
+        <div class="sg-ladder sg-mt">
+          <div class="sg-rung" style="background-color: var(--elev-0)" data-sg-token="--elev-0">
+            <span class="sg-rung__level">Level 0</span>
+            <span class="sg-rung__name">Page</span>
+            <span class="sg-rung__use">The ground, and the sidebar</span>
+            <code class="sg-rung__value">--elev-0 · <span data-sg-value></span></code>
+          </div>
+          <div class="sg-rung sg-rung--1" style="background-color: var(--elev-1)" data-sg-token="--elev-1">
+            <span class="sg-rung__level">Level 1</span>
+            <span class="sg-rung__name">Card</span>
+            <span class="sg-rung__use">Panels and cards on the page</span>
+            <code class="sg-rung__value">--elev-1 · <span data-sg-value></span></code>
+          </div>
+          <div class="sg-rung sg-rung--2" style="background-color: var(--elev-2)" data-sg-token="--elev-2">
+            <span class="sg-rung__level">Level 2</span>
+            <span class="sg-rung__name">Raised</span>
+            <span class="sg-rung__use">Lifted cards, dialogs, drawers</span>
+            <code class="sg-rung__value">--elev-2 · <span data-sg-value></span></code>
+          </div>
+          <div class="sg-rung sg-rung--3" style="background-color: var(--elev-3)" data-sg-token="--elev-3">
+            <span class="sg-rung__level">Level 3</span>
+            <span class="sg-rung__name">Overlay</span>
+            <span class="sg-rung__use">Boxes on a dialog, menus</span>
+            <code class="sg-rung__value">--elev-3 · <span data-sg-value></span></code>
+          </div>
+          <div class="sg-rung sg-rung--4" style="background-color: var(--elev-4)" data-sg-token="--elev-4">
+            <span class="sg-rung__level">Level 4</span>
+            <span class="sg-rung__name">Field</span>
+            <span class="sg-rung__use">Inputs and selects, above every surface</span>
+            <code class="sg-rung__value">--elev-4 · <span data-sg-value></span></code>
+          </div>
+        </div>
+        <p class="sg-p sg-mt" data-sg-token="--ui-well">
+          One surface sits outside the ladder: the <strong>well</strong>
+          (<code class="sg-code">--ui-well</code>, <span data-sg-value></span>), a track cut into a surface —
+          a meter, a segmented control, a fader rail. Inside a dialog it also stands in for level 0.
+        </p>
+
+        <h3 class="sg-h3">Stacking</h3>
+        <div class="card sg-mt">
+          <p class="card__title">.card — level 1</p>
+          <p class="card__desc">On a dashboard page a card is a panel on the ground.</p>
+          <div class="card elev-2 sg-mt">
+            <p class="card__title">.card.elev-2 — level 2</p>
+            <p class="card__desc">The usage tiles, the Chrono Origin trace form.</p>
+            <div class="rounded-xl border border-[var(--ui-border)] elev-3 p-5 sg-mt">
+              <p class="card__title">.elev-3 — level 3, a box on a lifted card</p>
+              <div class="field sg-mt">
+                <label class="field__label" for="sg-stack-field">.input — level 4, fields sit above every surface</label>
+                <input class="input" id="sg-stack-field" type="text" placeholder="Type here">
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────── Typography ───────────────────────────── -->
+    <!-- The most common pattern for each role across views/dashboard*.ejs. -->
+    <section id="type" class="sg-section">
+      <div class="sg-wrap">
+        <h2 class="sg-h2">Typography</h2>
+        <p class="sg-p">One scale for the site and the dashboard, from the UI Bible. Nothing readable under 12px.</p>
+
+        <div class="card sg-mt">
+          <div class="sg-type">
+            <div class="sg-type__row">
+              <p class="sg-type__role">Page title</p>
+              <div class="sg-type__sample">
+                <p class="text-h1 text-surface-100">Research Atlas</p>
+                <code class="sg-meta">text-h1 — 40/56 · 300</code>
+              </div>
+            </div>
+            <div class="sg-type__row">
+              <p class="sg-type__role">Dialog / major section</p>
+              <div class="sg-type__sample">
+                <p class="text-h2 text-surface-100">Upgrade your plan</p>
+                <code class="sg-meta">text-h2 — 24/32 · 500 · −0.025em</code>
+              </div>
+            </div>
+            <div class="sg-type__row">
+              <p class="sg-type__role">Section heading</p>
+              <div class="sg-type__sample">
+                <p class="text-h3 text-surface-100">Recent Activity</p>
+                <code class="sg-meta">text-h3 — 18/24 · 600</code>
+              </div>
+            </div>
+            <div class="sg-type__row">
+              <p class="sg-type__role">Card title</p>
+              <div class="sg-type__sample">
+                <p class="text-h4 text-surface-100">Text to Speech</p>
+                <code class="sg-meta">text-h4 — 16/24 · 500</code>
+              </div>
+            </div>
+            <div class="sg-type__row">
+              <p class="sg-type__role">Body</p>
+              <div class="sg-type__sample">
+                <p class="text-body text-surface-100">Paste your text, pick a voice and generate.</p>
+                <code class="sg-meta">text-body — 16/24 · 400</code>
+              </div>
+            </div>
+            <div class="sg-type__row">
+              <p class="sg-type__role">Interface</p>
+              <div class="sg-type__sample">
+                <p class="text-ui text-surface-100">Narrava Studio</p>
+                <code class="sg-meta">text-ui — 15/21 · 400 (nav, menus, rows, tabs)</code>
+              </div>
+            </div>
+            <div class="sg-type__row">
+              <p class="sg-type__role">Form label</p>
+              <div class="sg-type__sample">
+                <p class="text-label text-surface-100">Story title</p>
+                <code class="sg-meta">text-label — 15/24 · 500</code>
+              </div>
+            </div>
+            <div class="sg-type__row">
+              <p class="sg-type__role">Supporting</p>
+              <div class="sg-type__sample">
+                <p class="text-body-sm text-surface-200">Your latest generations across all products.</p>
+                <code class="sg-meta">text-body-sm — 14/20 · 400</code>
+              </div>
+            </div>
+            <div class="sg-type__row">
+              <p class="sg-type__role">Eyebrow</p>
+              <div class="sg-type__sample">
+                <p class="text-overline uppercase text-surface-200">Credits remaining</p>
+                <code class="sg-meta">text-overline uppercase — 12 · 500 · 0.09em</code>
+              </div>
+            </div>
+            <div class="sg-type__row">
+              <p class="sg-type__role">Caption</p>
+              <div class="sg-type__sample">
+                <p class="text-caption text-surface-400">Shown in the header and on exports.</p>
+                <code class="sg-meta">text-caption — 12/16 · 400 (the floor)</code>
+              </div>
+            </div>
+            <div class="sg-type__row">
+              <p class="sg-type__role">Disabled</p>
+              <div class="sg-type__sample">
+                <p class="text-body-sm text-surface-500">Locked while rendering</p>
+                <code class="sg-meta">text-body-sm text-surface-500</code>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────── Buttons ─────────────────────────────── -->
+    <section id="buttons" class="sg-section">
+      <div class="sg-wrap">
+        <h2 class="sg-h2">Buttons</h2>
+        <p class="sg-p">One primary button per view.</p>
+
+        <h3 class="sg-h3">Roles</h3>
+        <div class="card sg-mt">
+          <div class="sg-grid sg-grid--roles">
+            <div class="sg-demo">
+              <p class="sg-role">Primary</p>
+              <button type="button" class="btn btn--filled btn--md">Generate</button>
+              <code class="sg-meta">btn--filled</code>
+            </div>
+            <div class="sg-demo">
+              <p class="sg-role">Secondary</p>
+              <button type="button" class="btn btn--tonal btn--md">Recharge</button>
+              <code class="sg-meta">btn--tonal</code>
+            </div>
+            <div class="sg-demo">
+              <p class="sg-role">Neutral</p>
+              <button type="button" class="btn btn--outlined btn--md">Cancel</button>
+              <code class="sg-meta">btn--outlined</code>
+            </div>
+            <div class="sg-demo">
+              <p class="sg-role">Quiet</p>
+              <button type="button" class="btn btn--text btn--md">View usage</button>
+              <code class="sg-meta">btn--text</code>
+            </div>
+            <div class="sg-demo">
+              <p class="sg-role">Success</p>
+              <button type="button" class="btn btn--success btn--md">Save</button>
+              <code class="sg-meta">btn--success</code>
+            </div>
+            <div class="sg-demo">
+              <p class="sg-role">Destructive</p>
+              <button type="button" class="btn btn--danger-outline btn--md">Remove</button>
+              <code class="sg-meta">btn--danger-outline</code>
+            </div>
+            <div class="sg-demo">
+              <p class="sg-role">Destructive, quiet</p>
+              <button type="button" class="btn btn--danger-text btn--md">Discard</button>
+              <code class="sg-meta">btn--danger-text</code>
+            </div>
+          </div>
+          <p class="sg-meta sg-mt">
+            <span class="sg-meta__name">btn--accent</span> and <span class="sg-meta__name">btn--contrast</span> render as
+            Primary; <span class="sg-meta__name">btn--tonal-accent</span> renders as Secondary.
+          </p>
+        </div>
+
+        <h3 class="sg-h3">With icons</h3>
+        <div class="card sg-mt">
+          <div class="sg-grid sg-grid--roles">
+            <div class="sg-demo">
+              <p class="sg-role">Primary</p>
+              <button type="button" class="btn btn--filled btn--md"><i data-lucide="sparkles"></i>Generate</button>
+            </div>
+            <div class="sg-demo">
+              <p class="sg-role">Secondary</p>
+              <button type="button" class="btn btn--tonal btn--md"><i data-lucide="zap"></i>Recharge</button>
+            </div>
+            <div class="sg-demo">
+              <p class="sg-role">Neutral</p>
+              <button type="button" class="btn btn--outlined btn--md"><i data-lucide="upload"></i>Upload</button>
+            </div>
+            <div class="sg-demo">
+              <p class="sg-role">Quiet</p>
+              <button type="button" class="btn btn--text btn--md"><i data-lucide="download"></i>Download</button>
+            </div>
+            <div class="sg-demo">
+              <p class="sg-role">Success</p>
+              <button type="button" class="btn btn--success btn--md"><i data-lucide="check"></i>Publish</button>
+            </div>
+            <div class="sg-demo">
+              <p class="sg-role">Destructive</p>
+              <button type="button" class="btn btn--danger-outline btn--md"><i data-lucide="trash-2"></i>Delete</button>
+            </div>
+            <div class="sg-demo">
+              <p class="sg-role">Trailing icon</p>
+              <button type="button" class="btn btn--outlined btn--md">Next<i data-lucide="arrow-right"></i></button>
+            </div>
+          </div>
+          <div class="sg-demo sg-mt">
+            <p class="sg-role">Icon only</p>
+            <div class="sg-row">
+              <button type="button" class="btn btn--filled btn--icon btn--md" aria-label="Add"><i data-lucide="plus"></i></button>
+              <button type="button" class="btn btn--tonal btn--icon btn--md" aria-label="Recharge"><i data-lucide="zap"></i></button>
+              <button type="button" class="btn btn--outlined btn--icon btn--md" aria-label="Edit"><i data-lucide="pencil"></i></button>
+              <button type="button" class="btn btn--text btn--icon btn--md" aria-label="Copy"><i data-lucide="copy"></i></button>
+              <button type="button" class="btn btn--danger-text btn--icon btn--md" aria-label="Delete"><i data-lucide="trash-2"></i></button>
+            </div>
+            <code class="sg-meta">btn--icon · icons size with the button: 13 / 14 / 16 / 18px</code>
+          </div>
+        </div>
+
+        <h3 class="sg-h3">Sizes</h3>
+        <div class="card sg-mt">
+          <div class="sg-row">
+            <button type="button" class="btn btn--filled btn--xs">xs · 28</button>
+            <button type="button" class="btn btn--filled btn--sm">sm · 32</button>
+            <button type="button" class="btn btn--filled btn--md">md · 36</button>
+            <button type="button" class="btn btn--filled btn--lg">lg · 44</button>
+            <button type="button" class="btn btn--outlined btn--icon btn--md" aria-label="Add"><i data-lucide="plus"></i></button>
+            <button type="button" class="btn btn--text btn--icon btn--sm" aria-label="More"><i data-lucide="ellipsis"></i></button>
+          </div>
+        </div>
+
+        <h3 class="sg-h3">States</h3>
+        <div class="card sg-mt">
+          <div class="sg-grid sg-grid--roles">
+            <div class="sg-demo">
+              <p class="sg-role">Disabled</p>
+              <button type="button" class="btn btn--filled btn--md" disabled>Generate</button>
+              <code class="sg-meta">:disabled</code>
+            </div>
+            <div class="sg-demo">
+              <p class="sg-role">Loading</p>
+              <button type="button" class="btn btn--filled btn--md" data-loading="true">Generate</button>
+              <code class="sg-meta">data-loading</code>
+            </div>
+            <div class="sg-demo">
+              <p class="sg-role">Loading, secondary</p>
+              <button type="button" class="btn btn--tonal btn--md" data-loading="true">Recharge</button>
+              <code class="sg-meta">data-loading</code>
+            </div>
+            <div class="sg-demo">
+              <p class="sg-role">Done</p>
+              <button type="button" class="btn btn--success btn--md" data-success="true">Saved</button>
+              <code class="sg-meta">data-success</code>
+            </div>
+          </div>
+          <div class="sg-demo sg-mt">
+            <p class="sg-role">With a price</p>
+            <div class="sg-row">
+              <span class="cost-tag"><i data-lucide="zap" class="h-3.5 w-3.5"></i>300</span>
+              <span class="cost-tag"><i data-lucide="zap" class="h-3.5 w-3.5"></i>1,200</span>
+              <button type="button" class="btn btn--filled btn--cta"><i data-lucide="sparkles" class="h-4 w-4"></i>Build Audio Course</button>
+            </div>
+            <code class="sg-meta">cost-tag · btn--cta</code>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────────────── Forms ──────────────────────────────── -->
+    <section id="forms" class="sg-section">
+      <div class="sg-wrap">
+        <h2 class="sg-h2">Forms</h2>
+        <p class="sg-p">Fields look the same on a panel, a lifted card and in a dialog.</p>
+
+        <div class="sg-grid sg-grid--3 sg-mt">
+          <div class="card">
+            <p class="sg-label">On a panel · .card</p>
+            <div class="sg-demo sg-demo--fill sg-mt">
+              <div class="field">
+                <label class="field__label" for="sg-f1-name">Project name</label>
+                <input class="input" id="sg-f1-name" type="text" value="Ancient Knowledge">
+                <p class="field__hint">Shown in the header and on exports.</p>
+              </div>
+              <div class="field">
+                <label class="field__label" for="sg-f1-voice">Voice</label>
+                <select class="select" id="sg-f1-voice"><option>Narrator — warm</option><option>Narrator — bright</option></select>
+              </div>
+              <div class="field">
+                <label class="field__label" for="sg-f1-notes">Notes <span class="field__optional">optional</span></label>
+                <input class="input" id="sg-f1-notes" type="text" placeholder="Anything the narrator should know">
+              </div>
+            </div>
+          </div>
+
+          <div class="card elev-2">
+            <p class="sg-label">On a lifted card · .card.elev-2</p>
+            <div class="sg-demo sg-demo--fill sg-mt">
+              <div class="field">
+                <label class="field__label" for="sg-f2-name">Project name</label>
+                <input class="input" id="sg-f2-name" type="text" value="Ancient Knowledge">
+                <p class="field__hint">Shown in the header and on exports.</p>
+              </div>
+              <div class="field">
+                <label class="field__label" for="sg-f2-voice">Voice</label>
+                <select class="select" id="sg-f2-voice"><option>Narrator — warm</option><option>Narrator — bright</option></select>
+              </div>
+              <div class="field">
+                <label class="field__label" for="sg-f2-notes">Notes <span class="field__optional">optional</span></label>
+                <input class="input" id="sg-f2-notes" type="text" placeholder="Anything the narrator should know">
+              </div>
+            </div>
+          </div>
+
+          <div class="ui-dialog sg-panel">
+            <p class="sg-label">In a dialog · .ui-dialog</p>
+            <div class="sg-demo sg-demo--fill sg-mt">
+              <div class="field">
+                <label class="field__label" for="sg-f3-name">Project name</label>
+                <input class="input" id="sg-f3-name" type="text" value="Ancient Knowledge">
+                <p class="field__hint">Shown in the header and on exports.</p>
+              </div>
+              <div class="field">
+                <label class="field__label" for="sg-f3-voice">Voice</label>
+                <select class="select" id="sg-f3-voice"><option>Narrator — warm</option><option>Narrator — bright</option></select>
+              </div>
+              <div class="field">
+                <label class="field__label" for="sg-f3-notes">Notes <span class="field__optional">optional</span></label>
+                <input class="input" id="sg-f3-notes" type="text" placeholder="Anything the narrator should know">
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="sg-h3">States</h3>
+        <div class="card sg-mt">
+          <div class="sg-grid sg-grid--2">
+            <div class="sg-demo sg-demo--fill">
+              <div class="field">
+                <label class="field__label" for="sg-s-readonly">Read-only</label>
+                <input class="input" id="sg-s-readonly" type="text" value="usr_2f9c41" readonly>
+              </div>
+              <code class="sg-meta">[readonly]</code>
+            </div>
+            <div class="sg-demo sg-demo--fill">
+              <div class="field">
+                <label class="field__label" for="sg-s-disabled">Disabled</label>
+                <input class="input" id="sg-s-disabled" type="text" value="Locked while rendering" disabled>
+              </div>
+              <code class="sg-meta">:disabled</code>
+            </div>
+            <div class="sg-demo sg-demo--fill">
+              <div class="field">
+                <label class="field__label" for="sg-s-invalid">Email</label>
+                <input class="input" id="sg-s-invalid" type="email" value="you@example" aria-invalid="true" aria-describedby="sg-s-invalid-msg">
+                <p class="field__error" id="sg-s-invalid-msg">That address does not look right.</p>
+              </div>
+              <code class="sg-meta">aria-invalid="true"</code>
+            </div>
+            <div class="sg-demo sg-demo--fill">
+              <div class="field">
+                <label class="field__label" for="sg-s-icon">Article or book URL</label>
+                <div class="field--icon">
+                  <input class="input" id="sg-s-icon" type="url" placeholder="https://example.com/long-form-article">
+                  <i data-lucide="link" aria-hidden="true"></i>
+                </div>
+              </div>
+              <code class="sg-meta">field--icon</code>
+            </div>
+            <div class="sg-demo sg-demo--fill">
+              <div class="field">
+                <label class="field__label" for="sg-s-sm">Small · input--sm</label>
+                <input class="input input--sm" id="sg-s-sm" type="text" placeholder="Dense rows">
+              </div>
+              <div class="field">
+                <label class="field__label" for="sg-s-lg">Large · input--lg</label>
+                <input class="input input--lg" id="sg-s-lg" type="text" placeholder="The main entry">
+              </div>
+            </div>
+            <div class="sg-demo sg-demo--fill">
+              <label class="field__label" for="sg-s-textarea">Message</label>
+              <textarea class="textarea" id="sg-s-textarea" rows="3" placeholder="Describe the problem, what you expected, and any steps to reproduce it."></textarea>
+              <span class="field-count">0 / 5,000</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="sg-h3">Switches</h3>
+        <div class="card sg-mt">
+          <div class="sg-row">
+            <label class="relative inline-flex cursor-pointer items-center gap-3">
+              <input type="checkbox" class="peer sr-only" checked>
+              <span class="switch"></span>
+              <span class="sg-label">Enabled</span>
+            </label>
+            <label class="relative inline-flex cursor-pointer items-center gap-3">
+              <input type="checkbox" class="peer sr-only">
+              <span class="switch"></span>
+              <span class="sg-label">Off</span>
+            </label>
+            <label class="relative inline-flex cursor-pointer items-center gap-3">
+              <input type="checkbox" class="peer sr-only" checked>
+              <span class="switch switch--accent"></span>
+              <span class="sg-label">switch--accent</span>
+            </label>
+            <label class="relative inline-flex cursor-pointer items-center gap-3">
+              <input type="checkbox" class="peer sr-only" disabled>
+              <span class="switch"></span>
+              <span class="sg-label">Disabled</span>
+            </label>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ─────────────────────────────── Navigation ───────────────────────────── -->
+    <section id="navigation" class="sg-section">
+      <div class="sg-wrap">
+        <h2 class="sg-h2">Navigation</h2>
+        <p class="sg-p">The current item is never marked by color alone: a filled row, an underline or a raised chip.</p>
+
+        <div class="sg-grid sg-grid--2 sg-mt">
+          <div class="sg-demo sg-demo--fill">
+            <!-- As partials/admin/sidebar.ejs renders it on every dashboard page, open. -->
+            <nav class="dash-nav sg-panel sg-navdemo flex flex-col text-surface-200" aria-label="Sidebar example">
+              <div class="relative flex items-center gap-3 border-b border-[var(--ui-border)] px-4 py-4">
+                <div class="text-h2 text-surface-100"><%= guide.brand || guide.name %></div>
+              </div>
+              <div class="space-y-3 px-3 py-2">
+                <div>
+                  <p class="px-2 text-overline uppercase text-surface-200">Products</p>
+                  <ul class="mt-1.5 space-y-0.5">
+                    <li><a href="#navigation" class="nav-item"><span class="nav-item__icon"><i data-lucide="mic" class="h-4 w-4"></i></span><span class="nav-item__label">Text-to-Speech</span></a></li>
+                    <li><a href="#navigation" class="nav-item" aria-current="page"><span class="nav-item__icon"><i data-lucide="library" class="h-4 w-4"></i></span><span class="nav-item__label">Research Atlas</span></a></li>
+                    <li><a href="#navigation" class="nav-item"><span class="nav-item__icon"><i data-lucide="clapperboard" class="h-4 w-4"></i></span><span class="nav-item__label">Narrava Studio</span></a></li>
+                    <li><a href="#navigation" class="nav-item"><span class="nav-item__icon"><i data-lucide="life-buoy" class="h-4 w-4"></i></span><span class="nav-item__label">Support</span><span class="count-badge nav-item__count">3<span class="sr-only"> unread</span></span></a></li>
+                  </ul>
+                </div>
+              </div>
+              <div class="relative space-y-3 border-t border-[var(--ui-border)] p-3">
+                <button type="button" class="nav-cta bg-gradient-to-r from-primary-700 to-primary-600 text-surface-950 shadow-lg shadow-black/30 hover:from-primary-500 hover:to-white">
+                  <span class="text-body leading-none">★</span>
+                  <span>Upgrade Plan</span>
+                </button>
+                <button type="button" class="flex w-full items-center gap-3 rounded-lg px-2 py-2 text-left hover:bg-[var(--ui-layer-hover)]">
+                  <span class="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full elev-2">
+                    <i data-lucide="user" class="h-4 w-4 text-surface-200"></i>
+                  </span>
+                  <span class="min-w-0 flex-1">
+                    <span class="block truncate text-caption font-medium text-surface-100">Account</span>
+                    <span class="block truncate text-caption text-surface-200">you@example.com</span>
+                  </span>
+                  <i data-lucide="chevron-up" class="h-3 w-3 shrink-0 text-surface-200"></i>
+                </button>
+              </div>
+            </nav>
+            <code class="sg-meta">Sidebar · partials/admin/sidebar.ejs · .nav-item[aria-current="page"] · .nav-cta</code>
+          </div>
+
+          <div class="sg-stack">
+            <div class="sg-demo sg-demo--fill">
+              <div class="tabs" role="tablist" aria-label="Underline tabs example">
+                <button type="button" class="tab" role="tab" aria-selected="true">Sources</button>
+                <button type="button" class="tab" role="tab" aria-selected="false">My Dossiers</button>
+                <button type="button" class="tab" role="tab" aria-selected="false">Settings</button>
+              </div>
+              <code class="sg-meta">Page tabs · .tabs .tab — the brand underline marks the current one</code>
+            </div>
+
+            <div class="card">
+              <div class="sg-demo">
+                <div class="tabs tabs--pill">
+                  <button type="button" class="tab is-active">Upload file</button>
+                  <button type="button" class="tab">From URL</button>
+                  <button type="button" class="tab">Paste text</button>
+                </div>
+                <code class="sg-meta">Tabs in a card · .tabs.tabs--pill</code>
+              </div>
+              <div class="sg-demo sg-mt">
+                <div class="segmented" role="radiogroup" aria-label="Aspect ratio example">
+                  <button type="button" class="segmented__item" role="radio" aria-checked="true">9:16</button>
+                  <button type="button" class="segmented__item" role="radio" aria-checked="false">1:1</button>
+                  <button type="button" class="segmented__item" role="radio" aria-checked="false">16:9</button>
+                </div>
+                <code class="sg-meta">Pick a value · .segmented</code>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ───────────────────────────── Cards & data ───────────────────────────── -->
+    <section id="cards" class="sg-section">
+      <div class="sg-wrap">
+        <h2 class="sg-h2">Cards &amp; data</h2>
+
+        <h3 class="sg-h3">Cards</h3>
+        <div class="sg-grid sg-mt">
+          <div class="card">
+            <div class="card__header"><h4 class="card__title">.card</h4></div>
+            <p class="card__desc">A panel on the page.</p>
+          </div>
+          <div class="card card--raised">
+            <div class="card__header"><h4 class="card__title">.card--raised</h4></div>
+            <p class="card__desc">A deeper shadow, for emphasis.</p>
+          </div>
+          <div class="card card--interactive" tabindex="0">
+            <div class="card__header"><h4 class="card__title">.card--interactive</h4></div>
+            <p class="card__desc">Only for cards that are pressable.</p>
+          </div>
+          <div class="card elev-2">
+            <div class="card__header"><h4 class="card__title">.card.elev-2</h4></div>
+            <p class="card__desc">Lifted off a panel.</p>
+          </div>
+          <div class="card elev-3">
+            <div class="card__header"><h4 class="card__title">.card.elev-3</h4></div>
+            <p class="card__desc">Two steps up.</p>
+            <div class="card__footer"><p class="card__desc">.card__footer</p></div>
+          </div>
+        </div>
+
+        <h3 class="sg-h3">Summary tiles</h3>
+        <div class="sg-grid sg-grid--3 sg-mt">
+          <!-- As on dashboard-usage.ejs -->
+          <div class="sg-demo sg-demo--fill">
+            <div class="card card--raised elev-2">
+              <div class="flex items-center gap-3">
+                <div class="flex h-10 w-10 items-center justify-center rounded-xl bg-primary-500/10">
+                  <i data-lucide="activity" class="h-5 w-5 text-primary-400"></i>
+                </div>
+                <div>
+                  <p class="text-overline uppercase text-surface-200">Total</p>
+                  <p class="text-h2 text-surface-100">1,284</p>
+                  <p class="text-overline uppercase text-surface-200">Generations, all time</p>
+                </div>
+              </div>
+            </div>
+            <code class="sg-meta">Usage tile · card card--raised elev-2</code>
+          </div>
+
+          <!-- As BookAlchemy.js renders them, on its elev-2 drawer -->
+          <div class="card elev-2 sg-demo sg-demo--fill">
+            <dl class="sg-stack">
+              <div class="stat-tile">
+                <span class="stat-tile__chip" aria-hidden="true"><i data-lucide="clock"></i></span>
+                <div class="stat-tile__text"><dt class="stat-tile__label">Duration</dt><dd class="stat-tile__value">25:42</dd></div>
+              </div>
+              <div class="stat-tile stat-tile--success">
+                <span class="stat-tile__chip" aria-hidden="true"><i data-lucide="check"></i></span>
+                <div class="stat-tile__text"><dt class="stat-tile__label">Status</dt><dd class="stat-tile__value">Ready</dd></div>
+              </div>
+            </dl>
+            <code class="sg-meta">.stat-tile · stat-tile--success</code>
+          </div>
+
+          <div class="card elev-2 sg-demo sg-demo--fill">
+            <dl class="sg-stack">
+              <div class="stat-tile stat-tile--warning">
+                <span class="stat-tile__chip" aria-hidden="true"><i data-lucide="alert-triangle"></i></span>
+                <div class="stat-tile__text"><dt class="stat-tile__label">Source check</dt><dd class="stat-tile__value">Some content flagged</dd></div>
+              </div>
+              <div class="stat-tile stat-tile--error">
+                <span class="stat-tile__chip" aria-hidden="true"><i data-lucide="x"></i></span>
+                <div class="stat-tile__text"><dt class="stat-tile__label">Render</dt><dd class="stat-tile__value">Failed</dd></div>
+              </div>
+              <div class="stat-tile stat-tile--info">
+                <span class="stat-tile__chip" aria-hidden="true"><i data-lucide="info"></i></span>
+                <div class="stat-tile__text"><dt class="stat-tile__label">Sessions</dt><dd class="stat-tile__value">12</dd></div>
+              </div>
+            </dl>
+            <code class="sg-meta">stat-tile--warning · --error · --info</code>
+          </div>
+        </div>
+
+        <h3 class="sg-h3">Tables</h3>
+        <!-- The shape of the usage page's tables -->
+        <div class="sg-demo sg-demo--fill sg-mt">
+          <section class="card card--flush card--raised">
+            <div class="border-b border-surface-800 px-6 py-5">
+              <h4 class="text-h4 text-surface-100">Recent Activity</h4>
+              <p class="mt-1 text-caption text-surface-200">Your latest generations across all products</p>
+            </div>
+            <div class="data-table-wrap">
+              <table class="data-table">
+                <thead>
+                  <tr><th scope="col">Type</th><th scope="col">Title / File</th><th scope="col">Status</th><th scope="col" class="data-table__num">Credits</th></tr>
+                </thead>
+                <tbody>
+                  <tr><td>Research Atlas</td><td class="data-table__strong">Pier Nine — three filings</td><td><span class="badge badge--success"><span class="badge__dot"></span>Complete</span></td><td class="data-table__num">1,200</td></tr>
+                  <tr><td>Text-to-Speech</td><td class="data-table__strong">chapter-04.txt</td><td><span class="badge badge--warning"><span class="badge__dot"></span>Queued</span></td><td class="data-table__num">300</td></tr>
+                  <tr><td>Narrava Studio</td><td class="data-table__strong">Ancient Knowledge</td><td><span class="badge badge--error"><span class="badge__dot"></span>Failed</span></td><td class="data-table__num">0</td></tr>
+                </tbody>
+              </table>
+            </div>
+          </section>
+          <code class="sg-meta">card card--flush card--raised › .data-table</code>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────────── Status ──────────────────────────────── -->
+    <section id="status" class="sg-section">
+      <div class="sg-wrap">
+        <h2 class="sg-h2">Status</h2>
+        <p class="sg-p">Status keeps its color; everything else is grey.</p>
+
+        <div class="sg-grid sg-grid--2 sg-mt">
+          <div class="card sg-demo sg-demo--fill">
+            <p class="sg-label">Text · .ui-text-*</p>
+            <div class="sg-row">
+              <span class="ui-text-success">Saved</span>
+              <span class="ui-text-warning">Running low</span>
+              <span class="ui-text-error">Upload failed</span>
+              <span class="ui-text-info">Processing</span>
+              <span class="ui-text-muted">Draft</span>
+            </div>
+          </div>
+          <div class="card sg-demo sg-demo--fill">
+            <p class="sg-label">Pills · .ui-pill-*</p>
+            <div class="sg-row">
+              <span class="ui-pill-success rounded-full px-2.5 py-1 text-caption font-medium">Success</span>
+              <span class="ui-pill-warning rounded-full px-2.5 py-1 text-caption font-medium">Warning</span>
+              <span class="ui-pill-error rounded-full px-2.5 py-1 text-caption font-medium">Error</span>
+              <span class="ui-pill-info rounded-full px-2.5 py-1 text-caption font-medium">Info</span>
+            </div>
+          </div>
+          <div class="card sg-demo sg-demo--fill">
+            <p class="sg-label">Badges · .badge</p>
+            <div class="sg-row">
+              <span class="badge">Neutral</span>
+              <span class="badge badge--success"><span class="badge__dot"></span>Complete</span>
+              <span class="badge badge--warning"><span class="badge__dot"></span>Queued</span>
+              <span class="badge badge--error"><span class="badge__dot"></span>Failed</span>
+              <span class="badge badge--info"><span class="badge__dot"></span>Info</span>
+              <span class="badge badge--sm">badge--sm</span>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="sg-h3">Credits</h3>
+        <!-- Full width: the cost bar caps itself at 32rem and centers, as it does on a product page. -->
+        <div class="card sg-demo sg-demo--fill sg-mt">
+          <p class="sg-label">.costbar</p>
+          <!-- As partials/admin/credit-meter.ejs renders it -->
+          <div class="costbar">
+            <div class="flex items-baseline justify-between gap-3">
+              <span class="text-caption text-surface-200">Credits remaining</span>
+              <span class="text-caption tabular-nums text-surface-200">17,600 of 26,000</span>
+            </div>
+            <div class="meter__track" role="meter" aria-valuenow="17600" aria-valuemin="0" aria-valuemax="26000" aria-label="Credits remaining">
+              <div class="meter__fill" style="width: 68%"></div>
+            </div>
+            <div class="costbar__row">
+              <p class="costbar__facts">
+                <span><span class="costbar__strong">300</span> per generation</span>
+                <span class="costbar__sep" aria-hidden="true">·</span>
+                <span>about <span class="costbar__strong">58</span> more</span>
+              </p>
+              <button type="button" class="btn btn--tonal btn--sm shrink-0"><i data-lucide="zap" class="h-4 w-4"></i>Recharge</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="sg-grid sg-grid--2 sg-mt">
+          <div class="card elev-2 sg-demo sg-demo--fill">
+            <p class="sg-label">Running low · meter__fill--low</p>
+            <div class="meter__track" role="meter" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" aria-label="Meter example">
+              <div class="meter__fill" style="width: 68%"></div>
+            </div>
+            <div class="meter__track" role="meter" aria-valuenow="12" aria-valuemin="0" aria-valuemax="100" aria-label="Running low example">
+              <div class="meter__fill meter__fill--low" style="width: 12%"></div>
+            </div>
+          </div>
+          <div class="card sg-demo sg-demo--fill">
+            <p class="sg-label">Out of credits · .banner--warning</p>
+            <!-- As partials/admin/credit-meter.ejs renders it -->
+            <div class="banner banner--warning" role="status">
+              <i data-lucide="alert-triangle" class="banner__icon h-4 w-4"></i>
+              <div class="min-w-0">
+                <p class="banner__title">Not enough credits to generate</p>
+                <p class="banner__body">
+                  This generation costs <span class="costbar__strong">1,200</span>
+                  and you have <span class="costbar__strong">340</span>. Add credits to continue.
+                </p>
+                <div class="banner__actions">
+                  <button type="button" class="btn btn--filled btn--sm"><i data-lucide="zap" class="h-4 w-4"></i>Recharge</button>
+                  <a href="#status" class="btn btn--text btn--sm">View usage</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="sg-h3">Drop zone</h3>
+        <div class="card sg-mt">
+          <!-- As dashboard-book-alchemy.ejs renders it -->
+          <div class="sg-clip">
+            <button type="button" class="dropzone">
+              <span class="dropzone__icon" aria-hidden="true"><i data-lucide="file-plus-2" class="h-6 w-6"></i></span>
+              <span class="dropzone__body">
+                <span class="dropzone__title">Drop your file here, <span class="dropzone__browse">or click to browse</span></span>
+                <span class="dropzone__hint">PDF, EPUB, DOCX, TXT, Markdown, HTML, MOBI, AZW</span>
+                <span class="dropzone__hint">Best results with clean, well-structured content.</span>
+              </span>
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ──────────────────────────── Dialogs & menus ─────────────────────────── -->
+    <!-- Every overlay the dashboard opens, drawn in place. The real ones mount position:fixed
+         over a scrim; here .sg-stage is that scrim, as a box, so they can sit side by side. -->
+    <section id="dialogs" class="sg-section">
+      <div class="sg-wrap">
+        <h2 class="sg-h2">Dialogs &amp; menus</h2>
+        <p class="sg-p">
+          A dialog is a level-2 panel over the scrim; what sits on it is level 3. A menu is level 3,
+          so it can open over a dialog.
+        </p>
+
+        <h3 class="sg-h3">Alerts &amp; confirms</h3>
+        <p class="sg-p">One component for every yes/no in the product: <code class="sg-code">assets/js/dialog.js</code>. The last button is the action.</p>
+        <div class="sg-grid sg-grid--pairs sg-mt">
+          <div class="sg-demo sg-demo--fill">
+            <div class="synx-dialog-backdrop synx-show sg-inflow">
+              <div class="synx-dialog-panel">
+                <div class="synx-dialog-icon-wrap" style="background:var(--dialog-info-ring); color:var(--dialog-info-icon)">
+                  <svg class="synx-dialog-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="16" x2="12" y2="12"/><line x1="12" y1="8" x2="12.01" y2="8"/></svg>
+                </div>
+                <div class="synx-dialog-title">Heads up</div>
+                <div class="synx-dialog-message">Your export is still rendering. We will email you when it is ready.</div>
+                <div class="synx-dialog-actions">
+                  <button type="button" class="synx-dialog-btn synx-dialog-btn-primary" style="background:var(--dialog-info-btn); color:var(--dialog-info-fg)">OK</button>
+                </div>
+              </div>
+            </div>
+            <code class="sg-meta">showAlert(message) · info</code>
+          </div>
+
+          <div class="sg-demo sg-demo--fill">
+            <div class="synx-dialog-backdrop synx-show sg-inflow">
+              <div class="synx-dialog-panel">
+                <div class="synx-dialog-icon-wrap" style="background:var(--dialog-success-ring); color:var(--dialog-success-icon)">
+                  <svg class="synx-dialog-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></svg>
+                </div>
+                <div class="synx-dialog-title">Course ready</div>
+                <div class="synx-dialog-message">All 8 sessions are narrated and saved to My Courses.</div>
+                <div class="synx-dialog-actions">
+                  <button type="button" class="synx-dialog-btn synx-dialog-btn-primary" style="background:var(--dialog-success-btn); color:var(--dialog-success-fg)">Done</button>
+                </div>
+              </div>
+            </div>
+            <code class="sg-meta">showAlert(message, 'success')</code>
+          </div>
+
+          <div class="sg-demo sg-demo--fill">
+            <div class="synx-dialog-backdrop synx-show sg-inflow">
+              <div class="synx-dialog-panel">
+                <div class="synx-dialog-icon-wrap" style="background:var(--dialog-warning-ring); color:var(--dialog-warning-icon)">
+                  <svg class="synx-dialog-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+                </div>
+                <div class="synx-dialog-title">Leave without saving?</div>
+                <div class="synx-dialog-message">Your changes to this script have not been saved.</div>
+                <div class="synx-dialog-actions">
+                  <button type="button" class="synx-dialog-btn synx-dialog-btn-cancel">Stay</button>
+                  <button type="button" class="synx-dialog-btn synx-dialog-btn-primary" style="background:var(--dialog-warning-btn); color:var(--dialog-warning-fg)">Leave</button>
+                </div>
+              </div>
+            </div>
+            <code class="sg-meta">showConfirm(message, { type: 'warning' })</code>
+          </div>
+
+          <div class="sg-demo sg-demo--fill">
+            <div class="synx-dialog-backdrop synx-show sg-inflow">
+              <div class="synx-dialog-panel">
+                <div class="synx-dialog-icon-wrap" style="background:var(--dialog-error-ring); color:var(--dialog-error-icon)">
+                  <svg class="synx-dialog-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                </div>
+                <div class="synx-dialog-title">Delete project</div>
+                <div class="synx-dialog-message">This cannot be undone.</div>
+                <div class="synx-dialog-actions">
+                  <button type="button" class="synx-dialog-btn synx-dialog-btn-cancel">Cancel</button>
+                  <button type="button" class="synx-dialog-btn synx-dialog-btn-primary" style="background:var(--dialog-error-btn); color:var(--dialog-error-fg)">Delete</button>
+                </div>
+              </div>
+            </div>
+            <code class="sg-meta">showConfirm(message, { type: 'error' })</code>
+          </div>
+        </div>
+
+        <h3 class="sg-h3">Form dialog</h3>
+        <p class="sg-p">For anything you fill in: <code class="sg-code">studio/components/FormDialog.js</code>. Icon and title over a divider, a scrolling body, the action in the footer. Full screen on a phone.</p>
+        <div class="sg-stage sg-mt">
+          <div class="sg-stage__w">
+            <div class="ui-dialog flex w-full flex-col overflow-hidden sm:rounded-2xl">
+              <div class="flex shrink-0 items-center gap-3 border-b border-[var(--ui-border)] px-6 pt-5 pb-4">
+                <span class="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-primary-500/15 text-primary-300"><i data-lucide="type" class="h-4 w-4"></i></span>
+                <div class="min-w-0 flex-1">
+                  <p class="truncate text-body-sm font-medium text-surface-100">New text</p>
+                  <p class="truncate text-caption text-surface-200">It lands on the Text track at the playhead</p>
+                </div>
+                <button type="button" aria-label="Close" class="btn btn--text btn--xs btn--icon shrink-0"><i data-lucide="x" class="h-4 w-4"></i></button>
+              </div>
+              <div class="min-h-0 flex-1 overflow-y-auto px-6 py-5">
+                <div class="sg-stack">
+                  <div class="field">
+                    <label class="field__label" for="sg-fd-words">Words</label>
+                    <textarea class="textarea" id="sg-fd-words" rows="2">The Hidden Path</textarea>
+                  </div>
+                  <div class="sg-grid sg-grid--2">
+                    <div class="field">
+                      <label class="field__label" for="sg-fd-font">Font</label>
+                      <select class="select" id="sg-fd-font"><option>Inter</option><option>Playfair Display</option></select>
+                    </div>
+                    <div class="field">
+                      <label class="field__label" for="sg-fd-size">Size</label>
+                      <select class="select" id="sg-fd-size"><option>Large</option><option>Medium</option></select>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="flex shrink-0 items-center gap-2.5 border-t border-[var(--ui-border)] bg-[var(--ui-layer-hover)] px-6 py-4">
+                <p class="min-w-0 flex-1 truncate text-caption text-surface-200"></p>
+                <button type="button" class="btn btn--outlined btn--md">Cancel</button>
+                <button type="button" class="btn btn--filled btn--md">Add text</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="sg-h3">Upgrade plan</h3>
+        <p class="sg-p">On every dashboard page, opened from Recharge or the sidebar's Upgrade Plan: <code class="sg-code">partials/admin/upgrade-dialog.ejs</code>. The recommended plan carries the premium edge.</p>
+        <div class="sg-stage sg-mt">
+          <div class="sg-stage__w sg-stage__w--wide">
+            <div class="relative w-full rounded-2xl border border-surface-600 bg-surface-900 p-6 shadow-2xl shadow-black/50 sm:p-8">
+              <button type="button" aria-label="Close" class="btn btn--text btn--sm btn--icon absolute right-4 top-4"><i data-lucide="x" class="h-5 w-5"></i></button>
+              <div class="mb-6 text-center">
+                <div class="mb-2 inline-flex items-center gap-2">
+                  <i data-lucide="crown" class="h-5 w-5 text-primary-400"></i>
+                  <h4 class="text-h3 text-surface-100">Upgrade your plan</h4>
+                </div>
+                <p class="text-body-sm text-surface-200">Choose a plan and keep creating — credits refresh every month.</p>
+              </div>
+              <!-- Plans and features as src/billing/plans.js defines them. -->
+              <div class="grid gap-4 sm:grid-cols-3">
+                <div class="relative flex flex-col rounded-2xl border border-surface-800 bg-surface-950/40 p-5">
+                  <h3 class="text-h3 text-surface-100">Plus</h3>
+                  <div class="mt-2 flex items-baseline gap-1"><span class="text-h1 text-surface-100">$10</span><span class="text-body-sm font-medium text-surface-200">/month</span></div>
+                  <ul class="mt-5 space-y-3 text-body-sm">
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary-400"></i><span class="text-surface-200"><span class="font-medium text-primary-300">2,000</span> monthly credits</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary-400"></i><span class="text-surface-200">Priority generation on our latest models</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary-400"></i><span class="text-surface-200">Commercial usage rights</span></li>
+                  </ul>
+                  <a href="#dialogs" class="btn btn--md btn--block mt-6 btn--outlined">Subscribe to Plus</a>
+                </div>
+                <div class="relative flex flex-col rounded-2xl border border-primary-500 ring-2 ring-primary-500/40 bg-surface-950/40 p-5">
+                  <span class="absolute -top-3 left-1/2 -translate-x-1/2 rounded-full bg-primary-500 px-3 py-0.5 text-overline uppercase text-surface-950">Recommended</span>
+                  <h3 class="text-h3 text-surface-100">Pro</h3>
+                  <div class="mt-2 flex items-baseline gap-1"><span class="text-h1 text-surface-100">$30</span><span class="text-body-sm font-medium text-surface-200">/month</span></div>
+                  <ul class="mt-5 space-y-3 text-body-sm">
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary-400"></i><span class="text-surface-200"><span class="font-medium text-primary-300">12,000</span> monthly credits</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary-400"></i><span class="text-surface-200">Priority generation on our latest models</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary-400"></i><span class="text-surface-200">Commercial usage rights</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="sparkles" class="mt-0.5 h-4 w-4 flex-shrink-0 text-accent-400"></i><span class="font-medium text-surface-100">5,000-character TTS input</span></li>
+                  </ul>
+                  <a href="#dialogs" class="btn btn--md btn--block mt-6 btn--filled">Subscribe to Pro</a>
+                </div>
+                <div class="relative flex flex-col rounded-2xl border border-surface-800 bg-surface-950/40 p-5">
+                  <h3 class="text-h3 text-surface-100">Enterprise</h3>
+                  <div class="mt-2 flex items-baseline gap-1"><span class="text-h1 text-surface-100">$65</span><span class="text-body-sm font-medium text-surface-200">/month</span></div>
+                  <ul class="mt-5 space-y-3 text-body-sm">
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary-400"></i><span class="text-surface-200"><span class="font-medium text-primary-300">26,000</span> monthly credits</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary-400"></i><span class="text-surface-200">Priority generation on our latest models</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="check" class="mt-0.5 h-4 w-4 flex-shrink-0 text-primary-400"></i><span class="text-surface-200">Commercial usage rights</span></li>
+                    <li class="flex items-start gap-2"><i data-lucide="sparkles" class="mt-0.5 h-4 w-4 flex-shrink-0 text-accent-400"></i><span class="font-medium text-surface-100">5,000-character TTS input</span></li>
+                  </ul>
+                  <a href="#dialogs" class="btn btn--md btn--block mt-6 btn--outlined">Subscribe to Enterprise</a>
+                </div>
+              </div>
+              <p class="mt-6 text-center text-body-sm text-surface-200">
+                Want to buy credits only?
+                <a href="#dialogs" class="font-medium text-primary-300 hover:text-primary-200">Click here</a>
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="sg-h3">Workspace modal</h3>
+        <p class="sg-p">A panel you work in rather than a decision you make: <code class="sg-code">studio/components/Modal.js</code>. Sized by its content.</p>
+        <div class="sg-stage sg-mt">
+          <div class="nv-modal__panel">
+            <div class="nv-modal__head">
+              <h4 class="nv-modal__title">Mixer</h4>
+              <button type="button" class="nv-modal__action" aria-label="Reset levels"><i data-lucide="rotate-ccw" class="h-4 w-4"></i></button>
+              <button type="button" class="nv-modal__close" aria-label="Close"><i data-lucide="x" class="h-4 w-4"></i></button>
+            </div>
+            <div class="nv-modal__body">
+              <div class="sg-modal-body sg-stack">
+                <div class="sg-demo sg-demo--fill">
+                  <span class="sg-label">Narration</span>
+                  <div class="meter__track" role="meter" aria-valuenow="80" aria-valuemin="0" aria-valuemax="100" aria-label="Narration level"><div class="meter__fill" style="width: 80%"></div></div>
+                </div>
+                <div class="sg-demo sg-demo--fill">
+                  <span class="sg-label">Music</span>
+                  <div class="meter__track" role="meter" aria-valuenow="45" aria-valuemin="0" aria-valuemax="100" aria-label="Music level"><div class="meter__fill" style="width: 45%"></div></div>
+                </div>
+                <div class="sg-demo sg-demo--fill">
+                  <span class="sg-label">Sound effects</span>
+                  <div class="meter__track" role="meter" aria-valuenow="30" aria-valuemin="0" aria-valuemax="100" aria-label="Sound effects level"><div class="meter__fill" style="width: 30%"></div></div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <h3 class="sg-h3">Menus</h3>
+        <div class="sg-specials sg-mt">
+          <div class="sg-special">
+            <div class="sg-special__stage">
+              <!-- As dashboard-research-atlas.ejs renders its download menu, open. -->
+              <div class="ui-menu w-56 overflow-hidden rounded-lg p-1" role="menu" aria-label="Download menu example">
+                <p class="px-3 pb-1 pt-1.5 text-caption font-medium text-surface-200" aria-hidden="true">Download as</p>
+                <button type="button" role="menuitem" class="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-left text-ui text-surface-200 hover:bg-[var(--ui-layer-hover)]"><i data-lucide="file-text" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"></i>PDF report</button>
+                <button type="button" role="menuitem" class="flex w-full items-center gap-2.5 rounded-md px-3 py-2 text-left text-ui text-surface-200 hover:bg-[var(--ui-layer-hover)]"><i data-lucide="braces" class="h-3.5 w-3.5 shrink-0" aria-hidden="true"></i>Research data (JSON)</button>
+              </div>
+            </div>
+            <div class="sg-special__body">
+              <span class="sg-color__name">Action menu</span>
+              <code class="sg-color__token">.ui-menu — level 3</code>
+              <span class="sg-color__use">Opened from a button; rows take the hover layer.</span>
+            </div>
+          </div>
+          <div class="sg-special">
+            <div class="sg-special__stage">
+              <!-- As partials/admin/sidebar.ejs renders the profile menu, open. -->
+              <div class="elev-3 w-56 overflow-hidden rounded-2xl border border-[var(--ui-border)] py-2 text-surface-100 shadow-2xl" role="menu" aria-label="Profile menu example">
+                <a href="#dialogs" role="menuitem" class="flex items-center gap-3 px-3 py-2 text-ui hover:bg-[var(--ui-layer-hover)]"><i data-lucide="settings" class="h-4 w-4 text-surface-200"></i><span>Settings</span></a>
+                <a href="#dialogs" role="menuitem" class="flex items-center gap-3 px-3 py-2 text-ui hover:bg-[var(--ui-layer-hover)]"><i data-lucide="log-out" class="h-4 w-4 text-surface-200"></i><span>Log out</span></a>
+              </div>
+            </div>
+            <div class="sg-special__body">
+              <span class="sg-color__name">Profile menu</span>
+              <code class="sg-color__token">elev-3 · border --ui-border</code>
+              <span class="sg-color__use">From the account row at the foot of the sidebar.</span>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>window.SONIUS_GUIDE = <%- JSON.stringify({ id: guide.id, palette: guide.palette }).replace(/</g, '\\u003c') %>;</script>
+  <script src="/js/sheet.js"></script>
+</body>
+</html>

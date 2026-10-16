@@ -1,0 +1,27 @@
+{
+  "id": "phansora-dashboard",
+  "name": "Phansora Dashboard",
+  "brand": "Phansora",
+  "summary": "The colors, surfaces, type and shared components of the Phansora dashboard.",
+  "default": true,
+  "source": { "label": "the Phansora dashboard", "url": "https://phansora.com/dashboard" },
+  "swatches": ["#101012", "#1c1c1f", "#252529", "#2e2e33", "#38383e", "#e5e4e3", "#8b6eeb"],
+  "palette": {
+    "ramps": {
+      "surface": [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950],
+      "primary": [50, 100, 200, 300, 400, 500, 600, 700],
+      "accent": [200, 300, 400, 500, 600, 700],
+      "emerald": [300, 400, 500, 700],
+      "amber": [100, 200, 300, 400, 500, 700],
+      "rose": [100, 200, 300, 400, 500],
+      "red": [400, 500],
+      "violet": [500]
+    },
+    "tokens": [
+      "--ui-well", "--ui-field", "--ui-field-hover", "--ui-color-muted", "--ui-color-info",
+      "--ui-layer-hover", "--ui-layer-selected", "--ui-border", "--ui-border-strong", "--ui-scrim",
+      "--ui-fill-danger-edge", "--ui-fill-danger-wash",
+      "--dialog-info-ring", "--dialog-success-ring", "--dialog-error-ring", "--dialog-warning-ring"
+    ]
+  }
+}

@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Sonius — style guides</title>
+  <%# Sonius's own pages wear the default guide (built into /css/app.css). %>
+  <link rel="stylesheet" href="/css/app.css">
+</head>
+<body class="min-h-screen bg-surface-950 text-surface-100 antialiased">
+  <%- include('partials/bar') %>
+
+  <main class="dash-surface so-wrap so-page">
+    <h1 class="text-h1">Style guides</h1>
+    <p class="mt-2 max-w-2xl text-body-lg text-surface-300">Choose a guide to use as a reference.</p>
+
+    <ul class="so-guides" role="list">
+      <% guides.forEach(function (guide) { %>
+        <li>
+          <a class="card card--interactive so-guide" href="/guides/<%= guide.id %>">
+            <span class="so-swatches" aria-hidden="true">
+              <% guide.swatches.forEach(function (hex) { %><span style="background-color: <%= hex %>"></span><% }) %>
+            </span>
+            <span class="so-guide__head">
+              <span class="text-h4"><%= guide.name %></span>
+              <% if (guide.default) { %><span class="badge">Default</span><% } %>
+            </span>
+            <span class="text-body-sm text-surface-300"><%= guide.summary %></span>
+          </a>
+        </li>
+      <% }) %>
+    </ul>
+  </main>
+</body>
+</html>

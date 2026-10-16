@@ -1,0 +1,491 @@
+/* assets/css/dashboard-theme.css — the dashboard's theme: monochrome color, and the
+ * dashboard's typefaces (the second @theme block; the type scale is base.css's).
+ *
+ * Imported by dashboard.css after base.css, and only there. base.css is the shared
+ * system — components, type, motion, stacking — and reads every color by name without
+ * defining one. This file gives those names the dashboard's values; site-theme.css gives
+ * the same names the public site's. So neither bundle carries the other's colors.
+ *
+ * Values are the UI Bible's dark theme (ui-bible/src/styles/tokens.css) with two changes.
+ * The surfaces are the Sonora palette's elevation ladder (the Bible's Sonora page, E0–E4),
+ * and the accent is neutral rather than C64 Purple. Text, surfaces,
+ * icons and every "you are here" mark are grey; status keeps its hue because it carries
+ * meaning (the dashboard's own status palette, softer than the Bible's); logos, charts, media and category colours (timeline clips, Chrono node types)
+ * are content and are not governed here.
+ *
+ * The brand ramps (surface, primary, accent) are declared in @theme, as the site's are,
+ * so this bundle builds their utilities from these values. Tailwind emits
+ * `color: var(--color-surface-200)` rather than the literal, and every component reads
+ * the same names, so nothing in base.css knows which theme it is wearing. The stock
+ * ramps status speaks in (rose, red, emerald, amber) stay rebound in :root: in @theme,
+ * Tailwind would emit only the shades some utility happens to use.
+ *
+ * Every ramp carries only the shades the dashboard uses. A shade missing here is not
+ * harmless: in surface/primary/accent its utility is never generated, and in the status
+ * ramps it renders Tailwind's stock hue — a red where danger should be orange. So a new
+ * shade gets added here first; tests/styleguide-dashboard.test.js fails in both directions.
+ *
+ * The component rules at the bottom set the colors a component carries itself (the
+ * spinners, the price marks, the audio waveform), and turn dark whatever sits on a fill
+ * that used to be dark blue and is now light grey — a white label, a white knob, a
+ * white check.
+ */
+
+@theme {
+  /* ── Surfaces ─────────────────────────────────────────────────────────────
+     Sonora's ladder, E0–E3: 0 page, sidebar · 1 panels, cards · 2 lifted cards ·
+     3 boxes on a lifted card. E4 has no shade in this ramp; it is --elev-4 below.
+     surface-600/500 are separators and dim text rather than rungs. */
+  --color-surface-950: #101012;
+  --color-surface-900: #1c1c1f;
+  --color-surface-800: #252529;
+  --color-surface-700: #2e2e33;
+  --color-surface-600: #454545;
+
+  /* ── Foreground ───────────────────────────────────────────────────────────
+     The Bible's three text steps. 300 and 400 are both "muted": the dashboard used
+     them interchangeably for captions and placeholders, and the Bible certifies
+     one muted value, against the lightest field it can land on (4.7:1). */
+  --color-surface-500: #7a7a7a;
+  --color-surface-400: #aaaaaa;
+  --color-surface-300: #aaaaaa;
+  --color-surface-200: #b6b6b6;
+  --color-surface-100: #e5e4e3;
+  --color-surface-50:  #f5f5f5;
+
+  /* ── The accent, made neutral ─────────────────────────────────────────────
+     Brand blue and product gold both become the same light grey, so a primary
+     button, an active tab and a checked switch mean the same thing on every
+     product page. 300-600 are one value on purpose: the old ramps used those
+     steps for "accent text" and "accent fill" interchangeably, and in monochrome
+     there is exactly one of each. */
+  --color-primary-50:  #ffffff;
+  --color-primary-100: #f5f5f5;
+  --color-primary-200: #ededed;
+  --color-primary-300: #e5e4e3;
+  --color-primary-400: #e5e4e3;
+  --color-primary-500: #e5e4e3;
+  --color-primary-600: #e5e4e3;
+  --color-primary-700: #c8c8c8;
+
+  --color-accent-200: #ededed;
+  --color-accent-300: #e5e4e3;
+  --color-accent-400: #e5e4e3;
+  --color-accent-500: #e5e4e3;
+  --color-accent-600: #e5e4e3;
+  --color-accent-700: #c8c8c8;
+}
+
+/* ── Type ───────────────────────────────────────────────────────────────────
+   The dashboard's faces. The scale itself — every size, leading and weight — is shared
+   with the public site and lives in base.css (the @theme at its top). */
+@theme {
+  --font-sans: 'Inter Variable', 'Inter', ui-sans-serif, system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  /* One accent face, for a title that sells — never for interface text. */
+  --font-serif: ui-serif, 'New York', 'Iowan Old Style', Georgia, 'Times New Roman', serif;
+}
+
+:root {
+  --color-white: #ffffff;
+  /* An older name for surface-800, still read by the CMS editor's toolbar (dashboard.css). */
+  --color-surface-light-gray: var(--color-surface-800);
+
+  /* The surface ladder — why it exists is the note above .dash-surface in base.css —
+     mapped onto this theme's surfaces. Inside an overlay it shifts a rung; see below. */
+  --elev-0: var(--color-surface-950);
+  --elev-1: var(--color-surface-900);
+  --elev-2: var(--color-surface-800);
+  --elev-3: var(--color-surface-700);
+  /* Sonora's E4: the step above every rung a component can stand on. The field fill, and
+     the boxes on a level-3 panel (Chrono's node drawer in dashboard.css). */
+  --elev-4: #38383e;
+
+  /* The sidebar's ground: the page's own. The nav is part of the page, set off from the
+     content by its border rather than by standing a step above it. Its own token (read
+     by .dash-nav in base.css), so this stays a statement about the sidebar and the cards
+     and panels on level 1 are not moved by it. */
+  --dash-nav-bg: var(--elev-0);
+
+  --mono-accent:        #e5e4e3;
+  --mono-accent-hover:  #ffffff;   /* a control lightens under the pointer */
+  --mono-accent-active: #c8c8c8;   /* and darkens under the press */
+  /* The page's own dark, as ink — one definition, so the two cannot drift. 15:1 on the fill. */
+  --mono-on-accent:     var(--color-surface-950);
+
+  /* Violet. A brand color in its own right, not a status. Read through the token by the
+     current tab's underline below, so it lives in :root: in @theme Tailwind would emit it
+     only where a utility uses it. */
+  --color-violet-500: #8b6eeb;
+
+  /* The wash of light behind the dashboard home's heading (.dash-home in dashboard.css):
+     a deep violet, the dark end of the brand violet above, and how much of it shows where
+     it is strongest (0 is off, 1 is the full colour). Two tokens so the hue and the
+     brightness are separate decisions — turn the second one down and the glow dims
+     without changing colour. */
+  --dash-hero-glow: #4d33b7;
+  --dash-hero-glow-strength: 0.28;
+
+  /* Talari Book Studio. Its one hue is the brand violet above: the selected card, the
+     current step, the primary action, a checked box. Named for what each is FOR, so the
+     studio's CSS never spells a colour. Plain rgb rather than color-mix, which this build
+     has resolved to the full-strength colour before. */
+  --studio-accent:       var(--color-violet-500);
+  --studio-accent-hover: #9d85ef;
+  --studio-accent-press: #7b5fe2;
+  --studio-on-accent:    #ffffff;
+  --studio-accent-text:  #b9a7f5;                 /* violet as text on the dark ground: 7.9:1 */
+  --studio-accent-wash:  rgb(139 110 235 / 0.14); /* behind a selected card */
+  --studio-accent-edge:  rgb(139 110 235 / 0.85); /* a selected card's border */
+
+  /* Narrava Studio's welcome guide and home screen (dashboard.css, "the home screen and
+     the welcome guide"): the brand violet as LIGHT — the ring round the tab the guide is
+     pointing at, its arrow, the glow behind the character and around the card. Plain rgb,
+     for the same reason as Talari's above. */
+  --guide-accent:      var(--color-violet-500);
+  --guide-accent-text: #b9a7f5;                  /* icons and the checked radio on the dark ground */
+  --guide-edge:        rgb(139 110 235 / 0.55);  /* the card's border, a hovered card's */
+  --guide-glow:        rgb(139 110 235 / 0.45);  /* light thrown by the ring, arrow, halo */
+  --guide-wash:        rgb(139 110 235 / 0.20);  /* a soft field of it: the ring's spread, a checked radio */
+  --guide-deep:        rgb(77 51 183 / 0.32);    /* the dark end, at the halo's rim */
+  /* The desk the editor's pages lie on: a step lighter than the page ground, so white
+     pages read as objects on a surface rather than holes in it. */
+  --studio-desk:         #26262b;
+
+  /* ── Status ───────────────────────────────────────────────────────────────
+     Each status has a text color (--ui-color-*) and a darker fill (--ui-fill-*).
+     `rose` and `red` are both error in this codebase, so both ramps carry it. In
+     every status ramp 300 is the text color and 500 the fill; 400 sits between
+     (rose) or with the fill (emerald, amber); 100/200 are tints of the text color
+     and 700 a shade of the fill. Hard-coded copies of these live in dashboard.css
+     (Narrava mixer, Chrono Origin) and ChronoTimeline.js's canvas. */
+  --color-rose-100: #f8dbdb;
+  --color-rose-200: #f1b2b2;
+  --color-rose-300: #e98787;
+  --color-rose-400: #e17b7b;
+  --color-rose-500: #d96f6f;
+  --color-red-400: #e17b7b;
+  --color-red-500: #d96f6f;
+
+  --color-emerald-300: #6fd6b8;
+  --color-emerald-400: #4fbf9f;
+  --color-emerald-500: #4fbf9f;
+  --color-emerald-700: #337c67;
+
+  --color-amber-100: #f6eccc;
+  --color-amber-200: #eed897;
+  --color-amber-300: #e6c76a;
+  --color-amber-400: #d5b653;
+  --color-amber-500: #d5b653;
+  --color-amber-700: #9a681e;
+
+  /* Warning used to BE the accent ramp (gold). The accent is grey now, so
+     warning gets its own literal rather than silently going grey with it. */
+  --ui-color-success:     #6fd6b8;
+  --ui-color-warning:     #e6c76a;
+  --ui-color-error:       #e98787;
+  --ui-color-error-muted: #d96f6f;   /* the error fill, for washes and invalid edges */
+  --ui-color-info:        #8fb8d8;
+  --ui-color-muted:       #969696;
+
+  --ui-fill-success:            #4fbf9f;
+  --ui-fill-success-hover:      #6fd6b8;
+  --ui-fill-warning:            #d5b653;
+  --ui-fill-error:              #d96f6f;
+  --ui-fill-danger-edge:        rgb(217 111 111 / 0.36);
+  --ui-fill-danger-edge-strong: var(--ui-fill-error);
+  --ui-fill-danger-wash:        rgb(217 111 111 / 0.14);
+  --ui-fill-danger-text:        #e98787;
+
+  /* dialog.js reads these. Every fill here is light, so every label is dark. */
+  --dialog-info-icon:    #8fb8d8;   /* --ui-color-info; confirm dialogs use these too */
+  --dialog-info-btn:     #8fb8d8;
+  --dialog-info-ring:    rgb(143 184 216 / 0.25);
+  --dialog-info-fg:      var(--mono-on-accent);
+  --dialog-success-icon: #6fd6b8;
+  --dialog-success-btn:  #4fbf9f;
+  --dialog-success-ring: rgb(79 191 159 / 0.25);
+  --dialog-success-fg:   var(--mono-on-accent);
+  --dialog-error-icon:   #e98787;
+  --dialog-error-btn:    #d96f6f;
+  --dialog-error-ring:   rgb(217 111 111 / 0.25);
+  --dialog-error-fg:     var(--mono-on-accent);
+  --dialog-warning-icon: #e6c76a;
+  --dialog-warning-btn:  #d5b653;
+  --dialog-warning-ring: rgb(213 182 83 / 0.25);
+  --dialog-warning-fg:   var(--mono-on-accent);
+
+  /* ── Layers, edges, scrim ─────────────────────────────────────────────────
+     Selected can no longer differ from hover in hue, so it differs in strength
+     and in the second channel every selected state here already carries (the
+     nav bar, a label weight, a check). */
+  --ui-layer-hover:    rgb(255 255 255 / 0.045);
+  --ui-layer-selected: rgb(255 255 255 / 0.10);
+  --ui-border:         rgb(255 255 255 / 0.115);
+  --ui-border-strong:  rgb(255 255 255 / 0.19);
+  --ui-scrim:          rgb(0 0 0 / 0.72);
+
+  /* A field is a control standing on its container, so it sits above EVERY
+     surface — the dialog included. base.css reads these with the old level-2
+     fill as the fallback, which is what the public site still gets. */
+  --ui-field:       var(--elev-4);
+  --ui-field-hover: #3d3d43;
+  /* Non-interactive wells: meter tracks, segmented tracks. */
+  --ui-well:        #181818;
+}
+
+/* ── Inside an overlay, level 0 is a well rather than the page ───────────────
+   The whole ladder used to shift up a rung in here, so a dialog was #303030 and
+   the boxes on it #383838. That was a compatibility shim, not a rule: the
+   contents had been written against "an overlay is level 2, its contents level
+   3", and raising the ladder was the cheap way to keep them one step apart
+   without touching every dialog in the product.
+
+   It cost more than it saved. A dialog is a floating panel over a scrim that has
+   already taken the page to near-black, so an extra rung made it the brightest
+   slab on screen — and .nv-modal__panel and .nv-sheet__panel, which were never
+   in this selector list, kept painting the unshifted var(--elev-2). Two kinds of
+   overlay at two lightnesses, in the same editor, from one token. So the shim is
+   gone: a dialog is level 2 and its contents level 3, here as everywhere else,
+   which is what base.css says next to .ui-dialog and what the Bible's ladder
+   means by a step.
+
+   What does NOT come down is level 0. On a page that rung is the ground — the
+   darkest thing on screen — and a floating panel has no ground under it, so the
+   only thing that can read as level 0 on a dialog is something cut INTO it: a
+   meter track, a fader rail, a mixer readout. That is --ui-well, and letting it
+   fall to page-black would sink those holes a step below anything else in the
+   product. Custom properties inherit, so tagging the scrim wrapper is as good as
+   tagging the panel. */
+.ui-overlay,
+.ui-dialog,
+[role='dialog'],
+dialog,
+.synx-dialog-backdrop,
+.nv-busy {
+  --elev-0: var(--ui-well);
+}
+
+/* ── Tabs ──────────────────────────────────────────────────────────────────
+   The underline under the current tab is the one violet mark in the chrome — the brand
+   hue on this theme. (The sidebar's current row used to share it on its icon; that row
+   is a filled capsule now and carries no hue.) The label keeps its brightest step: the hue says which
+   tab you are on, and the weight of the text says it again for anyone who cannot see
+   the hue. The pill variant draws no underline, so it is untouched. */
+.tab[aria-selected='true'],
+.tab.is-active { border-block-end-color: var(--color-violet-500); }
+
+/* ── Text fields ───────────────────────────────────────────────────────────
+   A text field keeps its edge when you click into it. base.css puts the accent on a
+   focused field's border and a halo of it around that; the accent here is near-white, so
+   every click into a textarea drew a white box around it. The caret marks the focus in a
+   field you type in, and the edge stays the edge. Not .select: it has no caret, and its
+   ring is :focus-visible, which a click does not raise. An invalid field keeps the error
+   edge and halo base.css gives it. */
+.input:focus-visible:not([aria-invalid='true']),
+.textarea:focus-visible:not([aria-invalid='true']) {
+  border-color: var(--ui-border);
+  box-shadow: none;
+}
+
+/* ── The script editor (Text-to-Speech) ────────────────────────────────────
+   The page's writing surface rather than a control standing on a panel, so it takes the
+   card's own rung instead of the field fill that sits above every surface. It holds that
+   rung under the pointer — a tint sweeping a box this size reads as a flicker, and you are
+   already inside it. */
+.textarea--fill { background-color: var(--elev-2); }
+.textarea--fill:not(:disabled):not([readonly]):hover { background-color: var(--elev-2); }
+
+/* ── Buttons ─────────────────────────────────────────────────────────────── */
+/* The spinner a button shows while loading ("Loading and success" in base.css). This is
+   the default; the variants below name their own, so it has to come first. */
+.btn { --btn-spinner: var(--color-surface-100); }
+
+.btn--filled,
+.btn--accent,
+.btn--contrast {
+  background-color: var(--mono-accent);
+  color: var(--mono-on-accent);
+  --btn-spinner: var(--mono-on-accent);
+}
+.btn--filled:hover:not(:disabled),
+.btn--accent:hover:not(:disabled),
+.btn--contrast:hover:not(:disabled) { background-color: var(--mono-accent-hover); }
+.btn--filled:active:not(:disabled),
+.btn--accent:active:not(:disabled),
+.btn--contrast:active:not(:disabled) { background-color: var(--mono-accent-active); }
+
+/* Secondary is the success fill here, and a light fill takes the dark label. */
+.btn--tonal,
+.btn--tonal-accent {
+  background-color: var(--ui-fill-success);
+  color: var(--mono-on-accent);
+  --btn-spinner: var(--mono-on-accent);
+}
+.btn--tonal:hover:not(:disabled),
+.btn--tonal-accent:hover:not(:disabled) { background-color: var(--ui-fill-success-hover); }
+
+.btn--outlined { border-color: var(--ui-border-strong); }
+.btn--outlined:hover:not(:disabled) {
+  border-color: rgb(255 255 255 / 0.28);
+  background-color: var(--ui-layer-hover);
+}
+
+.btn--success { color: var(--mono-on-accent); --btn-spinner: var(--mono-on-accent); }
+.btn--danger-outline,
+.btn--danger-text { --btn-spinner: var(--ui-fill-danger-text); }
+
+/* The credit bolt beside a generate button: amber, the color credits wear here. The
+   number beside it stays grey — the mark carries the meaning, the count is just a count. */
+.cost-tag { --cost-tag-mark: var(--color-amber-400); }
+
+/* A switch that is on says so in green rather than in the neutral accent, which is the
+   same light grey as a primary button and reads as "there is a control here", not as a
+   state. Both variants: --accent was gold on the public site and is grey here, so on the
+   dashboard it no longer differs from the plain one. The knob stays dark — 7.3:1 on the
+   fill, where white would be 1.9:1. */
+.peer:checked ~ .switch,
+.peer:checked ~ .switch--accent { background-color: var(--color-emerald-400); }
+
+/* ── Selection controls — a light fill takes a dark mark ────────────────── */
+.peer:checked ~ .switch::after { background-color: var(--mono-on-accent); box-shadow: none; }
+.table-dark-1 input[type="checkbox"]:checked::after { border-color: var(--mono-on-accent); }
+
+/* Both sit in an inset well. */
+.tabs--pill,
+.segmented { background-color: var(--ui-well); }
+
+/* The selected pill takes the light fill, the same one a primary button takes, with the
+   dark label that goes on it (15:1). base.css asks for primary-700 + white, which is a
+   light grey under white text here; a 10% white wash, which is what this was, gave the
+   selected tab ~4 L* over the track to say it with and it read as unselected. */
+.tabs--pill .tab[aria-selected='true'],
+.tabs--pill .tab.is-active {
+  background-color: var(--mono-accent);
+  color: var(--mono-on-accent);
+}
+
+/* The segmented control is NOT that: it picks a value rather than switching a view, so the
+   Bible's raised segment is right for it and a fill that loud would outshout the field it
+   belongs to. */
+.segmented__item[aria-checked='true'],
+.segmented__item.is-active {
+  background-color: rgb(255 255 255 / 0.10);
+  color: var(--color-surface-100);
+}
+
+/* ── Meters ──────────────────────────────────────────────────────────────── */
+.meter__track,
+.card.elev-2 .meter__track { background-color: var(--ui-well); }
+.meter__fill--low { background-color: var(--ui-fill-warning); }
+/* The Studio's blocking-progress card is itself level 2, where its level-2 track drew nothing. */
+.nv-busy__meter { background: var(--ui-well); }
+
+/* The waveform player's canvas reads these ("Audio player" in base.css). */
+.ap {
+  --ap-played: var(--color-primary-500);
+  --ap-played-strong: #ffffff;
+  --ap-unplayed: var(--color-surface-500);
+  --ap-unplayed-idle: var(--color-surface-600);
+  --ap-playhead: var(--color-surface-50);
+}
+.ap-row .ap-play.is-playing,
+.ap-row .ap-play.is-playing:hover:not(:disabled) { color: var(--mono-on-accent); }
+
+/* ── Drop zone ───────────────────────────────────────────────────────────── */
+.dropzone__icon { color: var(--mono-on-accent); }
+/* Colour alone no longer separates the affordance from the title beside it —
+   both are light — so it takes weight instead: the sentence is regular, the part you
+   click is medium (the Bible's split). Still no underline: the whole zone is the
+   control. */
+.dropzone__browse { font-weight: 500; }
+
+/* ── The shared alert/confirm dialog (dialog.js) ───────────────────────────
+   Its neutral buttons were slate washes with warm-grey ink — both tints. */
+.synx-dialog-btn-cancel {
+  background: rgb(255 255 255 / 0.08);
+  color: var(--color-surface-200);
+  border-color: var(--ui-border);
+}
+.synx-dialog-btn-cancel:hover,
+.synx-dialog-btn-secondary:hover { background: rgb(255 255 255 / 0.12); }
+.synx-dialog-btn-secondary { background: rgb(255 255 255 / 0.08); }
+.synx-dialog-title,
+.synx-dialog-close:hover { color: var(--color-surface-100); }
+.synx-dialog-close:hover { background: var(--ui-layer-hover); }
+.synx-custom-dialog-body input,
+.synx-custom-dialog-body textarea {
+  border-color: var(--ui-border);
+  background: var(--ui-field);
+}
+/* The same edge focused as at rest — see "Text fields" above. */
+.synx-custom-dialog-body input:focus,
+.synx-custom-dialog-body textarea:focus { border-color: var(--ui-border); }
+
+/* ── From the dashboard's own stylesheet (dashboard.css): the parts the sheet shows ── */
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Type — the dashboard's own controls
+   The scale and the shared components' sizes are base.css's ("Type — the scale, applied").
+   The sidebar's rows read their size from .dash-nav; the current row keeps base.css's step
+   to medium, as the Bible's own sidebar does.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.dash-nav { --nav-control-font: var(--text-ui); }
+.nav-item { font-weight: var(--text-ui--font-weight); }
+.nav-cta { font-size: var(--text-label); font-weight: var(--text-label--font-weight); }
+
+
+/* ═══════════════════════════════════════════════════════════════════════════
+   Narrava Studio — the panel modal (components/Modal.js).
+
+   Separate from the shared dialog because it is a different thing: a panel you
+   work in, not a decision you make. The panel is sized BY ITS CONTENT — width
+   auto with a ceiling — so a desk of six channels is exactly as wide as six
+   channels, rather than sitting in a fixed box with dead space beside it.
+   ═══════════════════════════════════════════════════════════════════════════ */
+.nv-modal {
+  position: fixed; inset: 0; z-index: var(--z-modal);
+  display: flex; align-items: center; justify-content: center;
+  padding: 24px;
+  background: var(--ui-scrim);
+  backdrop-filter: blur(2px);
+}
+
+.nv-modal__panel {
+  display: flex; flex-direction: column;
+  /* max-content is what removes the gap beside Master: the panel stops where the
+     strips stop. min() keeps it inside the viewport on a small screen, and the
+     body scrolls rather than the panel overflowing. */
+  width: max-content; max-height: calc(100vh - 48px);
+  border: 1px solid var(--ui-border); border-radius: 14px;
+  background: var(--elev-2);
+  box-shadow: 0 24px 60px -12px rgb(0 0 0 / 0.6);
+  outline: none;
+}
+
+.nv-modal__head {
+  display: flex; align-items: center; gap: 16px;
+  padding: 20px 24px 16px;
+}
+.nv-modal__title {
+  margin: 0; flex: 1; min-width: 0;
+  font-size: var(--text-h2); font-weight: 500; color: var(--color-surface-100); letter-spacing: var(--text-h2--letter-spacing); line-height: var(--text-h2--line-height);}
+.nv-modal__close,
+.nv-modal__action {
+  display: inline-flex; align-items: center; justify-content: center;
+  width: 30px; height: 30px; flex-shrink: 0;
+  border: 0; border-radius: var(--radius-lg); background: transparent;
+  color: var(--color-surface-400); cursor: pointer; transition: color 140ms ease, background-color 140ms ease;
+}
+.nv-modal__close:hover,
+.nv-modal__action:not(:disabled):hover { background: var(--elev-3); color: var(--color-surface-100); }
+/* Disabled is quiet but still there: the control that resets the desk should not appear
+   and disappear as the desk is moved — a header button that comes and goes is one you
+   cannot find twice. */
+.nv-modal__action:disabled { opacity: 0.4; cursor: default; }
+.nv-modal__close:focus-visible,
+.nv-modal__action:focus-visible { outline: 2px solid var(--color-primary-400); outline-offset: 2px; }
+@media (pointer: coarse) {
+  .nv-modal__close, .nv-modal__action { width: 44px; height: 44px; }
+}
+
+.nv-modal__body { min-height: 0; overflow: auto; padding: 0 24px 20px; }

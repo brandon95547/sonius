@@ -1,0 +1,407 @@
+/* styleguide/dashboard-page.css — layout for styleguide/dashboard.html, and nothing else.
+ *
+ * Every component on that page is drawn by the dashboard's own shipped stylesheet,
+ * ../assets/css/dashboard.tailwind.css. This file only arranges the page around them:
+ * the header, the section rhythm, the demo grids, the swatches and their captions.
+ *
+ * Two rules keep the page honest:
+ *   1. It styles `sg-*` classes only. It is unlayered and loads after the bundle, so a
+ *      rule written against a component class would outrank the component, and the page
+ *      would be showing this file instead of the product. The one exception is marked.
+ *   2. It has no colors of its own. Every value is a dashboard token, so the page's own
+ *      chrome follows a theme change along with the components on it.
+ */
+
+:root {
+  --sg-mono: ui-monospace, SFMono-Regular, Menlo, monospace;
+}
+
+.sg-wrap {
+  box-sizing: border-box;
+  max-inline-size: 1240px;
+  margin-inline: auto;
+  padding-inline: 16px;
+}
+@media (min-width: 640px)  { .sg-wrap { padding-inline: 24px; } }
+@media (min-width: 1024px) { .sg-wrap { padding-inline: 40px; } }
+
+/* ── Header and section nav ─────────────────────────────────────────────────── */
+.sg-header {
+  background-color: var(--elev-1);
+  border-block-end: 1px solid var(--ui-border);
+}
+.sg-header > .sg-wrap { padding-block: 40px 32px; }
+
+.sg-eyebrow {
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-surface-400);
+}
+
+.sg-h1 {
+  margin-block-start: 8px;
+  font-size: clamp(1.75rem, 1.35rem + 1.6vw, 2.5rem);
+  line-height: 1.15;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-surface-100);
+}
+
+.sg-lede {
+  margin-block-start: 12px;
+  max-inline-size: 70ch;
+  font-size: 15px;
+  line-height: 1.6;
+  color: var(--color-surface-200);
+}
+
+.sg-cmds { margin-block-start: 20px; display: flex; flex-wrap: wrap; gap: 8px; }
+.sg-cmd {
+  padding: 6px 10px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-lg);
+  background-color: var(--elev-0);
+  font-family: var(--sg-mono);
+  font-size: 12px;
+  color: var(--color-surface-200);
+}
+
+.sg-aside {
+  margin-block-start: 16px;
+  max-inline-size: 70ch;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--color-surface-400);
+}
+
+.sg-link {
+  color: var(--color-surface-100);
+  text-decoration: underline;
+  text-decoration-color: var(--ui-border-strong);
+  text-underline-offset: 3px;
+}
+.sg-link:hover { text-decoration-color: currentColor; }
+
+.sg-nav {
+  position: sticky;
+  inset-block-start: 0;
+  z-index: var(--z-chrome);
+  border-block-end: 1px solid var(--ui-border);
+  background-color: var(--elev-0);
+}
+/* Scrolls rather than wraps on a phone, like the dashboard's own .tabs row. */
+.sg-nav > .sg-wrap {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  padding-block: 12px;
+  font-size: 14px;
+  white-space: nowrap;
+}
+.sg-nav a { color: var(--color-surface-200); }
+.sg-nav a:hover { color: var(--color-surface-100); }
+
+/* ── Sections ────────────────────────────────────────────────────────────────── */
+.sg-section { padding-block: 48px; scroll-margin-block-start: 48px; }
+.sg-section + .sg-section { border-block-start: 1px solid var(--ui-border); }
+
+.sg-h2 {
+  font-size: 22px;
+  line-height: 1.3;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+  color: var(--color-surface-100);
+}
+
+.sg-h3 {
+  margin-block-start: 36px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-surface-200);
+}
+
+.sg-p {
+  margin-block-start: 8px;
+  max-inline-size: 70ch;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--color-surface-200);
+}
+
+.sg-code {
+  padding: 1px 5px;
+  border-radius: var(--radius-md);
+  background-color: var(--elev-2);
+  font-family: var(--sg-mono);
+  font-size: 0.9em;
+  color: var(--color-surface-100);
+  overflow-wrap: anywhere;
+}
+
+.sg-label { font-size: 12px; font-weight: 500; color: var(--color-surface-200); }
+
+/* ── Layout ──────────────────────────────────────────────────────────────────── */
+.sg-mt { margin-block-start: 16px; }
+.sg-row { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; }
+.sg-stack { display: grid; align-content: start; gap: 16px; }
+
+.sg-grid {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 200px), 1fr));
+}
+.sg-grid--2 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 340px), 1fr)); }
+.sg-grid--3 { grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr)); }
+/* Two up at a desk, so four dialogs sit as a square rather than three and one. */
+.sg-grid--pairs { grid-template-columns: repeat(auto-fit, minmax(min(100%, 420px), 1fr)); }
+
+/* Padding for the bare overlay shells (.ui-dialog, .dash-nav), which have none of their own.
+   20px, a card's own padding, so a dialog stage lines up with the cards beside it. */
+.sg-panel { padding: 20px; border-radius: var(--radius-2xl); }
+
+/* The sidebar demo. .dash-nav supplies its ground and its edge COLOR; the real sidebar gets
+   the edge's width from a border-r utility, so this supplies width and style only. */
+.sg-navdemo { border-width: 1px; border-style: solid; }
+
+/* ── A demo and its caption ──────────────────────────────────────────────────── */
+.sg-demo { display: flex; flex-direction: column; align-items: flex-start; gap: 10px; min-inline-size: 0; }
+
+/* The role a button or state plays, above the component. */
+.sg-role { font-size: 13px; font-weight: 600; color: var(--color-surface-100); }
+.sg-grid--roles { grid-template-columns: repeat(auto-fill, minmax(min(100%, 140px), 1fr)); row-gap: 24px; }
+.sg-demo--fill { align-items: stretch; }
+
+/* A component that overflows at this width scrolls inside its demo instead of widening the
+   page. The component is left exactly as it ships; the padding keeps its focus ring unclipped. */
+.sg-clip { overflow-x: auto; padding: 4px; margin: -4px; }
+
+.sg-meta {
+  font-family: var(--sg-mono);
+  font-size: 12px;
+  line-height: 1.55;
+  color: var(--color-surface-400);
+  overflow-wrap: anywhere;
+}
+.sg-meta__name { color: var(--color-surface-200); }
+
+/* A layer chip: the interaction layer is the class beside this one. */
+.sg-layer {
+  padding: 10px 12px;
+  border-radius: var(--radius-lg);
+  font-size: 13px;
+  color: var(--color-surface-100);
+}
+
+/* ── Swatches ────────────────────────────────────────────────────────────────── */
+.sg-swatch {
+  margin: 0;
+  overflow: hidden;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-xl);
+}
+.sg-swatch__fill { block-size: 64px; }
+.sg-swatch__body { display: grid; gap: 2px; padding: 10px 12px; }
+.sg-swatch__title { font-size: 13px; font-weight: 600; color: var(--color-surface-100); }
+.sg-swatch__value { font-family: var(--sg-mono); font-size: 12px; color: var(--color-surface-200); }
+.sg-swatch__name { font-family: var(--sg-mono); font-size: 12px; color: var(--color-surface-400); overflow-wrap: anywhere; }
+
+/* ── Colors ──────────────────────────────────────────────────────────────────────
+   The palette as a design sheet: a few named colors, each a large swatch with its value,
+   its token and what it is for. Fills and inks are inline var() on the markup, so every
+   value shown is the bundle's own. */
+.sg-colors {
+  display: grid;
+  gap: 16px;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr));
+}
+.sg-color {
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-2xl);
+  background-color: var(--elev-1);
+}
+.sg-color__fill {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  block-size: 128px;
+  padding: 14px 16px;
+  font-size: 28px;
+  font-weight: 500;
+  line-height: 1;
+}
+.sg-color__body { display: grid; gap: 3px; padding: 14px 16px 6px; }
+.sg-color__name { font-size: 15px; font-weight: 600; color: var(--color-surface-100); }
+.sg-color__value { font-family: var(--sg-mono); font-size: 12px; color: var(--color-surface-200); }
+.sg-color__token { font-family: var(--sg-mono); font-size: 12px; color: var(--color-surface-400); overflow-wrap: anywhere; }
+.sg-color__use { margin-block-start: 4px; font-size: 13px; line-height: 1.5; color: var(--color-surface-200); }
+
+/* The states a color takes, as a row of chips under it. */
+.sg-states { display: grid; grid-auto-flow: column; grid-auto-columns: 1fr; gap: 8px; padding: 10px 16px 16px; }
+.sg-state { display: grid; gap: 4px; min-inline-size: 0; }
+.sg-state__chip { block-size: 28px; border: 1px solid var(--ui-border); border-radius: var(--radius-md); }
+.sg-state__label { font-size: 12px; font-weight: 500; color: var(--color-surface-200); }
+.sg-state__value { font-family: var(--sg-mono); font-size: 11px; color: var(--color-surface-400); }
+
+/* Text steps: the ink itself, set on the card ground it is read on. */
+.sg-inks { display: grid; gap: 1px; overflow: hidden; border: 1px solid var(--ui-border); border-radius: var(--radius-2xl); background-color: var(--ui-border); }
+@media (min-width: 640px) { .sg-inks { grid-template-columns: repeat(4, minmax(0, 1fr)); } }
+.sg-ink { display: grid; gap: 4px; padding: 18px 16px; background-color: var(--elev-1); }
+.sg-ink__sample { font-size: 32px; font-weight: 500; line-height: 1.1; }
+.sg-ink__line { font-size: 14px; line-height: 1.5; }
+
+/* Status: the ink on the left, the fill it pairs with on the right. */
+.sg-pairs { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 240px), 1fr)); }
+.sg-pair { margin: 0; overflow: hidden; border: 1px solid var(--ui-border); border-radius: var(--radius-2xl); background-color: var(--elev-1); }
+.sg-pair__fills { display: grid; grid-template-columns: 1fr 1fr; block-size: 72px; }
+.sg-pair__ink { display: flex; align-items: center; padding-inline: 14px; background-color: var(--elev-1); font-size: 15px; font-weight: 500; }
+.sg-pair__fill { display: flex; align-items: center; padding-inline: 14px; font-size: 13px; font-weight: 500; color: var(--mono-on-accent); }
+.sg-pair__body { display: grid; gap: 2px; padding: 12px 14px 14px; border-block-start: 1px solid var(--ui-border); }
+
+/* Special cases: each one drawn live, on the surface it actually sits on. */
+.sg-specials { display: grid; gap: 16px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); }
+.sg-special { display: grid; grid-template-rows: auto 1fr; overflow: hidden; border: 1px solid var(--ui-border); border-radius: var(--radius-2xl); background-color: var(--elev-1); }
+.sg-special__stage { display: grid; place-items: center; min-block-size: 150px; padding: 28px 20px 20px; background-color: var(--elev-0); }
+.sg-special__body { display: grid; align-content: start; gap: 3px; padding: 12px 16px 16px; border-block-start: 1px solid var(--ui-border); }
+/* A stand-in box for the edges that are not a component of their own. */
+.sg-edge { inline-size: 100%; max-inline-size: 200px; padding: 14px 16px; border: 1px solid; border-radius: var(--radius-xl); font-size: 13px; font-weight: 500; }
+.sg-edge--selected { border-width: 2px; }
+
+/* Lines and layers, each laid over a level-1 card so the alpha reads as it does in use. */
+.sg-layers { display: grid; gap: 12px; grid-template-columns: repeat(auto-fill, minmax(min(100%, 170px), 1fr)); }
+.sg-layer-demo { display: grid; align-content: start; gap: 3px; }
+.sg-layer-demo__stage { block-size: 72px; border-radius: var(--radius-xl); background-color: var(--elev-1); }
+.sg-layer-demo__stage--line { border: 2px solid; }
+
+/* ── Elevation ladder ────────────────────────────────────────────────────────────
+   Dark to light, left to right, each rung standing a little taller than the last. */
+.sg-ladder { display: grid; gap: 8px; align-items: end; }
+@media (min-width: 768px) { .sg-ladder { grid-template-columns: repeat(5, minmax(0, 1fr)); } }
+.sg-rung {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  gap: 3px;
+  min-block-size: 112px;
+  padding: 14px 16px;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-2xl);
+}
+@media (min-width: 768px) {
+  .sg-rung--1 { min-block-size: 148px; }
+  .sg-rung--2 { min-block-size: 184px; }
+  .sg-rung--3 { min-block-size: 220px; }
+  .sg-rung--4 { min-block-size: 256px; }
+}
+.sg-rung__level { font-size: 12px; font-weight: 600; letter-spacing: 0.08em; text-transform: uppercase; color: var(--color-surface-400); }
+.sg-rung__name { font-size: 15px; font-weight: 600; color: var(--color-surface-100); }
+.sg-rung__use { font-size: 13px; line-height: 1.45; color: var(--color-surface-200); }
+.sg-rung__value { font-family: var(--sg-mono); font-size: 12px; color: var(--color-surface-400); }
+
+/* ── Dialog stage ────────────────────────────────────────────────────────────────
+   The scrim a dialog opens over, as a box in the page, so a dialog can be shown in place
+   without its own position:fixed shell. */
+.sg-stage {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-inline-size: 0;
+  padding: 40px 16px;
+  overflow: hidden;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-2xl);
+  background-color: var(--ui-scrim);
+}
+.sg-stage__w { inline-size: 100%; max-inline-size: 560px; }
+.sg-stage__w--wide { max-inline-size: 960px; }
+/* The workspace modal is sized by its content, so its demo content needs a width. */
+.sg-modal-body { inline-size: min(420px, 70vw); }
+
+/* The full token list, folded away under the palette. */
+.sg-details { margin-block-start: 28px; }
+.sg-details > summary {
+  cursor: pointer;
+  inline-size: fit-content;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--color-surface-200);
+}
+.sg-details > summary:hover { color: var(--color-surface-100); }
+
+/* ── Typography ──────────────────────────────────────────────────────────────── */
+/* Role on the left, sample and its classes on the right; stacked on a phone. */
+.sg-type { display: grid; }
+.sg-type__row {
+  display: grid;
+  gap: 6px 24px;
+  padding-block: 14px;
+  border-block-end: 1px solid var(--ui-border);
+}
+.sg-type__row:first-child { padding-block-start: 0; }
+.sg-type__row:last-child { padding-block-end: 0; border-block-end: 0; }
+@media (min-width: 640px) { .sg-type__row { grid-template-columns: 140px minmax(0, 1fr); align-items: baseline; } }
+.sg-type__role { font-size: 13px; font-weight: 600; color: var(--color-surface-200); }
+.sg-type__sample { display: grid; gap: 4px; min-inline-size: 0; }
+
+/* ── Palette table ───────────────────────────────────────────────────────────── */
+.sg-scroll {
+  margin-block-start: 16px;
+  overflow-x: auto;
+  border: 1px solid var(--ui-border);
+  border-radius: var(--radius-xl);
+}
+
+.sg-tokens { border-collapse: collapse; inline-size: 100%; min-inline-size: 620px; font-size: 13px; }
+.sg-tokens th,
+.sg-tokens td {
+  padding: 10px 16px;
+  border-block-end: 1px solid var(--ui-border);
+  text-align: start;
+  vertical-align: middle;
+  color: var(--color-surface-200);
+}
+.sg-tokens thead th { font-size: 12px; font-weight: 500; color: var(--color-surface-400); }
+.sg-tokens td:first-child { inline-size: 28px; padding-inline-end: 0; }
+.sg-tokens tbody tr:last-child > * { border-block-end: 0; }
+.sg-tokens .sg-tokens__group {
+  padding-block: 20px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--color-surface-100);
+}
+/* A color can be reached by several classes; they wrap rather than widening the column. */
+.sg-tokens__classes { display: flex; flex-wrap: wrap; gap: 4px; }
+.sg-tokens__token { white-space: nowrap; }
+.sg-tokens__value { font-family: var(--sg-mono); font-size: 12px; white-space: nowrap; }
+/* Square, edged so a swatch the same color as the table still has a shape. */
+.sg-tokens__swatch {
+  display: block;
+  inline-size: 28px;
+  block-size: 28px;
+  border: 1px solid var(--ui-border-strong);
+  border-radius: var(--radius-sm);
+}
+
+/* ── The one exception to rule 1 ─────────────────────────────────────────────────
+   dialog.js mounts .synx-dialog-backdrop position:fixed over the whole viewport. Here
+   it stands in the page so it can be read beside everything else. Position is the only
+   thing changed: the scrim, the blur, the panel, and the overlay ladder the theme
+   rebinds inside the backdrop are all the shipped rules. */
+.synx-dialog-backdrop.sg-inflow {
+  position: relative;
+  inset: auto;
+  z-index: auto;
+  min-block-size: 300px;
+  padding: 24px 12px;
+  border-radius: var(--radius-xl);
+}

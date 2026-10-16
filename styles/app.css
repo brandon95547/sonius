@@ -1,0 +1,33 @@
+/* styles/app.css — Sonius's own pages: the bar and the showcase.
+ *
+ * Built into public/css/app.css after the shared components and the default guide's theme
+ * (scripts/build-css.mjs), so every value here is a token of the guide Sonius opens on. */
+
+.so-wrap { max-width: 1120px; margin-inline: auto; padding-inline: 24px; }
+@media (max-width: 640px) { .so-wrap { padding-inline: 16px; } }
+
+.so-bar { border-block-end: 1px solid var(--ui-border); }
+.so-bar__row { display: flex; align-items: center; block-size: 56px; }
+.so-brand {
+  font-size: var(--text-h4); line-height: var(--text-h4--line-height); font-weight: var(--text-h4--font-weight);
+  color: var(--color-surface-50); text-decoration: none;
+}
+
+.so-page { padding-block: 48px 72px; }
+
+.so-link { color: var(--color-surface-50); text-decoration: underline; text-underline-offset: 3px; }
+
+/* The guides: one card each, three across where there is room. */
+.so-guides {
+  display: grid; gap: 16px; margin-block-start: 32px; padding: 0; list-style: none;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+}
+.so-guide { display: flex; flex-direction: column; gap: 8px; block-size: 100%; text-decoration: none; color: inherit; }
+.so-guide__head { display: flex; align-items: center; justify-content: space-between; gap: 12px; margin-block-start: 8px; }
+
+/* A guide's colors, page to accent, as one strip. */
+.so-swatches {
+  display: flex; block-size: 56px; overflow: hidden;
+  border: 1px solid var(--ui-border); border-radius: var(--radius-lg);
+}
+.so-swatches > span { flex: 1; }
